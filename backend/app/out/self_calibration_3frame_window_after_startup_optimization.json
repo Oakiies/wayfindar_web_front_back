@@ -1,0 +1,120 @@
+{
+  "experiment": "three-consecutive-frame image-only self-calibration window",
+  "video": "D:\\wayfindar\\floor1_wide_pare.MOV",
+  "start_frame": 300,
+  "frame_count": 3,
+  "model_ready_seconds": 8.505117899971083,
+  "frame_processing_seconds": [
+    0.7307458999566734,
+    0.45633849990554154,
+    0.4645191999152303
+  ],
+  "mean_frame_seconds": 0.5505345332591484,
+  "window_processing_seconds": 1.6516035997774452,
+  "calibration_commit_elapsed_from_first_frame_seconds": 1.752968299901113,
+  "final_calibration": {
+    "status": "calibrated",
+    "committed": true,
+    "estimated_parameters": [
+      "fx",
+      "fy"
+    ],
+    "fixed_parameters": [
+      "cx",
+      "cy"
+    ],
+    "distortion_model": "not_estimated_in_fast_path",
+    "estimates": 3,
+    "pending": false,
+    "focal_px": 949.3154351982264,
+    "focal_ratio_to_initial": 0.6780824537130189,
+    "focal_mad_px": 9.252729917481474,
+    "last_error": null,
+    "blocking_budget_ms": 0.0
+  },
+  "frames": [
+    {
+      "frame": 300,
+      "success": true,
+      "inliers": 39,
+      "elapsed_seconds": 0.7307458999566734,
+      "calibration_snapshot": {
+        "status": "estimating",
+        "committed": false,
+        "estimated_parameters": [
+          "fx",
+          "fy"
+        ],
+        "fixed_parameters": [
+          "cx",
+          "cy"
+        ],
+        "distortion_model": "not_estimated_in_fast_path",
+        "estimates": 0,
+        "pending": true,
+        "focal_px": 1400.0,
+        "focal_ratio_to_initial": 1.0,
+        "focal_mad_px": null,
+        "last_error": null,
+        "blocking_budget_ms": 0.0
+      }
+    },
+    {
+      "frame": 301,
+      "success": true,
+      "inliers": 37,
+      "elapsed_seconds": 0.45633849990554154,
+      "calibration_snapshot": {
+        "status": "estimating",
+        "committed": false,
+        "estimated_parameters": [
+          "fx",
+          "fy"
+        ],
+        "fixed_parameters": [
+          "cx",
+          "cy"
+        ],
+        "distortion_model": "not_estimated_in_fast_path",
+        "estimates": 1,
+        "pending": true,
+        "focal_px": 1400.0,
+        "focal_ratio_to_initial": 1.0,
+        "focal_mad_px": 0.0,
+        "last_error": null,
+        "blocking_budget_ms": 0.0
+      }
+    },
+    {
+      "frame": 302,
+      "success": true,
+      "inliers": 36,
+      "elapsed_seconds": 0.4645191999152303,
+      "calibration_snapshot": {
+        "status": "estimating",
+        "committed": false,
+        "estimated_parameters": [
+          "fx",
+          "fy"
+        ],
+        "fixed_parameters": [
+          "cx",
+          "cy"
+        ],
+        "distortion_model": "not_estimated_in_fast_path",
+        "estimates": 2,
+        "pending": true,
+        "focal_px": 1400.0,
+        "focal_ratio_to_initial": 1.0,
+        "focal_mad_px": 8.39817258177959,
+        "last_error": null,
+        "blocking_budget_ms": 0.0
+      }
+    }
+  ],
+  "decision": {
+    "calibration_after_model_ready_under_3s": true,
+    "cold_process_under_3s": false,
+    "note": "The model-ready timer is separate because model loading is not calibration work."
+  }
+}

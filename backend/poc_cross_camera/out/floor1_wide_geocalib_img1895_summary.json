@@ -1,0 +1,288 @@
+{
+  "experiment": "GeoCalib (paper's own model/code, ECCV 2024) query focal+gravity estimation",
+  "paper": "https://arxiv.org/abs/2409.06704",
+  "device": "cuda",
+  "map_focal_px": 1400.0,
+  "n_frames": 30,
+  "median_focal_ratio_query_over_map": 0.6463294764927456,
+  "mean_focal_ratio_query_over_map": 0.6416159202938988,
+  "std_focal_ratio_query_over_map": 0.03973941176383423,
+  "inference_latency_ms": {
+    "mean": 147.69279332831502,
+    "median": 132.2139500407502,
+    "max": 470.47739988192916,
+    "min": 115.04760012030602
+  },
+  "rows": [
+    {
+      "frame": 0,
+      "time_s": 0.0,
+      "focal_px": 818.2715454101562,
+      "focal_ratio_query_over_map": 0.5844796752929687,
+      "roll_deg": 0.6964183449745178,
+      "pitch_deg": -1.7784367799758911,
+      "inference_s": 0.47047739988192916
+    },
+    {
+      "frame": 300,
+      "time_s": 10.004,
+      "focal_px": 1017.0989990234375,
+      "focal_ratio_query_over_map": 0.7264992850167411,
+      "roll_deg": 1.9636644124984741,
+      "pitch_deg": -3.3318915367126465,
+      "inference_s": 0.16121819987893105
+    },
+    {
+      "frame": 600,
+      "time_s": 20.007,
+      "focal_px": 785.2601318359375,
+      "focal_ratio_query_over_map": 0.5609000941685268,
+      "roll_deg": -0.32300058007240295,
+      "pitch_deg": 2.4253902435302734,
+      "inference_s": 0.14956150017678738
+    },
+    {
+      "frame": 900,
+      "time_s": 30.011,
+      "focal_px": 730.055908203125,
+      "focal_ratio_query_over_map": 0.521468505859375,
+      "roll_deg": 1.9649474620819092,
+      "pitch_deg": -2.303107976913452,
+      "inference_s": 0.14756130008026958
+    },
+    {
+      "frame": 1200,
+      "time_s": 40.014,
+      "focal_px": 888.4808349609375,
+      "focal_ratio_query_over_map": 0.6346291678292411,
+      "roll_deg": 0.9812489151954651,
+      "pitch_deg": -4.5715203285217285,
+      "inference_s": 0.13104989985004067
+    },
+    {
+      "frame": 1500,
+      "time_s": 50.018,
+      "focal_px": 901.3499755859375,
+      "focal_ratio_query_over_map": 0.6438214111328125,
+      "roll_deg": 3.054471969604492,
+      "pitch_deg": -9.747072219848633,
+      "inference_s": 0.1333282000850886
+    },
+    {
+      "frame": 1800,
+      "time_s": 60.021,
+      "focal_px": 912.4401245117188,
+      "focal_ratio_query_over_map": 0.6517429460797991,
+      "roll_deg": 1.4246482849121094,
+      "pitch_deg": -8.57921314239502,
+      "inference_s": 0.13182869995944202
+    },
+    {
+      "frame": 2100,
+      "time_s": 70.025,
+      "focal_px": 878.7060546875,
+      "focal_ratio_query_over_map": 0.6276471819196429,
+      "roll_deg": 2.313987970352173,
+      "pitch_deg": -5.465710163116455,
+      "inference_s": 0.131620500003919
+    },
+    {
+      "frame": 2400,
+      "time_s": 80.028,
+      "focal_px": 948.0044555664062,
+      "focal_ratio_query_over_map": 0.6771460396902902,
+      "roll_deg": 2.67069935798645,
+      "pitch_deg": -10.509136199951172,
+      "inference_s": 0.13153850007802248
+    },
+    {
+      "frame": 2700,
+      "time_s": 90.032,
+      "focal_px": 895.7572021484375,
+      "focal_ratio_query_over_map": 0.6398265729631697,
+      "roll_deg": 1.4612139463424683,
+      "pitch_deg": -8.140191078186035,
+      "inference_s": 0.1310423999093473
+    },
+    {
+      "frame": 3000,
+      "time_s": 100.035,
+      "focal_px": 909.6975708007812,
+      "focal_ratio_query_over_map": 0.6497839791434151,
+      "roll_deg": 2.2402849197387695,
+      "pitch_deg": -14.548051834106445,
+      "inference_s": 0.13018730003386736
+    },
+    {
+      "frame": 3300,
+      "time_s": 110.039,
+      "focal_px": 912.337890625,
+      "focal_ratio_query_over_map": 0.651669921875,
+      "roll_deg": -0.6363929510116577,
+      "pitch_deg": -11.964917182922363,
+      "inference_s": 0.14655340020544827
+    },
+    {
+      "frame": 3600,
+      "time_s": 120.042,
+      "focal_px": 884.4188232421875,
+      "focal_ratio_query_over_map": 0.6317277308872767,
+      "roll_deg": 2.1871702671051025,
+      "pitch_deg": -7.139890193939209,
+      "inference_s": 0.14795050001703203
+    },
+    {
+      "frame": 3900,
+      "time_s": 130.046,
+      "focal_px": 915.062744140625,
+      "focal_ratio_query_over_map": 0.6536162458147321,
+      "roll_deg": 2.42396879196167,
+      "pitch_deg": -6.534913539886475,
+      "inference_s": 0.13136799982748926
+    },
+    {
+      "frame": 4200,
+      "time_s": 140.049,
+      "focal_px": 885.2651977539062,
+      "focal_ratio_query_over_map": 0.632332284109933,
+      "roll_deg": 1.8332300186157227,
+      "pitch_deg": -5.456982612609863,
+      "inference_s": 0.13208899996243417
+    },
+    {
+      "frame": 4500,
+      "time_s": 150.053,
+      "focal_px": 868.5119018554688,
+      "focal_ratio_query_over_map": 0.6203656441824776,
+      "roll_deg": 1.4282264709472656,
+      "pitch_deg": -8.993006706237793,
+      "inference_s": 0.13075869996100664
+    },
+    {
+      "frame": 4800,
+      "time_s": 160.056,
+      "focal_px": 854.8544921875,
+      "focal_ratio_query_over_map": 0.6106103515625,
+      "roll_deg": 2.5384886264801025,
+      "pitch_deg": -7.691478729248047,
+      "inference_s": 0.13303439994342625
+    },
+    {
+      "frame": 5100,
+      "time_s": 170.06,
+      "focal_px": 939.6690673828125,
+      "focal_ratio_query_over_map": 0.6711921909877232,
+      "roll_deg": 1.240675687789917,
+      "pitch_deg": -11.469408988952637,
+      "inference_s": 0.1491109998896718
+    },
+    {
+      "frame": 5400,
+      "time_s": 180.063,
+      "focal_px": 862.935302734375,
+      "focal_ratio_query_over_map": 0.6163823590959822,
+      "roll_deg": 0.5876981616020203,
+      "pitch_deg": -5.7466959953308105,
+      "inference_s": 0.13174089998938143
+    },
+    {
+      "frame": 5700,
+      "time_s": 190.067,
+      "focal_px": 961.859375,
+      "focal_ratio_query_over_map": 0.6870424107142857,
+      "roll_deg": 4.7935333251953125,
+      "pitch_deg": -11.119516372680664,
+      "inference_s": 0.11504760012030602
+    },
+    {
+      "frame": 6000,
+      "time_s": 200.07,
+      "focal_px": 851.406005859375,
+      "focal_ratio_query_over_map": 0.6081471470424107,
+      "roll_deg": 2.420685291290283,
+      "pitch_deg": -7.4495062828063965,
+      "inference_s": 0.12980580003932118
+    },
+    {
+      "frame": 6300,
+      "time_s": 210.074,
+      "focal_px": 934.2000732421875,
+      "focal_ratio_query_over_map": 0.6672857666015625,
+      "roll_deg": 2.208852767944336,
+      "pitch_deg": -4.566565990447998,
+      "inference_s": 0.13233890011906624
+    },
+    {
+      "frame": 6600,
+      "time_s": 220.077,
+      "focal_px": 872.25146484375,
+      "focal_ratio_query_over_map": 0.6230367606026785,
+      "roll_deg": 1.2544351816177368,
+      "pitch_deg": -8.477803230285645,
+      "inference_s": 0.13121389993466437
+    },
+    {
+      "frame": 6900,
+      "time_s": 230.081,
+      "focal_px": 982.8458251953125,
+      "focal_ratio_query_over_map": 0.7020327322823661,
+      "roll_deg": 2.1887576580047607,
+      "pitch_deg": -10.16555404663086,
+      "inference_s": 0.14737879997119308
+    },
+    {
+      "frame": 7200,
+      "time_s": 240.085,
+      "focal_px": 911.8125,
+      "focal_ratio_query_over_map": 0.6512946428571429,
+      "roll_deg": 4.670776844024658,
+      "pitch_deg": -10.03126049041748,
+      "inference_s": 0.13151510013267398
+    },
+    {
+      "frame": 7500,
+      "time_s": 250.088,
+      "focal_px": 936.9808349609375,
+      "focal_ratio_query_over_map": 0.6692720249720983,
+      "roll_deg": 4.048557758331299,
+      "pitch_deg": -11.396078109741211,
+      "inference_s": 0.14724699989892542
+    },
+    {
+      "frame": 7800,
+      "time_s": 260.092,
+      "focal_px": 957.6974487304688,
+      "focal_ratio_query_over_map": 0.6840696062360491,
+      "roll_deg": 1.7727614641189575,
+      "pitch_deg": -8.56725025177002,
+      "inference_s": 0.1308329999446869
+    },
+    {
+      "frame": 8100,
+      "time_s": 270.095,
+      "focal_px": 897.1583862304688,
+      "focal_ratio_query_over_map": 0.6408274187360491,
+      "roll_deg": 0.4333656132221222,
+      "pitch_deg": -9.792682647705078,
+      "inference_s": 0.13267279998399317
+    },
+    {
+      "frame": 8400,
+      "time_s": 280.099,
+      "focal_px": 908.37255859375,
+      "focal_ratio_query_over_map": 0.6488375418526786,
+      "roll_deg": 0.700806200504303,
+      "pitch_deg": -9.881322860717773,
+      "inference_s": 0.14826299995183945
+    },
+    {
+      "frame": 8700,
+      "time_s": 290.102,
+      "focal_px": 925.10595703125,
+      "focal_ratio_query_over_map": 0.6607899693080357,
+      "roll_deg": 0.689724326133728,
+      "pitch_deg": -10.10050106048584,
+      "inference_s": 0.13244810001924634
+    }
+  ]
+}

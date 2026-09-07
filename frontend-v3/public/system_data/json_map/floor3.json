@@ -1,0 +1,1251 @@
+﻿{
+    "graph":  {
+                  "directed":  false,
+                  "metadata":  {
+                                   "building_name":  "เธญเธฒเธเธฒเธฃเธเธญเธเธเธฑเธ",
+                                   "floors":  [
+                                                  3
+                                              ],
+                                   "created_date":  "2026-03-02",
+                                   "scale":  1,
+                                   "defined_types":  [
+                                                         {
+                                                             "id":  "intersection",
+                                                             "label":  "Intersection",
+                                                             "color":  "#3b82f6"
+                                                         },
+                                                         {
+                                                             "id":  "room_access",
+                                                             "label":  "Room Access",
+                                                             "color":  "#14b8a6"
+                                                         },
+                                                         {
+                                                             "id":  "entrance",
+                                                             "label":  "Entrance",
+                                                             "color":  "#10b981"
+                                                         },
+                                                         {
+                                                             "id":  "restroom",
+                                                             "label":  "Restroom",
+                                                             "color":  "#06b6d4"
+                                                         },
+                                                         {
+                                                             "id":  "elevator",
+                                                             "label":  "Elevator",
+                                                             "color":  "#8b5cf6"
+                                                         },
+                                                         {
+                                                             "id":  "stairs",
+                                                             "label":  "Stairs",
+                                                             "color":  "#f59e0b"
+                                                         },
+                                                         {
+                                                             "id":  "fire_exit",
+                                                             "label":  "Fire Exit",
+                                                             "color":  "#ef4444"
+                                                         },
+                                                         {
+                                                             "id":  "poi",
+                                                             "label":  "POI",
+                                                             "color":  "#ec4899"
+                                                         },
+                                                         {
+                                                             "id":  "room",
+                                                             "label":  "Room",
+                                                             "color":  "#6366f1"
+                                                         }
+                                                     ]
+                               },
+                  "nodes":  {
+                                "node-1772465888247":  {
+                                                           "label":  "310",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  152.71256108077034
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772465899097":  {
+                                                           "label":  "317",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  45
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772465953302":  {
+                                                           "label":  "304_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  470
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "304"
+                                                                        }
+                                                       },
+                                "node-1772465977525":  {
+                                                           "label":  "304_A",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  369
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "304"
+                                                                        }
+                                                       },
+                                "node-1772465991541":  {
+                                                           "label":  "306_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  353
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "306"
+                                                                        }
+                                                       },
+                                "node-1772466012672":  {
+                                                           "label":  "306_A",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  293
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "306"
+                                                                        }
+                                                       },
+                                "node-1772466026123":  {
+                                                           "label":  "308_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  275
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "308 "
+                                                                        }
+                                                       },
+                                "node-1772466056850":  {
+                                                           "label":  "308_A",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  179.28743891922966
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "308"
+                                                                        }
+                                                       },
+                                "node-1772466122172":  {
+                                                           "label":  "316_A",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  62
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "316"
+                                                                        }
+                                                       },
+                                "node-1772466125908":  {
+                                                           "label":  "316_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  85
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466136025":  {
+                                                           "label":  "335_A",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  142.76087996174078
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "335"
+                                                                        }
+                                                       },
+                                "node-1772466138238":  {
+                                                           "label":  "328",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  156
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "328"
+                                                                        }
+                                                       },
+                                "node-1772466155656":  {
+                                                           "label":  "335_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  301,
+                                                                                             "y":  196
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "335"
+                                                                        }
+                                                       },
+                                "node-1772466165842":  {
+                                                           "label":  "334",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  236.56979995697998
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466166476":  {
+                                                           "label":  "333_A",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  251.86040008603996
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "333"
+                                                                        }
+                                                       },
+                                "node-1772466167902":  {
+                                                           "label":  "333_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  275
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "333"
+                                                                        }
+                                                       },
+                                "node-1772466168881":  {
+                                                           "label":  "332_A",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  293
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "332"
+                                                                        }
+                                                       },
+                                "node-1772466171435":  {
+                                                           "label":  "332_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  301,
+                                                                                             "y":  313
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "332"
+                                                                        }
+                                                       },
+                                "node-1772466173131":  {
+                                                           "label":  "323",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  287,
+                                                                                             "y":  313
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466174242":  {
+                                                           "label":  "331_A",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  329
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "331"
+                                                                        }
+                                                       },
+                                "node-1772466178852":  {
+                                                           "label":  "331_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  299.37750053775017,
+                                                                                             "y":  353
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "331"
+                                                                        }
+                                                       },
+                                "node-1772466180143":  {
+                                                           "label":  "330_A",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  369
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "330"
+                                                                        }
+                                                       },
+                                "node-1772466184531":  {
+                                                           "label":  "330_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  392
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "330"
+                                                                        }
+                                                       },
+                                "node-1772466185445":  {
+                                                           "label":  "329_A",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  409
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "329"
+                                                                        }
+                                                       },
+                                "node-1772466187901":  {
+                                                           "label":  "329_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  470
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "329"
+                                                                        }
+                                                       },
+                                "node-1772466241653":  {
+                                                           "label":  "320",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  424
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466246129":  {
+                                                           "label":  "321",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  424
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466257841":  {
+                                                           "label":  "325",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  264,
+                                                                                             "y":  224
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466278631":  {
+                                                           "label":  "Fire Exit 1",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "fire_exit",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  37
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466283421":  {
+                                                           "label":  "Fire Exit 2",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "fire_exit",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  490
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466291647":  {
+                                                           "label":  "Restroom 2",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "restroom",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  458.72557628979143
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466294894":  {
+                                                           "label":  "Restroom 1",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "restroom",
+                                                                            "position":  {
+                                                                                             "x":  177,
+                                                                                             "y":  111
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466305089":  {
+                                                           "label":  "Elevator 3",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "elevator",
+                                                                            "position":  {
+                                                                                             "x":  231,
+                                                                                             "y":  210
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466310667":  {
+                                                           "label":  "Stairs 3",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "stairs",
+                                                                            "position":  {
+                                                                                             "x":  231,
+                                                                                             "y":  242
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466317912":  {
+                                                           "label":  "Intersection 1",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  224
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466320172":  {
+                                                           "label":  "Intersection 2",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  231,
+                                                                                             "y":  224
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466321779":  {
+                                                           "label":  "Intersection 3",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  224
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466327303":  {
+                                                           "label":  "Intersection 4",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  446
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466329538":  {
+                                                           "label":  "Intersection 5",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  446
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466334759":  {
+                                                           "label":  "Intersection 6",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  134.20000000000005
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466339705":  {
+                                                           "label":  "Intersection 7",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  134.20000000000005
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466342041":  {
+                                                           "label":  "Intersection 8",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  111
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466808186":  {
+                                                           "label":  "Intersection 9",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  196
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772466820261":  {
+                                                           "label":  "328_B",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  287,
+                                                                                             "y":  196
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "328"
+                                                                        }
+                                                       },
+                                "node-1772467028628":  {
+                                                           "label":  "Intersection 11",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  313
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772467044470":  {
+                                                           "label":  "321",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  289,
+                                                                                             "y":  353
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1772467071959":  {
+                                                           "label":  "Intersection 12",
+                                                           "metadata":  {
+                                                                            "floor":  3,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  294,
+                                                                                             "y":  353
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       }
+                            },
+                  "edges":  [
+                                {
+                                    "source":  "node-1772466278631",
+                                    "source_label":  "Fire Exit 1",
+                                    "target":  "node-1772465899097",
+                                    "target_label":  "317",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  8,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466122172",
+                                    "source_label":  "316_A",
+                                    "target":  "node-1772465899097",
+                                    "target_label":  "317",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  17,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466122172",
+                                    "source_label":  "316_A",
+                                    "target":  "node-1772466125908",
+                                    "target_label":  "316_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  23,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466125908",
+                                    "source_label":  "316_B",
+                                    "target":  "node-1772466342041",
+                                    "target_label":  "Intersection 8",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  26,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466342041",
+                                    "source_label":  "Intersection 8",
+                                    "target":  "node-1772466294894",
+                                    "target_label":  "Restroom 1",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  30,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466342041",
+                                    "source_label":  "Intersection 8",
+                                    "target":  "node-1772466334759",
+                                    "target_label":  "Intersection 6",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  20,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466334759",
+                                    "source_label":  "Intersection 6",
+                                    "target":  "node-1772465888247",
+                                    "target_label":  "310",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  21.712561080770342,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466334759",
+                                    "source_label":  "Intersection 6",
+                                    "target":  "node-1772466339705",
+                                    "target_label":  "Intersection 7",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  87.05170877128145,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772465888247",
+                                    "source_label":  "310",
+                                    "target":  "node-1772466056850",
+                                    "target_label":  "308_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  26.574877838459315,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466056850",
+                                    "source_label":  "308_A",
+                                    "target":  "node-1772466317912",
+                                    "target_label":  "Intersection 1",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  44.71256108077034,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466317912",
+                                    "source_label":  "Intersection 1",
+                                    "target":  "node-1772466320172",
+                                    "target_label":  "Intersection 2",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  24,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466320172",
+                                    "source_label":  "Intersection 2",
+                                    "target":  "node-1772466305089",
+                                    "target_label":  "Elevator 3",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  14,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466320172",
+                                    "source_label":  "Intersection 2",
+                                    "target":  "node-1772466310667",
+                                    "target_label":  "Stairs 3",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  18,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466320172",
+                                    "source_label":  "Intersection 2",
+                                    "target":  "node-1772466257841",
+                                    "target_label":  "325",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  33,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466257841",
+                                    "source_label":  "325",
+                                    "target":  "node-1772466321779",
+                                    "target_label":  "Intersection 3",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  30,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466317912",
+                                    "source_label":  "Intersection 1",
+                                    "target":  "node-1772466026123",
+                                    "target_label":  "308_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  51,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466026123",
+                                    "source_label":  "308_B",
+                                    "target":  "node-1772466012672",
+                                    "target_label":  "306_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  18,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466012672",
+                                    "source_label":  "306_A",
+                                    "target":  "node-1772465991541",
+                                    "target_label":  "306_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  60,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772465991541",
+                                    "source_label":  "306_B",
+                                    "target":  "node-1772465977525",
+                                    "target_label":  "304_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  16,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772465977525",
+                                    "source_label":  "304_A",
+                                    "target":  "node-1772466241653",
+                                    "target_label":  "320",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  55,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466241653",
+                                    "source_label":  "320",
+                                    "target":  "node-1772466327303",
+                                    "target_label":  "Intersection 4",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  22,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466327303",
+                                    "source_label":  "Intersection 4",
+                                    "target":  "node-1772466291647",
+                                    "target_label":  "Restroom 2",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  13,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466291647",
+                                    "source_label":  "Restroom 2",
+                                    "target":  "node-1772465953302",
+                                    "target_label":  "304_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  11,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772465953302",
+                                    "source_label":  "304_B",
+                                    "target":  "node-1772466283421",
+                                    "target_label":  "Fire Exit 2",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  20,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466327303",
+                                    "source_label":  "Intersection 4",
+                                    "target":  "node-1772466329538",
+                                    "target_label":  "Intersection 5",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  87,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466329538",
+                                    "source_label":  "Intersection 5",
+                                    "target":  "node-1772466187901",
+                                    "target_label":  "329_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  24,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466329538",
+                                    "source_label":  "Intersection 5",
+                                    "target":  "node-1772466246129",
+                                    "target_label":  "321",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  22,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466246129",
+                                    "source_label":  "321",
+                                    "target":  "node-1772466185445",
+                                    "target_label":  "329_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  15,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466185445",
+                                    "source_label":  "329_A",
+                                    "target":  "node-1772466184531",
+                                    "target_label":  "330_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  17,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466184531",
+                                    "source_label":  "330_B",
+                                    "target":  "node-1772466180143",
+                                    "target_label":  "330_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  23,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466180143",
+                                    "source_label":  "330_A",
+                                    "target":  "node-1772467071959",
+                                    "target_label":  "Intersection 12",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  16,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772467071959",
+                                    "source_label":  "Intersection 12",
+                                    "target":  "node-1772467044470",
+                                    "target_label":  "321",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  5,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772467071959",
+                                    "source_label":  "Intersection 12",
+                                    "target":  "node-1772466178852",
+                                    "target_label":  "331_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  5.377500537750166,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772467071959",
+                                    "source_label":  "Intersection 12",
+                                    "target":  "node-1772466174242",
+                                    "target_label":  "331_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  24,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466174242",
+                                    "source_label":  "331_A",
+                                    "target":  "node-1772467028628",
+                                    "target_label":  "Intersection 11",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  16,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772467028628",
+                                    "source_label":  "Intersection 11",
+                                    "target":  "node-1772466173131",
+                                    "target_label":  "323",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  7,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772467028628",
+                                    "source_label":  "Intersection 11",
+                                    "target":  "node-1772466171435",
+                                    "target_label":  "332_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  7,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772467028628",
+                                    "source_label":  "Intersection 11",
+                                    "target":  "node-1772466168881",
+                                    "target_label":  "332_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  20,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466168881",
+                                    "source_label":  "332_A",
+                                    "target":  "node-1772466167902",
+                                    "target_label":  "333_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  18,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466167902",
+                                    "source_label":  "333_B",
+                                    "target":  "node-1772466166476",
+                                    "target_label":  "333_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  23.13959991396004,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466166476",
+                                    "source_label":  "333_A",
+                                    "target":  "node-1772466165842",
+                                    "target_label":  "334",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  15.290600129059982,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466165842",
+                                    "source_label":  "334",
+                                    "target":  "node-1772466321779",
+                                    "target_label":  "Intersection 3",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  12.569799956979978,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466321779",
+                                    "source_label":  "Intersection 3",
+                                    "target":  "node-1772466808186",
+                                    "target_label":  "Intersection 9",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  28,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466808186",
+                                    "source_label":  "Intersection 9",
+                                    "target":  "node-1772466820261",
+                                    "target_label":  "328_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  7,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466808186",
+                                    "source_label":  "Intersection 9",
+                                    "target":  "node-1772466155656",
+                                    "target_label":  "335_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  7,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466808186",
+                                    "source_label":  "Intersection 9",
+                                    "target":  "node-1772466138238",
+                                    "target_label":  "328",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  40,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466138238",
+                                    "source_label":  "328",
+                                    "target":  "node-1772466136025",
+                                    "target_label":  "335_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  13.239120038259216,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1772466136025",
+                                    "source_label":  "335_A",
+                                    "target":  "node-1772466339705",
+                                    "target_label":  "Intersection 7",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  8.560879961740739,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                }
+                            ]
+              }
+}

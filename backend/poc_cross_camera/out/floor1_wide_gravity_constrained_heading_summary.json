@@ -1,0 +1,21 @@
+{
+  "experiment": "gravity-constrained (GeoCalib) yaw-only PnP vs original 6-DoF PnP heading -- diagnostic, production unchanged",
+  "paper": {
+    "GeoCalib (Veicht et al., ECCV 2024)": "https://arxiv.org/abs/2409.06704"
+  },
+  "axis_convention_check": "validated on 10 map keyframes: gravity.vec3d cos-sim with -R[:,1] = -0.996 to -0.999",
+  "n_frames": 28,
+  "original_heading_step_stats": {
+    "median_step_deg": 63.54505011762552,
+    "mean_step_deg": 70.322328576208,
+    "n": 28
+  },
+  "constrained_heading_step_stats": {
+    "median_step_deg": 62.377100029221225,
+    "mean_step_deg": 70.16617813516197,
+    "n": 28
+  },
+  "mean_reproj_error_original_px": 2.904542619781561,
+  "mean_reproj_error_constrained_px": 11.971678571428573,
+  "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_gravity_constrained_heading.csv"
+}

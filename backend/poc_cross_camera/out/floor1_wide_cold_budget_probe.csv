@@ -1,0 +1,2 @@
+frame,time_s,candidate_matches,production_success,production_inliers,p4pf_success,p4pf_focal_px,p4pf_focal_ratio,p4pf_inliers,p4pf_median_reproj_error_px
+0,0.0,0,0,0,0,,,,

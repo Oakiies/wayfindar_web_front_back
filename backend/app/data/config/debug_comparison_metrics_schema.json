@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "baseline_mode": "orb",
+  "comparison_modes": [
+    "orb",
+    "superpoint"
+  ],
+  "frame_record": {
+    "frame_idx": "int",
+    "timestamp_seconds": "float",
+    "current_floor": "string",
+    "comparisons": {
+      "orb": {
+        "success": "bool",
+        "effective_mode": "string",
+        "localize_time_seconds": "float",
+        "position_xy": [
+          "float",
+          "float"
+        ],
+        "orientation_deg": "float|null",
+        "num_matches": "int",
+        "num_inliers": "int",
+        "matched_keyframe": "int|null",
+        "method": "string"
+      },
+      "superpoint": {
+        "success": "bool",
+        "effective_mode": "string",
+        "localize_time_seconds": "float",
+        "position_xy": [
+          "float",
+          "float"
+        ],
+        "orientation_deg": "float|null",
+        "num_matches": "int",
+        "num_inliers": "int",
+        "matched_keyframe": "int|null",
+        "method": "string"
+      }
+    }
+  },
+  "session_summary": {
+    "num_frames": "int",
+    "success_rate": {
+      "orb": "float",
+      "superpoint": "float"
+    },
+    "median_localize_time_seconds": {
+      "orb": "float",
+      "superpoint": "float"
+    }
+  }
+}

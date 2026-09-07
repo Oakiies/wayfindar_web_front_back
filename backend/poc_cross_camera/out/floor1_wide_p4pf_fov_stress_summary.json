@@ -1,0 +1,66 @@
+{
+  "experiment": "P4Pf unknown-focal solver over simulated source HFoVs",
+  "video": "D:\\wayfindar\\floor1_wide_pare.MOV",
+  "map_focal_px": 1400.0,
+  "map_hfov_deg": 68.87797861760724,
+  "reference_size": [
+    1920,
+    1080
+  ],
+  "hfovs_deg": [
+    45.0,
+    70.0,
+    90.0,
+    120.0
+  ],
+  "sampled_frames": 34,
+  "per_hfov": {
+    "45": {
+      "attempts": 34,
+      "production_successes": 25,
+      "p4pf_solver_successes": 25,
+      "p4pf_gate_10_inliers_successes": 25,
+      "median_focal_ratio_to_map": 0.3982674032528457,
+      "mean_focal_ratio_to_map": 0.45162855990721645,
+      "std_focal_ratio_to_map": 0.17684114954867908,
+      "median_inliers": 24.0
+    },
+    "70": {
+      "attempts": 34,
+      "production_successes": 33,
+      "p4pf_solver_successes": 33,
+      "p4pf_gate_10_inliers_successes": 33,
+      "median_focal_ratio_to_map": 0.6458354419046235,
+      "mean_focal_ratio_to_map": 0.6641550125647145,
+      "std_focal_ratio_to_map": 0.07431497277706013,
+      "median_inliers": 22.0
+    },
+    "90": {
+      "attempts": 34,
+      "production_successes": 32,
+      "p4pf_solver_successes": 32,
+      "p4pf_gate_10_inliers_successes": 24,
+      "median_focal_ratio_to_map": 1.024236876032469,
+      "mean_focal_ratio_to_map": 1.501349418553869,
+      "std_focal_ratio_to_map": 1.5522645389428482,
+      "median_inliers": 11.0
+    },
+    "120": {
+      "attempts": 34,
+      "production_successes": 30,
+      "p4pf_solver_successes": 30,
+      "p4pf_gate_10_inliers_successes": 7,
+      "median_focal_ratio_to_map": 3.2662040815143443,
+      "mean_focal_ratio_to_map": 6.109522152195222,
+      "std_focal_ratio_to_map": 12.921480995446961,
+      "median_inliers": 8.0
+    }
+  },
+  "solver": "PoseLib P4Pf in custom RANSAC; unknown focal, zero radial distortion",
+  "limitations": [
+    "HFoV variants are simulated because the MOV has no trusted per-device K.",
+    "Production success is the existing PnP gate, not metric pose accuracy.",
+    "This is P4Pf, not the distortion-aware P5Pfr solver."
+  ],
+  "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_p4pf_fov_stress.csv"
+}

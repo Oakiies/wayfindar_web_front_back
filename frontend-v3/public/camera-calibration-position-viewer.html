@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Camera Calibration / Position Viewer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #07111f;
+        --panel: #0e1b2d;
+        --panel-2: #12243a;
+        --line: #263b54;
+        --text: #f1f5f9;
+        --muted: #99aac0;
+        --cyan: #38bdf8;
+        --green: #4ade80;
+        --amber: #fbbf24;
+        --danger: #fb7185;
+        --shadow: 0 16px 36px rgba(0, 0, 0, 0.24);
+        color-scheme: dark;
+      }
+
+      * { box-sizing: border-box; }
+      html { background: var(--bg); }
+      body {
+        margin: 0;
+        min-width: 320px;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 85% -10%, rgba(56, 189, 248, 0.12), transparent 32rem),
+          var(--bg);
+        font-family: "Fira Sans", system-ui, sans-serif;
+      }
+      button, input { font: inherit; }
+      button { cursor: pointer; }
+      button:focus-visible, input:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+      .shell { width: min(1440px, 100%); margin: 0 auto; padding: 28px clamp(16px, 3vw, 48px) 42px; }
+      .eyebrow { margin: 0 0 7px; color: var(--cyan); font: 600 12px/1.2 "Fira Code", monospace; letter-spacing: .12em; text-transform: uppercase; }
+      h1 { margin: 0; font-size: clamp(25px, 3.4vw, 44px); line-height: 1.05; letter-spacing: -.025em; }
+      .subtitle { max-width: 760px; margin: 11px 0 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
+      .source { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; padding: 7px 11px; border: 1px solid var(--line); border-radius: 7px; color: #c7d5e6; background: rgba(14, 27, 45, .7); font: 500 12px "Fira Code", monospace; }
+      .source::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(74, 222, 128, .12); }
+      .action-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+      .action-link { display: inline-flex; align-items: center; min-height: 40px; padding: 8px 13px; border: 1px solid rgba(56, 189, 248, .55); border-radius: 7px; color: var(--text); background: rgba(56, 189, 248, .12); font-size: 13px; font-weight: 600; text-decoration: none; }
+      .action-link:hover { background: rgba(56, 189, 248, .22); }
+
+      .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 27px 0 18px; }
+      .stat, .panel { border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(145deg, rgba(18, 36, 58, .96), rgba(14, 27, 45, .96)); box-shadow: var(--shadow); }
+      .stat { padding: 17px 18px; }
+      .stat-label { color: var(--muted); font-size: 12px; }
+      .stat-value { margin-top: 7px; font: 600 clamp(21px, 2.4vw, 30px) "Fira Code", monospace; letter-spacing: -.04em; }
+      .stat-note { margin-top: 5px; color: var(--muted); font-size: 11px; }
+      .stat:nth-child(1) .stat-value { color: var(--cyan); }
+      .stat:nth-child(2) .stat-value { color: var(--green); }
+      .stat:nth-child(3) .stat-value { color: var(--amber); }
+
+      .comparison { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(340px, .96fr); gap: 18px; align-items: start; }
+      .panel { overflow: hidden; }
+      .panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 16px 18px 13px; border-bottom: 1px solid var(--line); }
+      .panel-title { margin: 0; font-size: 17px; }
+      .panel-kicker { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+      .badge { flex: 0 0 auto; padding: 5px 8px; border: 1px solid var(--line); border-radius: 5px; color: #c7d5e6; background: #0a1626; font: 500 11px "Fira Code", monospace; }
+      .media { position: relative; aspect-ratio: 16 / 9; background: #050b14; }
+      .media img { display: block; width: 100%; height: 100%; object-fit: contain; }
+      .media-overlay { position: absolute; inset: auto 12px 12px; display: flex; justify-content: space-between; gap: 8px; pointer-events: none; }
+      .overlay-badge { padding: 7px 9px; border: 1px solid rgba(255,255,255,.16); border-radius: 5px; background: rgba(5, 11, 20, .78); backdrop-filter: blur(6px); font: 500 11px "Fira Code", monospace; }
+      .map-wrap { padding: clamp(14px, 2vw, 22px); }
+      .map-stage { position: relative; width: min(100%, 560px); margin: 0 auto; border: 1px solid var(--line); background: #07111f; }
+      .map-stage img { display: block; width: 100%; height: auto; }
+      .map-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+      .map-line { stroke: var(--amber); stroke-width: 1.7; stroke-dasharray: 5 4; opacity: .9; }
+      .map-point { stroke-width: 2; vector-effect: non-scaling-stroke; }
+      .map-point.map { fill: var(--cyan); stroke: #062339; }
+      .map-point.estimated { fill: var(--green); stroke: #062719; }
+      .map-point-label { font: 600 10px "Fira Code", monospace; paint-order: stroke; stroke: #07111f; stroke-width: 3px; stroke-linejoin: round; }
+      .map-point-label.map-label { fill: var(--cyan); }
+      .map-point-label.estimated-label { fill: var(--green); }
+      .map-empty { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; color: var(--muted); background: rgba(7, 17, 31, .72); text-align: center; font-size: 13px; }
+      .map-caption { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; color: var(--muted); font-size: 12px; }
+
+      .controls { margin-top: 18px; padding: 17px 18px 19px; }
+      .control-row { display: flex; align-items: center; gap: 10px; }
+      .control-row input[type="range"] { min-width: 0; flex: 1; accent-color: var(--cyan); }
+      .control-button { min-height: 40px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 6px; color: var(--text); background: #12243a; font-size: 13px; }
+      .control-button:hover { border-color: var(--cyan); background: #17314d; }
+      .control-button.primary { border-color: rgba(56, 189, 248, .55); background: rgba(56, 189, 248, .12); }
+      .frame-counter { min-width: 75px; color: var(--muted); text-align: center; font: 500 12px "Fira Code", monospace; }
+      .range-label { display: flex; justify-content: space-between; margin-top: 9px; color: var(--muted); font: 11px "Fira Code", monospace; }
+
+      .details { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+      .detail-body { padding: 16px 18px 19px; }
+      .metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .metric { padding: 11px 12px; border: 1px solid rgba(38, 59, 84, .8); border-radius: 7px; background: rgba(7, 17, 31, .48); }
+      .metric-label { color: var(--muted); font-size: 11px; }
+      .metric-value { margin-top: 5px; font: 500 14px "Fira Code", monospace; }
+      .metric-value.map-color { color: var(--cyan); }
+      .metric-value.estimated-color { color: var(--green); }
+      .metric-value.delta-color { color: var(--amber); }
+      .legend { display: grid; gap: 10px; padding: 16px 18px 19px; }
+      .legend-item { display: flex; align-items: center; gap: 10px; color: #c7d5e6; font-size: 13px; }
+      .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+      .legend-dot.map { background: var(--cyan); }
+      .legend-dot.estimated { background: var(--green); }
+      .legend-line { width: 18px; border-top: 2px dashed var(--amber); }
+      .note { margin: 16px 0 0; padding: 11px 12px; border-left: 3px solid var(--amber); color: #bdcad9; background: rgba(251, 191, 36, .07); font-size: 12px; line-height: 1.5; }
+      .error { display: none; margin-top: 18px; padding: 15px 17px; border: 1px solid rgba(251, 113, 133, .55); border-radius: 8px; color: #fecdd3; background: rgba(136, 19, 55, .2); }
+      .loading { color: var(--muted); }
+
+      @media (max-width: 900px) {
+        .comparison { grid-template-columns: 1fr; }
+        .map-stage { width: min(100%, 560px); }
+      }
+      @media (max-width: 680px) {
+        .shell { padding-top: 21px; }
+        .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .details { grid-template-columns: 1fr; }
+        .panel-head { padding-left: 14px; padding-right: 14px; }
+        .controls, .detail-body, .legend { padding-left: 14px; padding-right: 14px; }
+        .control-row { flex-wrap: wrap; }
+        .control-row input[type="range"] { order: 3; flex-basis: 100%; }
+      }
+      @media (max-width: 420px) {
+        .stats { gap: 8px; }
+        .stat { padding: 13px; }
+        .stat-value { font-size: 18px; }
+        .media-overlay { left: 7px; right: 7px; bottom: 7px; }
+        .overlay-badge { padding: 6px; font-size: 10px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <p class="eyebrow">WayFindAR / experiment viewer</p>
+        <h1>Camera Calibration / Position Viewer</h1>
+        <p class="subtitle">ดูภาพ query พร้อมตำแหน่งที่ localize ได้บนแผนที่ และดูผลกระทบจากการใช้ค่า K คนละชุดใน timestamp เดียวกัน</p>
+        <div class="source">floor1_wide_pare.MOV · 34 sampled frames · same correspondence set</div>
+        <div class="action-row">
+          <a class="action-link" href="/?test=localizer">Test Localizer — ใส่วิดีโอและลองนำทาง</a>
+        </div>
+      </header>
+
+      <section id="stats" class="stats" aria-label="Experiment summary">
+        <article class="stat"><div class="stat-label">Map focal length</div><div id="mapFocal" class="stat-value loading">—</div><div class="stat-note">fx = fy · pixels</div></article>
+        <article class="stat"><div class="stat-label">Estimated focal length</div><div id="estimatedFocal" class="stat-value loading">—</div><div class="stat-note">image-only self-calibration</div></article>
+        <article class="stat"><div class="stat-label">Median position delta</div><div id="medianDelta" class="stat-value loading">—</div><div class="stat-note">between two K values · pixels</div></article>
+        <article class="stat"><div class="stat-label">Both successful</div><div id="bothSuccess" class="stat-value loading">—</div><div class="stat-note">same timestamps</div></article>
+      </section>
+
+      <div id="error" class="error" role="alert"></div>
+
+      <section class="comparison" aria-label="Query and map comparison">
+        <article class="panel">
+          <div class="panel-head">
+            <div><h2 class="panel-title">Query frame</h2><p class="panel-kicker">ภาพที่ใช้คำนวณตำแหน่งใน timestamp นี้</p></div>
+            <span id="frameBadge" class="badge">frame —</span>
+          </div>
+          <div class="media">
+            <img id="queryImage" alt="Query frame from floor1_wide_pare.MOV" />
+            <div class="media-overlay"><span id="timeBadge" class="overlay-badge">time —</span><span id="inlierBadge" class="overlay-badge">inliers —</span></div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div><h2 class="panel-title">Position on map</h2><p class="panel-kicker">พิกัดอ้างอิงเป็น pixel ของแผนที่ 500 × 500</p></div>
+            <span id="deltaBadge" class="badge">Δ —</span>
+          </div>
+          <div class="map-wrap">
+            <div class="map-stage">
+              <img src="./system_data/map/floor1.jpg" alt="Floor 1 map" />
+              <svg viewBox="0 0 500 500" role="img" aria-label="Map positions">
+                <line id="positionLine" class="map-line" x1="0" y1="0" x2="0" y2="0" />
+                <circle id="mapPoint" class="map-point map" r="6" cx="0" cy="0" />
+                <circle id="estimatedPoint" class="map-point estimated" r="6" cx="0" cy="0" />
+                <text id="mapLabel" class="map-point-label map-label" x="0" y="0">Map K</text>
+                <text id="estimatedLabel" class="map-point-label estimated-label" x="0" y="0">Estimated K</text>
+              </svg>
+              <div id="mapEmpty" class="map-empty">กำลังโหลดผลการคำนวณ…</div>
+            </div>
+            <div class="map-caption"><span id="mapCaption">Map K: —</span><span id="estimatedCaption">Estimated K: —</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel controls" aria-label="Frame controls">
+        <div class="control-row">
+          <button id="prevButton" class="control-button" type="button">ก่อนหน้า</button>
+          <button id="playButton" class="control-button primary" type="button">เล่นลำดับ</button>
+          <button id="nextButton" class="control-button" type="button">ถัดไป</button>
+          <span id="frameCounter" class="frame-counter">— / —</span>
+          <input id="frameSlider" type="range" min="0" max="0" value="0" step="1" aria-label="เลือก query frame" />
+        </div>
+        <div class="range-label"><span id="rangeStart">frame —</span><span id="rangeEnd">frame —</span></div>
+      </section>
+
+      <section class="details">
+        <article class="panel">
+          <div class="panel-head"><div><h2 class="panel-title">Frame metrics</h2><p class="panel-kicker">รายละเอียดของตำแหน่งที่เลือก</p></div></div>
+          <div class="detail-body"><div class="metric-grid">
+            <div class="metric"><div class="metric-label">Frame / time</div><div id="frameMetric" class="metric-value">—</div></div>
+            <div class="metric"><div class="metric-label">Position delta</div><div id="deltaMetric" class="metric-value delta-color">—</div></div>
+            <div class="metric"><div class="metric-label">Map K · inliers / reproj</div><div id="mapMetric" class="metric-value map-color">—</div></div>
+            <div class="metric"><div class="metric-label">Estimated K · inliers / reproj</div><div id="estimatedMetric" class="metric-value estimated-color">—</div></div>
+          </div></div>
+        </article>
+        <article class="panel">
+          <div class="panel-head"><div><h2 class="panel-title">How to read</h2><p class="panel-kicker">ความหมายของสัญลักษณ์ในภาพ</p></div></div>
+          <div class="legend">
+            <div class="legend-item"><span class="legend-dot map"></span><span><strong>Map K</strong> — ใช้ intrinsic จาก map</span></div>
+            <div class="legend-item"><span class="legend-dot estimated"></span><span><strong>Estimated K</strong> — ใช้ focal ที่ประมาณจากภาพ</span></div>
+            <div class="legend-item"><span class="legend-line"></span><span>เส้นประ = ระยะห่างของผลลัพธ์สองแบบ</span></div>
+            <p class="note">ค่า Δ เป็น sensitivity ต่อกล้อง matrix K ระหว่างวิธีสองแบบ ไม่ใช่ ground-truth error ของระบบ</p>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      const DATA_ROOT = "./experiment-data/floor1-wide-pare/";
+      // This compact fallback keeps the standalone page usable when opened via file://.
+      // The normal Vite path still reads the CSV and JSON files above the page.
+      const FALLBACK_CSV = `frame,time_s,map_x,map_y,map_inliers,map_reproj_px,estimated_x,estimated_y,estimated_inliers,estimated_reproj_px,delta_x_px,delta_y_px,delta_distance_px
+0,0.0,315.9255599884383,86.0319283322217,10,2.75293348360561,315.70685173143863,131.430504532423,13,2.2423593414594034,-0.2187082569996619,45.39857620020129,45.3991030121429
+300,10.004,313.8723655248136,147.15074775885319,39,4.018340157381415,316.549090523144,172.62303219922987,60,2.417566185310312,2.676724998330428,25.472284440376683,25.61253855688934
+600,20.007,297.69558560686903,183.31148564763296,25,3.641041547187895,309.4528227644821,224.66198134455132,34,2.743250086453318,11.757237157613076,41.35049569691836,42.98948848220017
+900,30.011,302.7483027532664,244.09153583677013,21,3.837174445306881,309.79784341292117,266.07796687780535,33,2.838080698132816,7.049540659654781,21.986431041035218,23.08894050047171
+1200,40.014,326.21701866528326,248.48982516980922,13,3.0189415140093927,330.57035411784364,310.74221264246296,18,2.769805897158302,4.353335452560373,62.25238747265374,62.40441711616202
+1500,50.018,340.7565799882996,323.71675851775507,18,2.781549069501898,335.658197894589,367.30120193191556,33,2.6143617546763736,-5.0983820937105975,43.58444341416049,43.88162722251337
+1800,60.021,335.84544891817677,413.97727890644734,10,4.4832600184878455,338.6876379015149,432.41896581896447,14,3.225229756110344,2.842188983338133,18.441686912517127,18.659417311275135
+2100,70.025,342.20287063052524,448.3609963571361,16,3.388319205386335,341.40942522272593,426.85224313109853,34,2.953948772203386,-0.7934454077993109,-21.508753226037584,21.5233831205445
+2400,80.028,335.4889800587392,364.5593036604613,19,2.2640237399149767,336.3717948598221,347.65224962630737,45,3.3463618753266746,0.8828148010829295,-16.90705403415393,16.930086771390506
+2700,90.032,340.2978583130338,305.43212433125996,25,3.005236722944226,312.73631332429505,306.3865947796765,44,3.4546595215695315,-27.561544988738774,0.9544704484165436,27.578066937390155
+3000,100.035,265.6556194313069,319.48166578397223,13,2.576262720857951,258.7625657903204,325.8995191875479,19,3.081153472383144,-6.893053640986466,6.417853403575691,9.418228644883541
+3300,110.039,248.86898506994442,337.9522229440853,17,3.3105280041427445,254.19955438021856,384.38204065096085,57,4.603812546971736,5.330569310274143,46.42981770687555,46.734815089666625
+3600,120.042,250.0013178486889,422.8484196854621,19,4.28394233349119,251.40172222567077,441.27426164854313,33,3.7722430135693377,1.400404376981868,18.42584196308104,18.478982235705196
+3900,130.046,258.20928431823944,433.3394450994189,19,2.3793724666102674,255.64827432341826,422.3490413490302,50,3.704489151277194,-2.561009994821177,-10.990403750388581,11.284845891288581
+4200,140.049,255.25784536184042,389.6884502213225,22,3.420946674123153,256.8618404918931,362.14942794026484,47,2.8329503891796284,1.6039951300526525,-27.53902228105767,27.58569463642022
+4500,150.053,248.0174704187588,335.6131688395527,14,2.890870408971989,275.6003612129108,317.0167955794662,23,3.2390991991397797,27.582890794152007,-18.596373260086523,33.26621353551643
+4800,160.056,314.9208348531867,344.1003140987473,13,2.2119332014383866,311.85897932326344,279.80070658025585,18,2.9697051834134305,-3.061855529923264,-64.29960751849143,64.37246683418432
+5100,170.06,301.4678616422274,267.75706925070995,15,4.214393730312092,308.6876849390567,225.4996665593884,16,2.0952488733699575,7.219823296829304,-42.257402691321545,42.86973210382762
+5400,180.063,315.8492026239483,197.36077277009855,11,3.368840180501728,315.54208317504344,171.83916754754668,22,3.03542378545,-0.30711944890487075,-25.52160522255187,25.52345304796517
+5700,190.067
+6000,200.07,325.0758141541065,150.73857418930046,18,3.112486059143662,278.199308393292,150.94923956288648,32,2.667400838739526,-46.87650576081455,0.21066537358601067,46.876979128814476
+6300,210.074,252.85389693399375,154.11749193357207,14,3.0498544480857195,202.76428955694968,149.09834607616415,21,3.0312382394502317,-50.089607377044075,-5.019145857407921,50.34044688244596
+6600,220.077,136.46789476156414,136.55866193942057,10,4.25512820928671,131.44420611864342,145.10127968444615,10,3.420096663870307,-5.0236886429207175,8.54261774502558,9.910285844446493
+6900,230.081,137.89382482406563,160.73763179303415,10,2.735652403322076,181.66074586903466,154.4632853277212,13,2.1913729851462107,43.766921044969024,-6.274346465312959,44.214373243588305
+7200,240.085,245.86396673466632,153.85180806866234,14,3.439918395789599,246.5506521764006,166.87687595674262,32,3.005897537486558,0.6866854417342836,13.025067888080287,13.043156457889712
+7500,250.088,246.0405080932241,205.66568720343807,11,4.468227668507899,259.7731900186745,215.78635957700044,13,3.089270805351509,13.732681925450379,10.120672373562371,17.059148928319377
+7800,260.092,302.6966433294937,232.99766525897942,11,3.1950062556781105,305.91742563022336,200.39257114401903,17,2.870913705219203,3.2207823007296383,-32.605094114960394,32.76378489848385
+8100,270.095,331.2117504498232,152.40487422648124,11,2.411453591327607,284.4488020636117,153.7327757075594,30,5.551009455910139,-46.76294838621152,1.3279014810781575,46.78179842753944
+8400,280.099,247.07328584124886,134.90599568581862,13,3.1776104347603256,248.09099369493592,183.1747385075324,33,4.6408674641167025,1.0177078536870567,48.26874282171377,48.27947040786799
+8700,290.102,243.81076346262654,259.9023349407271,12,2.861173893487445,277.86215104535455,228.58348412504026,14,3.756107608970249,34.05138758272801,-31.31885081568683,46.26410501376214
+9000,300.106,242.92014197669675,188.76210587260218,22,3.9320562176830904,245.7932771922488,216.88841312107112,32,3.042776946463687,2.873135215552054,28.126307248468947,28.27267347461365
+9300,310.109,246.81671446780462,261.1434898991343,19,2.2964454133245025,246.8473862049913,283.79938088138033,41,3.238773854592984,0.030671737186679593,22.655890982246035,22.65591174406537
+9600,320.113,249.14946016258162,281.9463723312435,18,3.6071138794656035,247.6466201785144,258.39683073651867,33,2.8629018735245673,-1.502839984067208,-23.549541594724815,23.59744556809879
+9900,330.116,253.6445760927365,208.62627076299006,24,3.472107953486855,254.02634155254188,184.02712540920902,28,2.651478807678997,0.38176545980539345,-24.59914535378104,24.60210757237574`;
+      const FALLBACK_SUMMARY = { map_focal_px: 1400, estimated_focal_px: 949.3154351982264, sampled_frames: 34, both_successes: 33, position_delta_px_when_both_success: { median: 27.58569463642022 } };
+      const state = { rows: [], index: 0, playing: false, timer: null };
+      const $ = (id) => document.getElementById(id);
+      const number = (value, digits = 1) => Number.isFinite(Number(value)) ? Number(value).toFixed(digits) : "—";
+      const integer = (value) => Number.isFinite(Number(value)) ? String(Math.round(Number(value))) : "—";
+      const valid = (value) => value !== "" && value !== null && value !== undefined && Number.isFinite(Number(value));
+      const parseCsv = (text) => {
+        const lines = text.trim().split(/\r?\n/);
+        const headers = lines.shift().split(",");
+        return lines.filter(Boolean).map((line) => {
+          const values = line.split(",");
+          return Object.fromEntries(headers.map((header, i) => [header, values[i] ?? ""]));
+        });
+      };
+
+      function setPoint(element, label, point, yOffset) {
+        if (!point) {
+          element.style.display = "none";
+          label.style.display = "none";
+          return;
+        }
+        element.style.display = "block";
+        label.style.display = "block";
+        element.setAttribute("cx", point.x);
+        element.setAttribute("cy", point.y);
+        label.setAttribute("x", Math.min(438, Math.max(8, point.x + 9)));
+        label.setAttribute("y", Math.min(492, Math.max(14, point.y + yOffset)));
+      }
+
+      function rowPoint(row, prefix) {
+        const x = Number(row[`${prefix}_x`]);
+        const y = Number(row[`${prefix}_y`]);
+        return Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null;
+      }
+
+      function render() {
+        const row = state.rows[state.index];
+        if (!row) return;
+        const mapPoint = rowPoint(row, "map");
+        const estimatedPoint = rowPoint(row, "estimated");
+        const delta = valid(row.delta_distance_px) ? number(row.delta_distance_px) + " px" : "—";
+        $("queryImage").src = DATA_ROOT + "frames/frame_" + String(row.frame).padStart(4, "0") + ".jpg";
+        $("frameBadge").textContent = "frame " + row.frame;
+        $("timeBadge").textContent = "time " + number(row.time_s, 2) + " s";
+        $("inlierBadge").textContent = "inliers " + (valid(row.map_inliers) ? row.map_inliers : "—") + " / " + (valid(row.estimated_inliers) ? row.estimated_inliers : "—");
+        $("deltaBadge").textContent = "Δ " + delta;
+        $("frameCounter").textContent = `${state.index + 1} / ${state.rows.length}`;
+        $("rangeStart").textContent = "frame " + state.rows[0].frame;
+        $("rangeEnd").textContent = "frame " + state.rows[state.rows.length - 1].frame;
+        $("frameMetric").textContent = `${row.frame} / ${number(row.time_s, 2)} s`;
+        $("deltaMetric").textContent = `${delta} · dx ${number(row.delta_x_px)} · dy ${number(row.delta_y_px)}`;
+        $("mapMetric").textContent = mapPoint ? `${integer(row.map_inliers)} / ${number(row.map_reproj_px, 2)} px` : "no valid pose";
+        $("estimatedMetric").textContent = estimatedPoint ? `${integer(row.estimated_inliers)} / ${number(row.estimated_reproj_px, 2)} px` : "no valid pose";
+        $("mapCaption").textContent = "Map K: " + (mapPoint ? `${number(mapPoint.x)} , ${number(mapPoint.y)}` : "no valid pose");
+        $("estimatedCaption").textContent = "Estimated K: " + (estimatedPoint ? `${number(estimatedPoint.x)} , ${number(estimatedPoint.y)}` : "no valid pose");
+        $("frameSlider").value = state.index;
+        setPoint($("mapPoint"), $("mapLabel"), mapPoint, -10);
+        setPoint($("estimatedPoint"), $("estimatedLabel"), estimatedPoint, 22);
+        if (mapPoint && estimatedPoint) {
+          $("positionLine").style.display = "block";
+          $("positionLine").setAttribute("x1", mapPoint.x); $("positionLine").setAttribute("y1", mapPoint.y);
+          $("positionLine").setAttribute("x2", estimatedPoint.x); $("positionLine").setAttribute("y2", estimatedPoint.y);
+          $("mapEmpty").style.display = "none";
+        } else {
+          $("positionLine").style.display = "none";
+          $("mapEmpty").textContent = "timestamp นี้ไม่มีผลลัพธ์ที่ valid จากทั้งสองวิธี";
+          $("mapEmpty").style.display = "grid";
+        }
+      }
+
+      function stop() {
+        state.playing = false;
+        if (state.timer) window.clearInterval(state.timer);
+        state.timer = null;
+        $("playButton").textContent = "เล่นลำดับ";
+      }
+
+      function move(step) {
+        if (!state.rows.length) return;
+        state.index = (state.index + step + state.rows.length) % state.rows.length;
+        render();
+      }
+
+      function togglePlay() {
+        if (state.playing) { stop(); return; }
+        state.playing = true;
+        $("playButton").textContent = "หยุดเล่น";
+        state.timer = window.setInterval(() => {
+          if (state.index >= state.rows.length - 1) { stop(); return; }
+          move(1);
+        }, 1500);
+      }
+
+      async function loadData() {
+        if (window.location.protocol === "file:") return { csv: FALLBACK_CSV, summary: FALLBACK_SUMMARY };
+        const [csvResponse, summaryResponse] = await Promise.all([
+          fetch(DATA_ROOT + "map_vs_estimated_k.csv"),
+          fetch(DATA_ROOT + "map_vs_estimated_k_summary.json")
+        ]);
+        if (!csvResponse.ok || !summaryResponse.ok) throw new Error("โหลดข้อมูลผลทดลองไม่สำเร็จ");
+        return { csv: await csvResponse.text(), summary: await summaryResponse.json() };
+      }
+
+      async function init() {
+        try {
+          const loaded = await loadData();
+          state.rows = parseCsv(loaded.csv);
+          const summary = loaded.summary;
+          $("mapFocal").textContent = number(summary.map_focal_px, 1);
+          $("estimatedFocal").textContent = number(summary.estimated_focal_px, 1);
+          $("medianDelta").textContent = number(summary.delta_distance_px?.median, 1) + " px";
+          $("bothSuccess").textContent = `${summary.both_successes}/${summary.sampled_frames}`;
+          $("frameSlider").max = Math.max(0, state.rows.length - 1);
+          $("mapEmpty").style.display = "none";
+          render();
+        } catch (error) {
+          $("error").textContent = error.message + " — ตรวจสอบว่าเปิดจากโฟลเดอร์ public ที่ถูกต้อง";
+          $("error").style.display = "block";
+          $("mapEmpty").textContent = "ไม่สามารถโหลดข้อมูลได้";
+        }
+      }
+
+      $("prevButton").addEventListener("click", () => move(-1));
+      $("nextButton").addEventListener("click", () => move(1));
+      $("playButton").addEventListener("click", togglePlay);
+      $("frameSlider").addEventListener("input", (event) => { state.index = Number(event.target.value); render(); });
+      window.addEventListener("keydown", (event) => {
+        if (event.target.matches("input, button")) return;
+        if (event.key === "ArrowLeft") move(-1);
+        if (event.key === "ArrowRight") move(1);
+        if (event.key === " ") { event.preventDefault(); togglePlay(); }
+      });
+      init();
+    </script>
+  </body>
+</html>

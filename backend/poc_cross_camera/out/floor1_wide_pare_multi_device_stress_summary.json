@@ -1,0 +1,43 @@
+{
+  "video": "D:\\wayfindar\\floor1_wide_pare.MOV",
+  "protocol": {
+    "sampled_frames": 34,
+    "step_seconds": 10,
+    "simulated_hfovs_deg": [45, 70, 90, 120],
+    "map_focal_px": 1400.0,
+    "map_hfov_deg": 68.87797861760724
+  },
+  "fixed_virtual_camera_localization": {
+    "raw_production": {"successes": 33, "attempts": 34, "rate": 0.9705882352941176},
+    "vc_hfov_45": {"successes": 28, "attempts": 34, "rate": 0.8235294117647058, "trajectory_consistent": 22},
+    "vc_hfov_70": {"successes": 31, "attempts": 34, "rate": 0.9117647058823529, "trajectory_consistent": 31},
+    "vc_hfov_90": {"successes": 32, "attempts": 34, "rate": 0.9411764705882353, "trajectory_consistent": 32},
+    "vc_hfov_120": {"successes": 32, "attempts": 34, "rate": 0.9411764705882353, "trajectory_consistent": 32}
+  },
+  "p4pf_unknown_focal": {
+    "vc_hfov_45": {"solver_successes": 25, "gate_10_inliers": 25, "median_focal_ratio_to_map": 0.3982674032528457, "median_inliers": 24.0},
+    "vc_hfov_70": {"solver_successes": 33, "gate_10_inliers": 33, "median_focal_ratio_to_map": 0.6458354419046235, "median_inliers": 22.0},
+    "vc_hfov_90": {"solver_successes": 32, "gate_10_inliers": 24, "median_focal_ratio_to_map": 1.024236876032469, "median_inliers": 11.0},
+    "vc_hfov_120": {"solver_successes": 30, "gate_10_inliers": 7, "median_focal_ratio_to_map": 3.2662040815143443, "median_inliers": 8.0}
+  },
+  "interpretation": [
+    "This is a controlled HFoV simulation, not a physical multi-phone capture with ground-truth intrinsics.",
+    "A solver success without an inlier/uncertainty gate is not a reliable focal estimate.",
+    "The wide-FoV 120-degree case is especially unstable under finite-FoV rendering and sparse correspondences.",
+    "The current clip does not justify replacing the raw production path with one fixed virtual-camera FOV."
+  ],
+  "recommended_deployment": {
+    "primary": "Estimate calibration from image geometry only: use GeoCalib/vanishing-point initialization, then unknown-focal P4Pf/P5Pfr RANSAC and aggregate focal across a short session.",
+    "no_external_calibration_dependency": true,
+    "validation": "Accept a focal estimate only when multi-frame median/dispersion, reprojection error, inlier count, and trajectory consistency pass gates.",
+    "temporal_refinement": "Refine K, per-frame pose, and optionally local 3D structure from tracked multi-frame geometry with bundle adjustment.",
+    "fallback": "Keep raw localization as the first path; try estimated-K/virtual-camera hypotheses only when confidence is low. Use multi-FoV or 360-degree map coverage for cameras whose FoV has little overlap with the map."
+  },
+  "source_outputs": {
+    "fixed_fov_csv": "out/floor1_wide_pare_fov_stress.csv",
+    "fixed_fov_summary": "out/floor1_wide_pare_fov_stress_summary.json",
+    "fixed_fov_trajectory": "out/floor1_wide_pare_fov_stress_trajectory_consistency.json",
+    "p4pf_csv": "out/floor1_wide_p4pf_fov_stress.csv",
+    "p4pf_summary": "out/floor1_wide_p4pf_fov_stress_summary.json"
+  }
+}

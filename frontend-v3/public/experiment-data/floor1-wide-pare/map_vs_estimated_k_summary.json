@@ -1,0 +1,55 @@
+{
+  "experiment": "same-correspondence position comparison: map K vs estimated K",
+  "video": "D:\\wayfindar\\floor1_wide_pare.MOV",
+  "map_K": [
+    [
+      1400.0,
+      0.0,
+      964.7
+    ],
+    [
+      0.0,
+      1400.0,
+      546.2
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "estimated_K": [
+    [
+      949.3154351982264,
+      0.0,
+      964.7
+    ],
+    [
+      0.0,
+      949.3154351982264,
+      546.2
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "map_focal_px": 1400.0,
+  "estimated_focal_px": 949.3154351982264,
+  "focal_ratio_estimated_to_map": 0.6780824537130189,
+  "map_hfov_deg": 68.87797861760724,
+  "estimated_hfov_deg": 90.64124980888941,
+  "sampled_frames": 34,
+  "map_successes": 33,
+  "estimated_successes": 33,
+  "both_successes": 33,
+  "position_delta_px_when_both_success": {
+    "median": 27.58569463642022,
+    "mean": 32.18979359523481,
+    "p95": 55.16603497593237,
+    "max": 64.37246683418432
+  },
+  "caveat": "No metric ground truth; delta measures sensitivity to K, not which K is correct.",
+  "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_map_vs_estimated_k_pare.csv"
+}

@@ -1,0 +1,4 @@
+frame,time_s,config,kind,source_hfov,yaw_deg,exact_reference_size,valid_pixel_fraction,success,failure_stage,method,x_px,y_px,matched_keyframe,retrieval_top1,retrieval_top1_score,num_matches,num_inliers,inlier_ratio,median_reproj_error,max_candidate_matches,max_raw_pnp_inliers,elapsed_s
+0,0.0,raw_production,raw,,0.0,0,1.0,0,pnp_insufficient_inliers,,,,,3092,0.43424508,0,0,0.0,inf,25,9,0.669
+0,0.0,raw_exact_1920x1080,raw,,0.0,1,1.0,0,quality_or_pose_gate,,,,,3092,0.43424508,0,0,0.0,inf,27,10,0.184
+0,0.0,vc_hfov_90_yaw_+0,virtual_camera,90.0,0.0,1,1.0,0,pnp_insufficient_inliers,,,,,3096,0.33825205,0,0,0.0,inf,15,5,0.149

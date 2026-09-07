@@ -1,0 +1,42 @@
+{
+  "source_csv": "out\\floor1_wide_production_validation53_topk20.csv",
+  "method": "MAD-based outlier flag (|modified z| > 3.5) on consecutive position-jump and heading-jump magnitudes; no absolute meters-per-pixel scale is available for this map, so this is a relative/self-normalizing check, not an absolute speed gate.",
+  "per_config": [
+    {
+      "config": "raw_production",
+      "total_timestamps": 53,
+      "gate_pass_successes": 28,
+      "gate_pass_rate": 0.5283018867924528,
+      "trajectory_consistent_successes": 28,
+      "trajectory_consistent_rate": 0.5283018867924528,
+      "flagged_as_position_or_heading_outlier": 0,
+      "has_heading_logged": false,
+      "median_position_jump_px": 68.72804714234212,
+      "median_heading_jump_deg": null
+    },
+    {
+      "config": "raw_exact_1920x1080",
+      "total_timestamps": 53,
+      "gate_pass_successes": 29,
+      "gate_pass_rate": 0.5471698113207547,
+      "trajectory_consistent_successes": 29,
+      "trajectory_consistent_rate": 0.5471698113207547,
+      "flagged_as_position_or_heading_outlier": 0,
+      "has_heading_logged": false,
+      "median_position_jump_px": 65.08769331225545,
+      "median_heading_jump_deg": null
+    },
+    {
+      "config": "vc_hfov_70_yaw_+0",
+      "total_timestamps": 53,
+      "gate_pass_successes": 29,
+      "gate_pass_rate": 0.5471698113207547,
+      "trajectory_consistent_successes": 29,
+      "trajectory_consistent_rate": 0.5471698113207547,
+      "flagged_as_position_or_heading_outlier": 0,
+      "has_heading_logged": false,
+      "median_position_jump_px": 62.64140826281513,
+      "median_heading_jump_deg": null
+    }
+  ]
+}

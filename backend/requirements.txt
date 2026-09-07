@@ -1,0 +1,39 @@
+fastapi
+uvicorn
+python-multipart
+werkzeug
+opencv-python
+numpy
+networkx
+torch
+torchvision
+h5py
+pycolmap
+poselib
+# hloc will be installed via: pip install git+https://github.com/cvg/Hierarchical-Localization
+# SuperGluePretrainedNetwork will be cloned manually to the project directory
+scipy
+matplotlib
+networkx
+Pillow
+packaging
+tqdm
+imageio-ffmpeg
+
+# Accelerated inference stack (app/services/accel.py, opt-in via NAV_ACCEL=1 —
+# see app/config.py ACCEL_MODE): ONNX MegaLoc retrieval + SuperPoint/LightGlue
+# matching, ported from navigate_indoor/poc_megaloc_onnx + poc_lightglue.
+# Only needed if you turn NAV_ACCEL on.
+# WARNING (hit before, see navigate_indoor/poc_lightglue/README.md): both of
+# these can silently pull a CPU-only torch wheel from PyPI and clobber an
+# existing CUDA build. Install them with torch pinned/constrained, e.g.:
+#   pip install -r requirements.txt --index-url https://download.pytorch.org/whl/cu124
+# then run `python -c "import torch; print(torch.cuda.is_available())"` and
+# reinstall the matching cu12x torch/torchvision build if it prints False.
+onnxruntime-gpu==1.20.1
+lightglue @ git+https://github.com/cvg/LightGlue.git
+
+# Parses the Lucide icon path data rendered onto the AR direction card
+# (poc_ar_arrow/lucide_icons.py). Was already present transitively; pinned here
+# now that it is imported directly.
+svg.path==7.0

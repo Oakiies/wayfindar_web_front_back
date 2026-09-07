@@ -1,0 +1,15 @@
+{
+  "experiment": "sharpest-frame-in-window as the query for every timestamp (not just failures)",
+  "paper": {
+    "Cho & Lee, Simultaneous Localization Mapping and Deblurring (ICCV 2011)": "https://doi.org/10.1109/ICCV.2011.6126370"
+  },
+  "top_k": 4,
+  "window_s": 0.5,
+  "total_timestamps": 53,
+  "baseline_same_frame_successes": 22,
+  "sharpest_policy_successes": 24,
+  "per_timestamp_gains": 3,
+  "per_timestamp_losses": 1,
+  "net_delta": 2,
+  "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_sharpest_policy_repeat_topk4.csv"
+}

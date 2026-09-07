@@ -1,0 +1,15 @@
+{
+  "experiment": "PoseLib P4Pf minimal solver wrapped in query-side RANSAC",
+  "paper": {
+    "Kukelova et al., ICCV 2013 P4Pfr/P5Pfr family": "https://openaccess.thecvf.com/content_iccv_2013/html/Kukelova_Real-Time_Solution_to_2013_ICCV_paper.html"
+  },
+  "solver": "P4Pf (unknown focal, zero radial distortion), not P5Pfr",
+  "map_focal_px": 1400.0,
+  "sampled_frames": 1,
+  "p4pf_successes": 0,
+  "median_focal_ratio": null,
+  "mean_focal_ratio": null,
+  "std_focal_ratio": null,
+  "median_inliers": null,
+  "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_cold_budget_probe.csv"
+}

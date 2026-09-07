@@ -1,0 +1,66 @@
+# Local environments and dependency trees
+**/.venv/
+**/venv/
+**/env/
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.git/
+**/.git-embedded-backup/
+
+# Local certificates, editor files and logs
+**/.dev_ssl/
+**/.vscode/
+**/.idea/
+*.log
+*.local
+*.pyc
+*.pyo
+*.pyd
+*.swp
+.DS_Store
+Thumbs.db
+
+# Archived/legacy copies are kept locally but are not part of this repo
+_archive/
+backend/_archive*/
+
+# Runtime uploads, temporary frames and generated caches
+backend/app/runtime/
+backend/app/data/map_data/
+backend/app/data/models/
+backend/app/data/demo/
+backend/**/uploads/
+backend/**/temp_frames/
+backend/**/hloc_work_dir/
+
+# Generated numerical/model artifacts
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.safetensors
+
+# Walkthrough videos and rendered video evidence
+*.mp4
+*.MP4
+*.mov
+*.MOV
+*.avi
+*.AVI
+*.mkv
+*.MKV
+*.m4v
+*.M4V
+*.webm
+*.WEBM

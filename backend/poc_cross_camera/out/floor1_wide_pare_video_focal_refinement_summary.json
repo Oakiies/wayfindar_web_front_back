@@ -1,0 +1,34 @@
+{
+  "experiment": "video-level robust focal aggregation",
+  "paper_relation": {
+    "inspiration": "multi-view/video self-calibration",
+    "note": "robust session-level aggregation; not a reproduction of full Deep Geometry-Aware Camera Self-Calibration from Video"
+  },
+  "assumption": "intrinsics are constant within one video/session",
+  "map_focal_px": 1400.0,
+  "image_width_px": 1920,
+  "pnpf_adaptation": {
+    "n": 33,
+    "median_focal_px": 1080.0,
+    "mad_px": 120.0,
+    "robust_threshold_px": 300.0,
+    "robust_inlier_n": 30,
+    "robust_focal_px": 1070.0,
+    "focal_ratio_to_map": 0.7642857142857142,
+    "implied_hfov_deg": 83.79667194026308,
+    "min_focal_px": 760.0,
+    "max_focal_px": 2000.0
+  },
+  "geocalib": {
+    "n": 34,
+    "median_focal_px": 902.2794799804688,
+    "mad_px": 34.993133544921875,
+    "robust_threshold_px": 87.48283386230469,
+    "robust_inlier_n": 30,
+    "robust_focal_px": 905.2518920898438,
+    "focal_ratio_to_map": 0.6466084943498884,
+    "implied_hfov_deg": 93.36247901648026,
+    "min_focal_px": 725.6357421875,
+    "max_focal_px": 1016.4072265625
+  }
+}

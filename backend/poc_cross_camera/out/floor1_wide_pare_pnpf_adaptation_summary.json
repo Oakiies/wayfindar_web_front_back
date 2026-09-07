@@ -1,0 +1,15 @@
+{
+  "experiment": "map-grounded query focal-length check via grid search on accepted inlier correspondences",
+  "method_note": "Grid search over shared f (500-3000px step 20), R/t re-solved per candidate via SOLVEPNP_ITERATIVE on the already-accepted inlier set. This is a coarse stand-in for a closed-form PnPf solver, used only to test the direction/magnitude of any focal mismatch.",
+  "map_focal_px": 1400.0,
+  "n_frames_analyzed": 33,
+  "median_focal_ratio_query_over_map": 0.7714285714285715,
+  "mean_focal_ratio_query_over_map": 0.790909090909091,
+  "std_focal_ratio_query_over_map": 0.16461263094352585,
+  "interpretation": "ratio near 1.0 => query and map focal length agree; the clip's failures are not explained by a focal/FoV mismatch, so HFoV-sweep and single-image self-calibration should not be expected to move success rate. ratio far from 1.0 => mismatch is real and self-calibration (e.g. GeoCalib) is worth the added dependency.",
+  "papers": {
+    "PnPf/P4Pfr (Kukelova et al., ICCV 2013)": "https://openaccess.thecvf.com/content_iccv_2013/html/Kukelova_Real-Time_Solution_to_2013_ICCV_paper.html",
+    "GeoCalib (Veicht et al., ECCV 2024)": "https://arxiv.org/abs/2409.06704"
+  },
+  "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_pare_pnpf_adaptation.csv"
+}

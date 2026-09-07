@@ -1,0 +1,17 @@
+{
+  "experiment": "confidence-triggered adaptive top-k cascade (escalate on cheap-top-k failure only)",
+  "papers": {
+    "To Match or Not to Match (Barbarani et al., 2025)": "https://arxiv.org/abs/2504.06116"
+  },
+  "cheap_top_k": 4,
+  "expensive_top_k": 20,
+  "n_timestamps": 34,
+  "cheap_only_successes": 28,
+  "cascade_final_successes": 32,
+  "n_escalated": 6,
+  "escalation_rate": 0.17647058823529413,
+  "mean_latency_s": 0.2554647058823529,
+  "median_latency_s": 0.1572,
+  "p95_latency_s": 0.7686399999999998,
+  "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_pare_adaptive_cascade.csv"
+}

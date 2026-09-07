@@ -1,0 +1,1250 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wayfindar Map Symbols</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
+
+<style>
+  :root {
+    --paper: #eaedf1;
+    --surface: #f8f9fb;
+    --surface-2: #eff1f5;
+    --ink: #12161d;
+    --ink-2: #5b6472;
+    --ink-3: #8a929e;
+    --line: rgba(18, 22, 29, 0.13);
+    --line-hard: rgba(18, 22, 29, 0.28);
+    --route: #0d6efd;
+    --route-ink: #0b5ed7;
+    --dest: #ef4444;
+    --dest-ink: #d92d2d;
+    --origin: #0f172a;
+    --origin-ink: #0f172a;
+    --focus: #0d6efd;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0d1016;
+      --surface: #151a22;
+      --surface-2: #1b212b;
+      --ink: #e9edf3;
+      --ink-2: #99a3b1;
+      --ink-3: #6d7887;
+      --line: rgba(233, 237, 243, 0.14);
+      --line-hard: rgba(233, 237, 243, 0.3);
+      --route-ink: #6aa6ff;
+      --dest-ink: #ff8080;
+      --origin-ink: #c3ccda;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #0d1016;
+    --surface: #151a22;
+    --surface-2: #1b212b;
+    --ink: #e9edf3;
+    --ink-2: #99a3b1;
+    --ink-3: #6d7887;
+    --line: rgba(233, 237, 243, 0.14);
+    --line-hard: rgba(233, 237, 243, 0.3);
+    --route-ink: #6aa6ff;
+    --dest-ink: #ff8080;
+    --origin-ink: #c3ccda;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Spectral, Georgia, serif;
+    font-size: 16px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 60px) clamp(18px, 4vw, 44px) 96px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(32px, 4vw, 52px);
+  }
+
+  h1, h2, h3, .ui { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; }
+
+  .eyebrow {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  h1 {
+    font-size: clamp(30px, 5vw, 46px);
+    font-weight: 700;
+    letter-spacing: -0.028em;
+    line-height: 1.05;
+    text-wrap: balance;
+    margin: 10px 0 0;
+  }
+
+  .lede {
+    margin: 14px 0 0;
+    max-width: 62ch;
+    color: var(--ink-2);
+    font-size: 17px;
+  }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .facts b { color: var(--ink); font-weight: 500; }
+
+  /* ---- Stage: live floor plan + controls ---- */
+
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.85fr);
+    gap: clamp(20px, 3vw, 36px);
+    align-items: start;
+  }
+  @media (max-width: 860px) { .stage { grid-template-columns: 1fr; } }
+
+  .plate {
+    position: relative;
+    background: #e8e4dd;
+    border: 1px solid var(--line-hard);
+    border-radius: 4px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    cursor: grab;
+    touch-action: none;
+  }
+  .plate:active { cursor: grabbing; }
+  .plate svg { display: block; width: 100%; height: 100%; }
+
+  .plate-tag {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    padding: 5px 9px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 3px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: #12161d;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .panel h2 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  .ctl { display: flex; flex-direction: column; gap: 7px; }
+  .ctl-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+  }
+  .ctl-head span:first-child { color: var(--ink-2); }
+  .ctl-head output { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 22px;
+    background: transparent;
+    cursor: pointer;
+    margin: 0;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--line-hard);
+  }
+  input[type="range"]::-moz-range-track {
+    height: 2px;
+    background: var(--line-hard);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    margin-top: -6px;
+    border-radius: 50%;
+    background: var(--route);
+    border: 2px solid var(--surface);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--surface);
+    border-radius: 50%;
+    background: var(--route);
+  }
+  input[type="range"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+  .toggles { display: flex; flex-direction: column; gap: 2px; }
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+  .toggle:last-child { border-bottom: 0; }
+  .toggle input { accent-color: var(--route); width: 14px; height: 14px; margin: 0; }
+  .toggle .swatch { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+
+  button.reset {
+    font-family: Archivo, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 9px 12px;
+    border: 1px solid var(--line-hard);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  button.reset:hover { background: var(--surface-2); }
+  button.reset:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .hint {
+    font-size: 13px;
+    color: var(--ink-3);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* ---- Symbol specimens ---- */
+
+  .section-head { display: flex; flex-direction: column; gap: 6px; }
+  .section-head h2 {
+    margin: 0;
+    font-size: clamp(19px, 2.4vw, 24px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .section-head p { margin: 0; color: var(--ink-2); max-width: 60ch; }
+
+  .specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+  }
+
+  .spec {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+  }
+  .spec-fig {
+    background: #e8e4dd;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    place-items: center;
+    padding: 22px 0;
+  }
+  .spec-fig svg { display: block; }
+  .spec-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; }
+  .spec-body h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .spec-body p { margin: 0; font-size: 14px; color: var(--ink-2); line-height: 1.55; }
+
+  dl {
+    margin: 4px 0 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 14px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  dt { color: var(--ink-3); }
+  dd { margin: 0; color: var(--ink); text-align: right; }
+
+  .tag {
+    align-self: flex-start;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 2px;
+    border: 1px solid currentColor;
+  }
+  .tag.route { color: var(--route-ink); }
+  .tag.dest { color: var(--dest-ink); }
+  .tag.origin { color: var(--origin-ink); }
+
+  .note {
+    border-left: 2px solid var(--line-hard);
+    padding: 2px 0 2px 18px;
+    color: var(--ink-2);
+    max-width: 66ch;
+  }
+  .note code, .inline-code {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.86em;
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+
+  /* ---- Variant picker ---- */
+
+  .choices { display: flex; flex-direction: column; gap: 2px; }
+  .choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .choice:last-child { border-bottom: 0; }
+  .choice input { accent-color: var(--route); width: 14px; height: 14px; margin: 3px 0 0; flex: none; }
+  .choice .txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .choice .nm {
+    font-family: Archivo, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .choice .th {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .choice input:checked ~ .txt .nm { color: var(--route-ink, var(--route)); }
+
+  /* ---- Variant gallery ---- */
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .card.is-active { border-color: var(--route); box-shadow: 0 0 0 1px var(--route); }
+
+  .card-fig {
+    position: relative;
+    background: #e8e4dd;
+    border-bottom: 1px solid var(--line);
+    aspect-ratio: 3 / 2;
+  }
+  .card-fig svg { display: block; width: 100%; height: 100%; }
+
+  .card-fig .idx {
+    position: absolute;
+    top: 8px;
+    left: 9px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    color: #12161d;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 2px;
+    padding: 2px 6px;
+  }
+
+  .card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .card-body h3 { margin: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; }
+  .card-body p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+  .card-body .pick {
+    align-self: flex-start;
+    margin-top: 2px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 2px;
+    border: 1px solid var(--line-hard);
+    background: transparent;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+  .card-body .pick:hover { background: var(--surface-2); color: var(--ink); }
+  .card-body .pick:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .card.is-active .pick { border-color: var(--route); color: var(--route-ink, var(--route)); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Wayfindar · MapCanvas.tsx</div>
+    <h1>Wayfindar Map Symbols</h1>
+    <p class="lede">
+      สัญลักษณ์ทั้งสี่ที่วาดลงบนแผนผังอาคาร วาดด้วยสูตรและค่าคงที่ชุดเดียวกับในโค้ดจริง
+      ลากเพื่อเลื่อน หมุนสไลเดอร์เพื่อซูม — ทุกสัญลักษณ์คงขนาดเท่าเดิมบนจอทุกระดับการซูม
+      เส้นทางเป็นเส้นตรงทึบ ส่วนตำแหน่งของฉันเลือกได้หกแบบจากแผงด้านขวา
+    </p>
+    <div class="facts">
+      <span><b>Floor 1</b> · 39 nodes / 44 edges</span>
+      <span>Route <b>Auditorium → M21_B</b></span>
+      <span>16 hops · <b>498</b> units</span>
+      <span>viewBox <b>500 × 500</b></span>
+    </div>
+  </header>
+
+  <section class="stage">
+    <div class="plate" id="plate">
+      <svg id="map" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet" aria-label="Floor 1 plan with origin, route and destination symbols"></svg>
+      <div class="plate-tag" id="plateTag">zoom 1.0×</div>
+    </div>
+
+    <div class="panel">
+      <h2>Controls</h2>
+
+      <div class="ctl">
+        <div class="ctl-head"><span>zoom</span><output id="zoomOut">1.0×</output></div>
+        <input type="range" id="zoom" min="1" max="6" step="0.1" value="1" aria-label="Zoom level">
+      </div>
+
+      <div class="ctl">
+        <div class="ctl-head"><span>heading</span><output id="headOut">90°</output></div>
+        <input type="range" id="head" min="0" max="359" step="1" value="90" aria-label="User heading in degrees">
+      </div>
+
+      <div class="ctl">
+        <div class="ctl-head"><span>walk progress</span><output id="progOut">38%</output></div>
+        <input type="range" id="prog" min="0" max="100" step="1" value="38" aria-label="Position along the route">
+      </div>
+
+      <div class="toggles">
+        <label class="toggle"><input type="checkbox" id="tOrigin" checked><span class="swatch" style="background:#0f172a"></span>origin</label>
+        <label class="toggle"><input type="checkbox" id="tRoute" checked><span class="swatch" style="background:#0d6efd"></span>route</label>
+        <label class="toggle"><input type="checkbox" id="tPose" checked><span class="swatch" style="background:#0d6efd"></span>user pose</label>
+        <label class="toggle"><input type="checkbox" id="tDest" checked><span class="swatch" style="background:#ef4444"></span>destination</label>
+      </div>
+
+      <div class="ctl">
+        <h2>ชุดสี</h2>
+        <div class="choices" id="schemeChoices"></div>
+      </div>
+
+      <div class="ctl">
+        <h2>เส้นทาง</h2>
+        <div class="choices" id="routeChoices"></div>
+      </div>
+
+      <div class="ctl">
+        <h2>จุดตำแหน่ง</h2>
+        <div class="choices" id="dotChoices"></div>
+      </div>
+
+      <div class="ctl">
+        <h2>ใบพัดบอกทิศ</h2>
+        <div class="choices" id="poseChoices"></div>
+      </div>
+
+      <button class="reset" id="reset" type="button">Reset view</button>
+
+      <p class="hint">ลากบนแผนผังเพื่อเลื่อน · สกรอลล์เพื่อซูม · ปุ่มบนคือค่าเดียวกับที่ผู้ใช้ทำได้จริงในแอป</p>
+    </div>
+  </section>
+
+  <section class="section-head">
+    <h2>เลือกแบบตำแหน่งของฉัน</h2>
+    <p>
+      หกแบบบนเส้นทางเดียวกัน ระยะเดียวกัน หันทิศเดียวกัน — ต่างกันแค่สัญลักษณ์ตำแหน่ง
+      ทุกแบบเป็นสีทึบล้วน ไม่มี gradient จุดกลมสีฟ้าขอบขาวขนาดเท่ากันหมด
+      กดปุ่มใต้การ์ดเพื่อส่งแบบนั้นขึ้นไปดูบนแผนผังใหญ่ด้านบน
+    </p>
+  </section>
+
+  <div class="gallery" id="gallery"></div>
+
+  <section class="section-head">
+    <h2>สัญลักษณ์ทีละตัว</h2>
+    <p>
+      แต่ละตัวขยายให้เห็นรายละเอียด พร้อมค่าจริงที่ใช้ในโค้ด — ตัวเลขทั้งหมดคูณด้วย
+      <span class="inline-code">unitsPerPixel</span> ก่อนวาด จึงคงขนาดบนจอทุกระดับซูม
+    </p>
+  </section>
+
+  <div class="specs">
+    <article class="spec">
+      <div class="spec-fig"><svg id="figOrigin" width="150" height="120" viewBox="-75 -60 150 120"></svg></div>
+      <div class="spec-body">
+        <span class="tag origin">origin</span>
+        <h3>จุดต้นทาง</h3>
+        <p>วงแหวนกลวง สื่อว่า “เริ่มจากที่นี่” ไม่ใช่หมุดปัก ไม่มีตัวอักษรกำกับ</p>
+        <dl>
+          <dt>radius</dt><dd>8</dd>
+          <dt>ring</dt><dd>0.30 × r</dd>
+          <dt>core</dt><dd>0.36 × r</dd>
+          <dt>fill</dt><dd>#0f172a</dd>
+        </dl>
+      </div>
+    </article>
+
+    <article class="spec">
+      <div class="spec-fig"><svg id="figRoute" width="150" height="120" viewBox="-75 -60 150 120"></svg></div>
+      <div class="spec-body">
+        <span class="tag route">route</span>
+        <h3 id="routeSpecName">Dotted trail + casing</h3>
+        <p id="routeSpecNote">เส้นตรงทึบ · 4 px ไม่มีขอบขาว</p>
+        <dl>
+          <dt>dot radius</dt><dd>4</dd>
+          <dt>casing radius</dt><dd>6.2</dd>
+          <dt>spacing</dt><dd>17</dd>
+          <dt>joins</dt><dd>round</dd>
+          <dt>fill</dt><dd>#0d6efd</dd>
+        </dl>
+      </div>
+    </article>
+
+    <article class="spec">
+      <div class="spec-fig"><svg id="figPose" width="150" height="120" viewBox="-75 -60 150 120"></svg></div>
+      <div class="spec-body">
+        <span class="tag route">pose</span>
+        <h3 id="poseSpecName">Radar sector</h3>
+        <p id="poseSpecNote">—</p>
+        <dl>
+          <dt>dot r</dt><dd>7</dd>
+          <dt>ring</dt><dd>0.42 × r</dd>
+          <dt>fill</dt><dd>#0d6efd</dd>
+          <dt>gradient</dt><dd>none</dd>
+        </dl>
+      </div>
+    </article>
+
+    <article class="spec">
+      <div class="spec-fig"><svg id="figDest" width="150" height="120" viewBox="-75 -60 150 120"></svg></div>
+      <div class="spec-body">
+        <span class="tag dest">destination</span>
+        <h3>จุดหมาย</h3>
+        <p>หัวกลมกับส่วนเรียวบรรจบกันด้วยเส้นสัมผัสวงกลม ปลายหมุดปักตรงพิกัดจริง</p>
+        <dl>
+          <dt>radius</dt><dd>12 / 16</dd>
+          <dt>height</dt><dd>3.35 × r</dd>
+          <dt>stroke</dt><dd>0.20 × r</dd>
+          <dt>hole</dt><dd>0.34 × r</dd>
+        </dl>
+      </div>
+    </article>
+  </div>
+
+  <p class="note">
+    จุดตำแหน่งเล็กลงเหลือ <code>r = 7</code> ได้เพราะไม่ต้องแข่งน้ำหนักกับเส้นทางอีกแล้ว —
+    เส้นทางเป็น “เส้น” ส่วนตำแหน่งเป็น “จุด + ใบพัด” คนละรูปทรงกัน ต่อให้สีเดียวกันก็แยกออก
+    ตอนที่ทั้งคู่ยังเป็นวงกลมสีฟ้าขอบขาวเหมือนกัน ต้องดันจุดตำแหน่งให้ใหญ่ขึ้นเรื่อย ๆ เพื่อให้เห็น
+  </p>
+
+  <p class="note">
+    เลือกได้แล้วบอกหมายเลขมา เดี๋ยวย้ายค่าลง <code>src/components/MapCanvas.tsx</code> ให้ —
+    ตอนนี้ในโค้ดจริงตั้งไว้เป็นแบบ 01 Radar sector กับเส้นทางแบบเส้นตรงอยู่แล้ว
+  </p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var MAP_SIZE = 500;
+  var MIN_ZOOM = 1;
+  var MAX_ZOOM = 6;
+
+  var ROUTE_COLOR = '#0d6efd';
+  var POSE_COLOR = '#0d6efd';
+  var ORIGIN_COLOR = '#0f172a';
+  var DEST_COLOR = '#ef4444';
+  var POSE_RADIUS = 11;
+
+  var MAP_HREF = '/system_data/map/floor1.jpg';
+
+  // Real shortest path on floor 1: Auditorium -> M21_B.
+  var ROUTE = [
+    [140, 146], [207, 146], [241, 146], [250, 146], [313, 146], [313, 215],
+    [313, 253], [338, 312], [338, 333], [338, 351], [338, 378.85], [338, 391],
+    [338, 408], [338, 433.43], [338, 446], [338, 466]
+  ].map(function (p) { return { x: p[0], y: p[1] }; });
+
+  var ORIGIN = ROUTE[0];
+  var DEST = ROUTE[ROUTE.length - 1];
+
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  function clampView(v) {
+    var size = clamp(v.size, MAP_SIZE / MAX_ZOOM, MAP_SIZE / MIN_ZOOM);
+    var half = size / 2;
+    return {
+      size: size,
+      cx: clamp(v.cx, half, MAP_SIZE - half),
+      cy: clamp(v.cy, half, MAP_SIZE - half)
+    };
+  }
+
+  // Emits a point every `spacing` units along the polyline.
+  function sampleAlongPath(points, spacing) {
+    if (points.length < 2 || spacing <= 0) return [];
+    var out = [points[0]];
+    var carried = 0;
+    for (var i = 1; i < points.length; i++) {
+      var a = points[i - 1], b = points[i];
+      var dx = b.x - a.x, dy = b.y - a.y;
+      var len = Math.hypot(dx, dy);
+      if (len === 0) continue;
+      var travelled = spacing - carried;
+      while (travelled <= len) {
+        var t = travelled / len;
+        out.push({ x: a.x + dx * t, y: a.y + dy * t });
+        travelled += spacing;
+      }
+      carried = (carried + len) % spacing;
+    }
+    return out;
+  }
+
+  function pointAtFraction(points, fraction) {
+    var total = 0, i;
+    for (i = 1; i < points.length; i++) total += Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y);
+    var target = total * clamp(fraction, 0, 1);
+    var walked = 0;
+    for (i = 1; i < points.length; i++) {
+      var a = points[i - 1], b = points[i];
+      var len = Math.hypot(b.x - a.x, b.y - a.y);
+      if (walked + len >= target) {
+        var t = len === 0 ? 0 : (target - walked) / len;
+        return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+      }
+      walked += len;
+    }
+    return points[points.length - 1];
+  }
+
+  function polar(cx, cy, r, rad) { return { x: cx + Math.cos(rad) * r, y: cy + Math.sin(rad) * r }; }
+
+  function conePath(cx, cy, rad, spread, r) {
+    var s = polar(cx, cy, r, rad - spread);
+    var e = polar(cx, cy, r, rad + spread);
+    return 'M ' + cx + ' ' + cy + ' L ' + s.x + ' ' + s.y +
+           ' A ' + r + ' ' + r + ' 0 0 1 ' + e.x + ' ' + e.y + ' Z';
+  }
+
+  // Circle of `radius` centred `distance` above the tip, closed by tangent lines.
+  function pinPath(radius, distance) {
+    var cosPhi = radius / distance;
+    var sinPhi = Math.sqrt(Math.max(0, 1 - cosPhi * cosPhi));
+    var tx = radius * sinPhi;
+    var ty = -distance + radius * cosPhi;
+    return 'M 0 0 L ' + tx + ' ' + ty +
+           ' A ' + radius + ' ' + radius + ' 0 1 0 ' + (-tx) + ' ' + ty + ' Z';
+  }
+
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(name, attrs) {
+    var node = document.createElementNS(NS, name);
+    for (var k in attrs) node.setAttribute(k, attrs[k]);
+    return node;
+  }
+
+  function drawOrigin(parent, x, y, radius, color) {
+    var g = el('g', { transform: 'translate(' + x + ' ' + y + ')' });
+    g.appendChild(el('circle', { cx: 0, cy: 0, r: radius, fill: '#ffffff' }));
+    g.appendChild(el('circle', { cx: 0, cy: 0, r: radius, fill: 'none', stroke: color, 'stroke-width': radius * 0.3 }));
+    g.appendChild(el('circle', { cx: 0, cy: 0, r: radius * 0.36, fill: color }));
+    parent.appendChild(g);
+  }
+
+  function drawDest(parent, x, y, radius, color) {
+    var g = el('g', { transform: 'translate(' + x + ' ' + y + ')' });
+    g.appendChild(el('path', {
+      d: pinPath(radius, radius * 2.35), fill: color,
+      stroke: '#ffffff', 'stroke-width': radius * 0.2, 'stroke-linejoin': 'round'
+    }));
+    g.appendChild(el('circle', { cx: 0, cy: -radius * 2.35, r: radius * 0.34, fill: '#ffffff' }));
+    parent.appendChild(g);
+  }
+
+  /* ---------- route styles ---------- */
+
+  // One unbroken stroke: white casing under an accent line, both scaled like
+  // every other symbol so the route keeps its weight at any zoom.
+  function routePath(points) {
+    return points.map(function (pt, i) {
+      return (i === 0 ? 'M ' : 'L ') + pt.x + ' ' + pt.y;
+    }).join(' ');
+  }
+
+  function drawRouteLine(parent, points, unit) {
+    var d = routePath(points);
+    var common = { fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' };
+    parent.appendChild(el('path', Object.assign({ d: d, stroke: '#ffffff', 'stroke-width': 7.4 * unit }, common)));
+    parent.appendChild(el('path', Object.assign({ d: d, stroke: ROUTE_COLOR, 'stroke-width': 4 * unit }, common)));
+  }
+
+  // No casing: the line has to hold on its own colour where it crosses a room.
+  function drawRouteBare(parent, points, unit) {
+    parent.appendChild(el('path', {
+      d: routePath(points), fill: 'none', stroke: ROUTE_COLOR,
+      'stroke-width': 4 * unit, 'stroke-linecap': 'round', 'stroke-linejoin': 'round'
+    }));
+  }
+
+  // Evenly spaced dots, measured along the true arc length rather than per vertex.
+  function trail(parent, points, unit, casing) {
+    var dots = sampleAlongPath(points, 17 * unit);
+    if (casing) {
+      var under = el('g', {});
+      dots.forEach(function (d) {
+        under.appendChild(el('circle', { cx: d.x, cy: d.y, r: 6.2 * unit, fill: '#ffffff' }));
+      });
+      parent.appendChild(under);
+    }
+    var fills = el('g', {});
+    dots.forEach(function (d) {
+      fills.appendChild(el('circle', { cx: d.x, cy: d.y, r: 4 * unit, fill: ROUTE_COLOR }));
+    });
+    parent.appendChild(fills);
+  }
+
+  function drawRouteDots(parent, points, unit) { trail(parent, points, unit, true); }
+  function drawRouteDotsBare(parent, points, unit) { trail(parent, points, unit, false); }
+
+  var ROUTE_STYLES = [
+    { id: 'bare', nm: 'Solid line, no casing', th: 'เส้นตรงทึบ · 4 px ไม่มีขอบขาว', draw: drawRouteBare },
+    { id: 'line', nm: 'Solid line + casing', th: 'เส้นตรงทึบ · 4 px + ขอบขาว 7.4', draw: drawRouteLine },
+    { id: 'dots-bare', nm: 'Dotted trail, no casing', th: 'จุดไข่ปลา · r 4 ไม่มีขอบขาว', draw: drawRouteDotsBare },
+    { id: 'dots', nm: 'Dotted trail + casing', th: 'จุดไข่ปลา · r 4 + ขอบขาว 6.2', draw: drawRouteDots }
+  ];
+
+  /* ---------- colour schemes ---------- */
+  //
+  // Judged against what this plan actually is: 60% light grey #ececec, 12%
+  // turquoise rooms (#a5d8d9 / #6dc8c9), black wall lines. `cr` is WCAG
+  // contrast on the darker turquoise, the hardest ground here - #0d6efd scores
+  // 1.80, so today's route survives on its white casing, not on its colour.
+
+  var SCHEMES = [
+    { id: 'A', nm: 'One accent', th: 'ฟ้าเดียวกันทั้งคู่ (ปัจจุบัน)',
+      route: '#0d6efd', pose: '#0d6efd', cr: 'route 1.80 · pose 1.80' },
+    { id: 'B', nm: 'Two-step blue', th: 'ทางน้ำเงินเข้ม · ฉันฟ้าสด',
+      route: '#0a49c4', pose: '#0d6efd', cr: 'route 3.04 · pose 1.80' },
+    { id: 'C', nm: 'Graphite path', th: 'ทางเทาเข้ม · ฉันเป็นสีเดียวบนแผนที่',
+      route: '#3a4453', pose: '#0d6efd', cr: 'route 3.94 · pose 1.80' },
+    { id: 'D', nm: 'Navy path', th: 'ทางกรมท่า · ฉันฟ้าสว่าง',
+      route: '#123a8f', pose: '#2b8bff', cr: 'route 4.15 · pose 1.55' },
+    { id: 'E', nm: 'Violet me', th: 'ทางฟ้า · ฉันม่วง',
+      route: '#0d6efd', pose: '#7c3aed', cr: 'route 1.80 · pose 2.28' },
+
+    // Green is crowded here: the rooms are mint (hue 164), the lifts are neon
+    // lime (hue 85), and the app already spends #22c55e on the lift marker.
+    // Only a dark green clears all three - #22c55e itself scores 1.10 on the
+    // turquoise and sits 0 degrees from that marker.
+    { id: 'F', nm: 'Forest path', th: 'ทางเขียวเข้ม · ฉันฟ้า',
+      route: '#14532d', pose: '#0d6efd', cr: 'route 3.65 · pose 1.80' },
+    { id: 'G', nm: 'Two-step green', th: 'เขียวเข้ม + เขียวกลาง',
+      route: '#14532d', pose: '#15803d', cr: 'route 3.65 · pose 2.01' },
+    { id: 'H', nm: 'Green me', th: 'ทางฟ้า · ฉันเขียว',
+      route: '#0d6efd', pose: '#15803d', cr: 'route 1.80 · pose 2.01' },
+
+    // Orange is squeezed between two colours the app already spends: the stairs
+    // marker #f59e0b (hue 38) and the destination pin #e5484d (hue 358).
+    // #ea580c (hue 21) is the widest gap available - 17 degrees from the stairs,
+    // 22 from the pin - and it buys hue contrast against any blue or green path,
+    // which separates more strongly than a contrast ratio does.
+    { id: 'I', nm: 'Orange me', th: 'ทางฟ้า · ฉันส้ม',
+      route: '#0d6efd', pose: '#ea580c', cr: 'route 1.80 · pose 1.42' },
+    { id: 'J', nm: 'Graphite + orange', th: 'ทางเทาเข้ม · ฉันส้ม',
+      route: '#3a4453', pose: '#ea580c', cr: 'route 3.94 · pose 1.42' },
+    { id: 'K', nm: 'Forest + orange', th: 'ทางเขียวเข้ม · ฉันส้ม',
+      route: '#14532d', pose: '#ea580c', cr: 'route 3.65 · pose 1.42' }
+  ];
+
+  /* ---------- pose variants ---------- */
+  //
+  // Every variant draws the same core: an accent disc in a white ring, small on
+  // purpose. What differs is how the heading is stated. Nothing here uses a
+  // gradient - the fans are one flat fill with a flat outline, which is what
+  // keeps them readable over the dark parts of a floor plan.
+
+  var DOT_R = 7;           // accent disc, screen px
+  var DOT_RING = 0.42;     // white ring, as a fraction of the disc
+
+  // The casing is what carries a symbol over a dark ground - but the pose is
+  // always ON the route, and the route runs down corridors, where a bare disc
+  // already scores 3.81 against #ececec. It only weakens inside a room.
+  var dotRing = true;
+
+  function drawDot(g, x, y, unit) {
+    var attrs = { cx: x, cy: y, r: DOT_R * unit, fill: POSE_COLOR };
+    if (dotRing) {
+      attrs.stroke = '#ffffff';
+      attrs['stroke-width'] = DOT_R * DOT_RING * unit;
+    }
+    g.appendChild(el('circle', attrs));
+  }
+
+  var DOT_STYLES = [
+    { id: 'bare', nm: 'No casing', th: 'จุดล้วน · ทางเดิน 3.81' },
+    { id: 'ring', nm: 'White casing', th: 'มีขอบขาว · ยืนได้ทุกพื้น' }
+  ];
+
+  function fan(g, x, y, rad, spreadDeg, r, unit, fillOpacity, edgeOpacity) {
+    var spread = spreadDeg * Math.PI / 180;
+    var d = conePath(x, y, rad, spread, r * unit);
+    g.appendChild(el('path', { d: d, fill: POSE_COLOR, opacity: fillOpacity }));
+    if (edgeOpacity) {
+      g.appendChild(el('path', {
+        d: d, fill: 'none', stroke: POSE_COLOR, 'stroke-width': 1.4 * unit,
+        'stroke-linejoin': 'round', opacity: edgeOpacity
+      }));
+    }
+  }
+
+  function arcStroke(g, x, y, rad, spreadDeg, r, unit, width, opacity) {
+    var spread = spreadDeg * Math.PI / 180;
+    var a = polar(x, y, r * unit, rad - spread);
+    var b = polar(x, y, r * unit, rad + spread);
+    g.appendChild(el('path', {
+      d: 'M ' + a.x + ' ' + a.y + ' A ' + (r * unit) + ' ' + (r * unit) + ' 0 0 1 ' + b.x + ' ' + b.y,
+      fill: 'none', stroke: POSE_COLOR, 'stroke-width': width * unit,
+      'stroke-linecap': 'round', opacity: opacity
+    }));
+  }
+
+  var POSE_VARIANTS = [
+    {
+      id: 'sector',
+      nm: 'Radar sector',
+      th: 'ใบพัดเรดาร์ · ±32° r 30',
+      note: 'ใบพัดหนึ่งชิ้น ขอบโค้ง ทึบแบน มีเส้นขอบบาง ๆ กันจมไปกับพื้นสีเข้ม อ่านว่า “กำลังหันไปทางนี้” ตรงที่สุด',
+      draw: function (g, x, y, rad, unit) {
+        fan(g, x, y, rad, 32, 30, unit, 0.32, 0.62);
+        drawDot(g, x, y, unit);
+      }
+    },
+    {
+      id: 'beam',
+      nm: 'Long beam',
+      th: 'ลำแคบยาว · ±16° r 46',
+      note: 'แคบและยาวกว่า ชี้ทิศได้แม่นกว่าเวลาเดินตรงยาว ๆ แต่กินพื้นที่แผนที่มากกว่าเมื่อซูมเข้า',
+      draw: function (g, x, y, rad, unit) {
+        fan(g, x, y, rad, 16, 46, unit, 0.28, 0.7);
+        drawDot(g, x, y, unit);
+      }
+    },
+    {
+      id: 'sweep',
+      nm: 'Radar with range rings',
+      th: 'ใบพัด + วงระยะ 2 ชั้น',
+      note: 'ใบพัดจาง ๆ กับส่วนโค้งสองเส้นแบบจอเรดาร์ ให้ความรู้สึกว่าเป็นค่าที่กำลังสแกนอยู่ตลอด แลกกับรายละเอียดที่เยอะที่สุดในชุดนี้',
+      draw: function (g, x, y, rad, unit) {
+        fan(g, x, y, rad, 34, 34, unit, 0.2, 0);
+        arcStroke(g, x, y, rad, 34, 20, unit, 1.3, 0.5);
+        arcStroke(g, x, y, rad, 34, 34, unit, 1.6, 0.75);
+        drawDot(g, x, y, unit);
+      }
+    },
+    {
+      id: 'chevron',
+      nm: 'Chevron on the ring',
+      th: 'ลูกศรเกาะขอบวง · ไม่มีใบพัด',
+      note: 'สะอาดที่สุด บังแผนที่น้อยที่สุด เป็นแบบที่แอปแผนที่ส่วนใหญ่ใช้ แต่ทิศอ่านยากกว่าใบพัดตอนสัญลักษณ์เล็ก',
+      draw: function (g, x, y, rad, unit) {
+        var base = polar(x, y, DOT_R * 1.5 * unit, rad);
+        var tip = polar(x, y, DOT_R * 2.9 * unit, rad);
+        var l = polar(x, y, DOT_R * 1.62 * unit, rad - 0.62);
+        var r = polar(x, y, DOT_R * 1.62 * unit, rad + 0.62);
+        g.appendChild(el('path', {
+          d: 'M ' + tip.x + ' ' + tip.y + ' L ' + l.x + ' ' + l.y + ' L ' + base.x + ' ' + base.y + ' L ' + r.x + ' ' + r.y + ' Z',
+          fill: POSE_COLOR, stroke: '#ffffff', 'stroke-width': 1.6 * unit, 'stroke-linejoin': 'round'
+        }));
+        drawDot(g, x, y, unit);
+      }
+    },
+    {
+      id: 'torch',
+      nm: 'Wide torch',
+      th: 'ลำกว้างสั้น · ±62° r 22',
+      note: 'กว้างเกือบครึ่งวง สั้น อ่านเป็น “ด้านหน้าของฉันคือฝั่งนี้” มากกว่าทิศเป๊ะ ๆ เหมาะตอน heading ยังไม่นิ่ง',
+      draw: function (g, x, y, rad, unit) {
+        fan(g, x, y, rad, 62, 22, unit, 0.3, 0.55);
+        drawDot(g, x, y, unit);
+      }
+    },
+    {
+      id: 'needle',
+      nm: 'Compass needle',
+      th: 'เข็มทิศ · แท่งเรียว r 34',
+      note: 'เข็มเรียวทึบเต็มสี ไม่มีพื้นที่โปร่ง จึงชัดที่สุดบนผังที่ลายเยอะ แต่ดูเป็นเครื่องมือมากกว่าเป็นตัวเรา',
+      draw: function (g, x, y, rad, unit) {
+        var tip = polar(x, y, 34 * unit, rad);
+        var l = polar(x, y, DOT_R * 1.1 * unit, rad - Math.PI / 2);
+        var r = polar(x, y, DOT_R * 1.1 * unit, rad + Math.PI / 2);
+        g.appendChild(el('path', {
+          d: 'M ' + tip.x + ' ' + tip.y + ' L ' + l.x + ' ' + l.y + ' L ' + r.x + ' ' + r.y + ' Z',
+          fill: POSE_COLOR, stroke: '#ffffff', 'stroke-width': 1.5 * unit, 'stroke-linejoin': 'round'
+        }));
+        drawDot(g, x, y, unit);
+      }
+    }
+  ];
+
+  var poseVariant = POSE_VARIANTS[0];
+  var routeStyle = ROUTE_STYLES[3];
+
+  function drawPose(parent, x, y, headingDeg, unit, variant) {
+    var g = el('g', {});
+    (variant || poseVariant).draw(g, x, y, headingDeg * Math.PI / 180, unit);
+    parent.appendChild(g);
+  }
+
+  /* ---------- live plate ---------- */
+
+  var svg = document.getElementById('map');
+  var plate = document.getElementById('plate');
+  var plateTag = document.getElementById('plateTag');
+  var zoomInput = document.getElementById('zoom');
+  var headInput = document.getElementById('head');
+  var progInput = document.getElementById('prog');
+  var zoomOut = document.getElementById('zoomOut');
+  var headOut = document.getElementById('headOut');
+  var progOut = document.getElementById('progOut');
+  var toggles = {
+    origin: document.getElementById('tOrigin'),
+    route: document.getElementById('tRoute'),
+    pose: document.getElementById('tPose'),
+    dest: document.getElementById('tDest')
+  };
+
+  var view = { cx: MAP_SIZE / 2, cy: MAP_SIZE / 2, size: MAP_SIZE };
+
+  function render() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    svg.setAttribute('viewBox',
+      (view.cx - view.size / 2) + ' ' + (view.cy - view.size / 2) + ' ' + view.size + ' ' + view.size);
+
+    var unit = view.size / MAP_SIZE;
+
+    svg.appendChild(el('image', {
+      href: MAP_HREF, x: 0, y: 0, width: MAP_SIZE, height: MAP_SIZE, preserveAspectRatio: 'none'
+    }));
+
+    if (toggles.route.checked) routeStyle.draw(svg, ROUTE, unit);
+    if (toggles.origin.checked) drawOrigin(svg, ORIGIN.x, ORIGIN.y, 8 * unit, ORIGIN_COLOR);
+    if (toggles.dest.checked) drawDest(svg, DEST.x, DEST.y, 12 * unit, DEST_COLOR);
+    if (toggles.pose.checked) {
+      var p = pointAtFraction(ROUTE, progInput.value / 100);
+      drawPose(svg, p.x, p.y, Number(headInput.value), unit);
+    }
+
+    var zoom = MAP_SIZE / view.size;
+    plateTag.textContent = 'zoom ' + zoom.toFixed(1) + '×';
+    zoomOut.textContent = zoom.toFixed(1) + '×';
+    headOut.textContent = headInput.value + '°';
+    progOut.textContent = progInput.value + '%';
+    if (Math.abs(Number(zoomInput.value) - zoom) > 0.05) zoomInput.value = zoom.toFixed(1);
+  }
+
+  function toMapPoint(clientX, clientY) {
+    var rect = svg.getBoundingClientRect();
+    var drawn = Math.min(rect.width, rect.height);
+    if (drawn <= 0) return null;
+    var scale = drawn / view.size;
+    return {
+      x: view.cx - view.size / 2 + (clientX - rect.left - (rect.width - drawn) / 2) / scale,
+      y: view.cy - view.size / 2 + (clientY - rect.top - (rect.height - drawn) / 2) / scale
+    };
+  }
+
+  function zoomAround(clientX, clientY, factor) {
+    var anchor = toMapPoint(clientX, clientY);
+    var next = clampView({ cx: view.cx, cy: view.cy, size: view.size / factor });
+    if (anchor) {
+      var ratio = next.size / view.size;
+      next = clampView({
+        size: next.size,
+        cx: anchor.x + (view.cx - anchor.x) * ratio,
+        cy: anchor.y + (view.cy - anchor.y) * ratio
+      });
+    }
+    view = next;
+    render();
+  }
+
+  plate.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    zoomAround(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0016));
+  }, { passive: false });
+
+  var pointers = new Map();
+  var pinchDistance = null;
+
+  plate.addEventListener('pointerdown', function (e) {
+    plate.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    pinchDistance = null;
+  });
+
+  plate.addEventListener('pointermove', function (e) {
+    var prev = pointers.get(e.pointerId);
+    if (!prev) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    if (pointers.size >= 2) {
+      var vals = Array.from(pointers.values());
+      var d = Math.hypot(vals[0].x - vals[1].x, vals[0].y - vals[1].y);
+      var last = pinchDistance;
+      pinchDistance = d;
+      if (last && d > 0) zoomAround((vals[0].x + vals[1].x) / 2, (vals[0].y + vals[1].y) / 2, d / last);
+      return;
+    }
+
+    var rect = svg.getBoundingClientRect();
+    var drawn = Math.min(rect.width, rect.height);
+    var perPixel = drawn > 0 ? view.size / drawn : 1;
+    view = clampView({
+      size: view.size,
+      cx: view.cx - (e.clientX - prev.x) * perPixel,
+      cy: view.cy - (e.clientY - prev.y) * perPixel
+    });
+    render();
+  });
+
+  function endPointer(e) {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinchDistance = null;
+  }
+  plate.addEventListener('pointerup', endPointer);
+  plate.addEventListener('pointercancel', endPointer);
+
+  zoomInput.addEventListener('input', function () {
+    view = clampView({ cx: view.cx, cy: view.cy, size: MAP_SIZE / Number(zoomInput.value) });
+    render();
+  });
+  headInput.addEventListener('input', render);
+  progInput.addEventListener('input', render);
+  Object.keys(toggles).forEach(function (k) { toggles[k].addEventListener('change', render); });
+
+  document.getElementById('reset').addEventListener('click', function () {
+    view = { cx: MAP_SIZE / 2, cy: MAP_SIZE / 2, size: MAP_SIZE };
+    zoomInput.value = 1;
+    headInput.value = 90;
+    progInput.value = 38;
+    render();
+  });
+
+  render();
+
+  /* ---------- specimens ---------- */
+
+  drawOrigin(document.getElementById('figOrigin'), 0, 0, 26, ORIGIN_COLOR);
+  drawDest(document.getElementById('figDest'), 0, 34, 22, DEST_COLOR);
+
+  var FIG_ROUTE = [{ x: -58, y: 22 }, { x: 6, y: 22 }, { x: 6, y: -26 }, { x: 58, y: -26 }];
+
+  // Both specimens follow whatever is selected in the panel.
+  function renderSpecimens() {
+    var figPose = document.getElementById('figPose');
+    var figRoute = document.getElementById('figRoute');
+    while (figPose.firstChild) figPose.removeChild(figPose.firstChild);
+    while (figRoute.firstChild) figRoute.removeChild(figRoute.firstChild);
+    drawPose(figPose, -8, 0, 0, 1.9);
+    routeStyle.draw(figRoute, FIG_ROUTE, 1.55);
+    document.getElementById('poseSpecName').textContent = poseVariant.nm;
+    document.getElementById('poseSpecNote').textContent = poseVariant.note;
+    document.getElementById('routeSpecName').textContent = routeStyle.nm;
+    document.getElementById('routeSpecNote').textContent = routeStyle.th;
+  }
+
+  /* ---------- variant gallery ---------- */
+
+  // Each tile is a close-up of the same stretch of corridor, so the only thing
+  // that changes between tiles is the symbol under test.
+  var TILE_ZOOM = 2.9;
+  var TILE_PROGRESS = 0.38;
+
+  function renderTile(host, variant) {
+    var svgTile = host.querySelector('svg');
+    while (svgTile.firstChild) svgTile.removeChild(svgTile.firstChild);
+
+    var pose = pointAtFraction(ROUTE, TILE_PROGRESS);
+    var size = MAP_SIZE / TILE_ZOOM;
+    var v = clampView({ cx: pose.x, cy: pose.y, size: size });
+    svgTile.setAttribute('viewBox',
+      (v.cx - v.size / 2) + ' ' + (v.cy - v.size / 2) + ' ' + v.size + ' ' + v.size);
+
+    // The tile uses preserveAspectRatio="slice", so the viewBox is scaled to
+    // COVER the box - the longer side sets the scale, not the shorter one.
+    var rect = svgTile.getBoundingClientRect();
+    var drawn = Math.max(rect.width, rect.height) || 270;
+    var unit = v.size / drawn;
+
+    svgTile.appendChild(el('image', {
+      href: MAP_HREF, x: 0, y: 0, width: MAP_SIZE, height: MAP_SIZE, preserveAspectRatio: 'none'
+    }));
+    routeStyle.draw(svgTile, ROUTE, unit);
+    drawPose(svgTile, pose.x, pose.y, Number(headInput.value), unit, variant);
+  }
+
+  var gallery = document.getElementById('gallery');
+
+  POSE_VARIANTS.forEach(function (variant, i) {
+    var card = document.createElement('article');
+    card.className = 'card';
+    card.dataset.variant = variant.id;
+    card.innerHTML =
+      '<div class="card-fig">' +
+        '<svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="' + variant.nm + '"></svg>' +
+        '<span class="idx">' + String(i + 1).padStart(2, '0') + '</span>' +
+      '</div>' +
+      '<div class="card-body">' +
+        '<h3>' + variant.nm + '</h3>' +
+        '<p>' + variant.note + '</p>' +
+        '<button class="pick" type="button">ใช้แบบนี้</button>' +
+      '</div>';
+    card.querySelector('.pick').addEventListener('click', function () {
+      selectPose(variant.id);
+      document.getElementById('plate').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    gallery.appendChild(card);
+  });
+
+  function renderGallery() {
+    Array.prototype.forEach.call(gallery.children, function (card, i) {
+      card.classList.toggle('is-active', POSE_VARIANTS[i].id === poseVariant.id);
+      renderTile(card, POSE_VARIANTS[i]);
+    });
+  }
+
+  /* ---------- pickers ---------- */
+
+  function buildChoices(hostId, list, name, onPick, selectedId) {
+    var host = document.getElementById(hostId);
+    list.forEach(function (item, i) {
+      var lab = document.createElement('label');
+      lab.className = 'choice';
+      lab.innerHTML =
+        '<input type="radio" name="' + name + '" value="' + item.id + '"' +
+          ((selectedId ? item.id === selectedId : i === 0) ? ' checked' : '') + '>' +
+        '<span class="txt"><span class="nm">' + item.nm + '</span><span class="th">' + item.th + '</span></span>';
+      lab.querySelector('input').addEventListener('change', function () { onPick(item.id); });
+      host.appendChild(lab);
+    });
+  }
+
+  function selectPose(id) {
+    poseVariant = POSE_VARIANTS.filter(function (v) { return v.id === id; })[0] || POSE_VARIANTS[0];
+    var input = document.querySelector('input[name="pose"][value="' + id + '"]');
+    if (input) input.checked = true;
+    render();
+    renderSpecimens();
+    renderGallery();
+  }
+
+  function selectRoute(id) {
+    routeStyle = ROUTE_STYLES.filter(function (v) { return v.id === id; })[0] || ROUTE_STYLES[3];
+    render();
+    renderSpecimens();
+    renderGallery();
+  }
+
+  function selectScheme(id) {
+    var scheme = SCHEMES.filter(function (v) { return v.id === id; })[0] || SCHEMES[0];
+    ROUTE_COLOR = scheme.route;
+    POSE_COLOR = scheme.pose;
+    document.querySelectorAll('.toggle .swatch').forEach(function (sw, i) {
+      if (i === 1) sw.style.background = ROUTE_COLOR;
+      if (i === 2) sw.style.background = POSE_COLOR;
+    });
+    render();
+    renderSpecimens();
+    renderGallery();
+  }
+
+  function selectDot(id) {
+    dotRing = id === 'ring';
+    render();
+    renderSpecimens();
+    renderGallery();
+  }
+
+  buildChoices('dotChoices', DOT_STYLES, 'dot', selectDot, 'ring');
+  buildChoices('schemeChoices', SCHEMES.map(function (v) {
+    return { id: v.id, nm: v.id + '  ' + v.nm, th: v.th + ' · ' + v.cr };
+  }), 'scheme', selectScheme);
+  buildChoices('poseChoices', POSE_VARIANTS, 'pose', selectPose);
+  buildChoices('routeChoices', ROUTE_STYLES, 'route', selectRoute, 'dots');
+
+  headInput.addEventListener('input', renderGallery);
+
+  renderSpecimens();
+  renderGallery();
+  window.addEventListener('resize', renderGallery);
+})();
+</script>
+</body>
+</html>

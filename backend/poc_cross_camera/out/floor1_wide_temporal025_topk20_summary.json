@@ -1,0 +1,21 @@
+{
+  "metric": "timestamp coverage using a nearby frame; not same-frame success",
+  "baseline_csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_production_validation53_topk20.csv",
+  "baseline_config": "raw_production",
+  "baseline_successes": 28,
+  "total_timestamps": 53,
+  "failed_timestamps_tested": 25,
+  "offsets_seconds": [
+    -0.25,
+    0.25
+  ],
+  "recovered_timestamps": 3,
+  "covered_timestamps": 31,
+  "coverage_rate": 0.5849056603773585,
+  "top_k": 20,
+  "pipeline": "MegaLoc + SuperPoint/LightGlue + PnP, fixed existing map",
+  "paper": {
+    "SeqSLAM": "https://doi.org/10.1109/ICRA.2012.6224623"
+  },
+  "output_csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_temporal025_topk20.csv"
+}

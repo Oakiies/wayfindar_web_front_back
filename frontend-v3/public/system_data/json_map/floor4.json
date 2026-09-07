@@ -1,0 +1,867 @@
+﻿{
+    "graph":  {
+                  "directed":  false,
+                  "metadata":  {
+                                   "building_name":  "เธญเธฒเธเธฒเธฃเธเธญเธเธเธฑเธ",
+                                   "floors":  [
+                                                  4
+                                              ],
+                                   "created_date":  "2026-03-13",
+                                   "scale":  1,
+                                   "defined_types":  [
+                                                         {
+                                                             "id":  "intersection",
+                                                             "label":  "Intersection",
+                                                             "color":  "#3b82f6"
+                                                         },
+                                                         {
+                                                             "id":  "room_access",
+                                                             "label":  "Room Access",
+                                                             "color":  "#14b8a6"
+                                                         },
+                                                         {
+                                                             "id":  "entrance",
+                                                             "label":  "Entrance",
+                                                             "color":  "#10b981"
+                                                         },
+                                                         {
+                                                             "id":  "restroom",
+                                                             "label":  "Restroom",
+                                                             "color":  "#06b6d4"
+                                                         },
+                                                         {
+                                                             "id":  "elevator",
+                                                             "label":  "Elevator",
+                                                             "color":  "#8b5cf6"
+                                                         },
+                                                         {
+                                                             "id":  "stairs",
+                                                             "label":  "Stairs",
+                                                             "color":  "#f59e0b"
+                                                         },
+                                                         {
+                                                             "id":  "fire_exit",
+                                                             "label":  "Fire Exit",
+                                                             "color":  "#ef4444"
+                                                         },
+                                                         {
+                                                             "id":  "poi",
+                                                             "label":  "POI",
+                                                             "color":  "#ec4899"
+                                                         },
+                                                         {
+                                                             "id":  "room",
+                                                             "label":  "Room",
+                                                             "color":  "#6366f1"
+                                                         }
+                                                     ],
+                                   "floor_images":  {
+                                                        "4":  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAWBZJREFUeAHt3Q2clXWd///PGW5UcEbNGe3nEOi2yQyVW3HjdgNmUIlZArpqKfBvd9MegZVWJuBtCWi12m/Fku2/2wJpbilDNwatYAm2myjVrjcz2I1CYCpj6YyMd3DO73p/z/W9znUOZ4a5Ozdzzuvp43jOuc51zgzDcN7n871NtLe3pwwAAAxpNQYAAIY8Ah0AgApAoAMAUAGGG4AsDQ0NVgh79uwxACgUKnQAACoAgQ4AQAUg0AEAqAD0oaNP6uvrrdIlEgkDgKGGCh0AgApAhY5+ua1tuw2G85vGD8rrDdbryAXNTQYAQw0VOgAAFYBABwZo+PDhlkqlur3U1PDPDEDh0eQO9JMGzyWTSXvttdfcojHx8H7xxRdt586dVldXZ29729sYaAeg4CgdgH5QQH/+85+3p59+2t3fv3+/HXPMMW4WwN/8zd/YL37xC2tsbIyCPMGehgAKjEAH+kAVuCpxVebjx4+3Y4891h0fPnyYu1aAL1myxD760Y9G50uKAh1AgRHoGLA9u3db69at7nrtipvdsQ2rV9mWlpas83a0trrjO1rbBvxam4P7Pb1Wb19H5+i1dF7csGHDoj7wQw891F2rr3zChAnutprUTz31vS7AdRk2LNN79corr9DEDqDoCHQMmEKyPQrEhHV1dlhXR0cQkrvcbe+hTRutPmiGDurVAb/WtNmzbVRtnY3rZopZb19nR1urTZgyxV3H7du3z5599ln73e9+5/rC//u//9v1lf/v//6vC+vRo0fbuHHH2+9//3s78sgjbcGCBVGIq3p/9dVXs16PeAdQaAQ6BkRVb3MQiHuDkGxwYW22t6PTRtXVBeE9xt1WBazq/KXOTps0fUYQnm0Dfi1V1P6cgbyOPBZU6V3BsVyHHnqYHXHEETZy5Eg78cQTbcSIEW6Q29133+1C+4wzzrBt27bZD37wA/vABz7gKnf3tfbudR8AAKCYCHQMSPPkKe46Hoij62rdfd+MrWp6XHOzjW1qdkE6Knh8oK+lpnKF9kBfx5+T+z2lw7vWbaU6btw4O/roo11gdwYfSh599FHXN3766afbOeecY9OmTbO/+7u/i56rDwFTp07Nej3GxAEotER7ezvvNeg1v5Z7Na0Up/50VelHHXWUvetd77I1a9bYxIkT7ZFHHrELL7zQvvWtb9kzzzzjBsip2f3GG2+0z372s/aHP/zBurq67K1vfas7zn7oAAqJeejAQag/XU3r+jCjwXDTp093VboozEWh76maV5M8ABQTgQ4chMJac8vFD3w799xzbcuWLa5PXc4+++zo9j/8wz/Y6tWr7atf/aprugeAYiDQgYNQtR2fhqYR7hr5/o//+I+uWV2Ly6hpXeeon91fa3DcE088YQBQDAQ60EtvfOMb7YQTTrA3velNdsMNN9jatWvtZz+7zz71qU9ae3t7t8/zi9EAQCER6EAPFMYKcvWjf+ELX7AZM2bYPffcY1/72tfs2muv7dUCMoQ5gGJglDv6pFCj3Huru3D0wXqwx3sjfq5eT4vJ6Fqh/pOf/MSuuuqq6Ly+hDWj3AEUEhU60IP4gDjPBzmVN4ByQqCjpHwotrW19er87s5rDVd9O9jjvaH12r18088IcgDliJXiAACoAAQ6AAAVgEAHAKAC0IeOfunr6PRuXye87ksfd6H5PnL2NAcwlFChAwBQAajQ0S+lmocOAMiPCh0AgApAhQ5047HHHrPB0NzcbABQaAQ6kKOcBugBQG/R5A4AQAUg0DFge3bvttatW9312hU3u2MbVq+yLS0tWec9tGmjbQ6OtQfnAQAGF4GOAduSFdIJ6+rssK6OjiDgd7nbns4ZVVfrLgCAwUWgY0BUiTdPmWJ7g+BuaGx0x/Z2dAahXWf1jWPcbVXlO4J+6WmzZ9u4pmZ3HwAwuBgUhwFpnjwlqMI7g4q8Mzo2OqjAdV9hrvHdCnLZtnFjEPxB2NfWGQBgcCXa29vZCxK9Vl9f764Ha2GZj40/0V33dvvUYvDTzAZrtLt/veDfmgFAodDkDgBABSDQAQCoAAQ6AAAVgEFxKCm/RWlv+6tZRhUA8qNCBwCgAlCho19Kve3pYI2yz4ctXQEMRVToAABUACp09MtgVch9rYZTqfSyCbdvf9wAABkEOoCy8Itf/MIWLlxoA7FmzRp7y1veknVs3rx59vDDD7vbP/zhD+0Nb3iDoe+++93v2le+8pXo/q9//WtDeSHQAZSNP/7xjzYQL7zwQt5jA33daqef31e/+lV+jmWOQAdQdsaOHWvvfve7ra+OOOIIw+BTK8fOnTsN5Y1AB1B21Cx+8803G0pPzey+ywLljVHuGLA9u3db69at7nrtivSbsLZV3ZJnm9SHNm105/WXFqLxi9EM5HvROfpeAHRP4xri/eYobwQ6Bkxh2R6FdMK6Ojusq6MjCNVd7rankN3R2hY7t3Tfy6ja2qwtXwFkU3/5xRdfHN0/77zzDOWNQMeAqPptnjLF9gZh2dDY6I5pH/RRdXVW3zjG3d4chOyO1lZ37gSd29FhhdCX72UcS8gCPVqyZEnUb64xDZdddpmhvNGHjgFpnjwlqHw7s6rd0XXp6lcBqticNnu2Oz7Jndfhzi/19wL0RE3N69evdyPkFWoabKdQmzlzZr8G6w3Ga+p5P/nJT9zt+KDBjuDf1O23326PPvqoe93TTz/dLrroIhsINbP7r6Xv8wc/+EG0BgTKF4GOAfGVripjmRPOI56TZz6xPyfOv0m0tbVZMb8XIdyRSyF2xRVXdDui+9Zbb3Vh+oUvfME++tGPWm8M1msq0H0TuM5ToK9cudKFb3y6nl5rINTUHu83v+6669wgRUa5lz8CHQAsXZXGg0yVqYLMT4VThS0KNgWrgu9gzdC5ryla+Ka711SVrQDtDYW5msUHk/5MZ555ZnRflX5vP7ig9Ah0AFUvHrwKWwXZJz/5Saurq4vOUdO2qml/nr/uLtRzw1zn5XtNNZdr0RZV2Xp9OVio6wOAVm4TVer6ft/61rdG339/6fuN95t/8YtfNAwdBDqAqvbII49kBa/6i3OXjxUFsUJZfdSqYhXAep4CNbcPPLfZ+uc//3m3r6mQf8973hO9pkL9YP3qvrLX9zNYg9VU8fsPCaKfQ/zDB8ofgQ6g7Chk402/vbF06dK8oXkw8Wbr3ryGHldFHK/UFX5x8TXpFbi9eU31oauvvbvXzKWm8MEKc30Ayf05sOb90EOgo6T8IjGtra0GeKpUfRXal+f0lYLMfx01Mfd2dLjOU0Xrv09d+6bu3NfsbeiqUvdN73q+XqenUB2seeFq9o9/eNIHhYGOkkdpMA8dQNnxA9L6cumP+JKmfZmOpu9PTe+en+KV+5p9bTGIh/T9999vPX39/k6fy3XDDTcw37xCUKGjX/q6j/nBNDU1Zd33lXt3c18H++ujvCgID9bkPBjUtB//mn0RPz++C9lAXjM+5aynnc0GOjXNU5+5Whq81atX09Q+hFGhA6ha8dDs6wCw+PndNff3NRzjr9lToA/GYDW9vu+zl9709aO8UaGjX25r226D6fbtj/fq+GB/3Xyo/qvHQIKxI7aEcXdTxToGsMxxoUeY+1H1Xu7a7blyP7TEz9WHASr70iPQAVSteNN1vKm8N+Irp8UDPX67r6urxavywWpW707u9xafstYb8fPV90+glx5N7gCqVryJua+B3l1f+UBeMz6yn+Zv9BUVOoCq5Zdh9VPFFMC9CdLcqWnxEee6HX9NXXozIr2n1yyE9vb2Pp2viv4d73hHv5+PwqNCB1C1/DKvXm/XRo8vHJNvPnj8NXPXcu9O/Guz9zj6g0AHUNUUvr6/WhXywQJYwRuvpLUgzMFes6fBZv4141ujsiEK+oNAB1DVVKVr/rUfzKZAV9OyBn2pCV5N4bpojfVTTz01mrft9wnPNxo99zX1Wr19TeaCo7/oQ8eg2rN7t7UHl/rGRtvSstbmLLzYNqxeZaNr62xqbP/x1q1b3bnau7whOLdYX3dzS4u7njRjuo2qZeMJpPmFbObNm+f6iv12pt1RFX2w4NVralMWTQ/ry2syGA79RYWOQbUlCEwFa1rCujo7rKujIwjcXe62p+BVqO5oG5w13Hv7dfUBYlxTk+1obTMgzoe65lR3N2VMFbQe7273tFwK/J/97GeD+ppAd6jQMWhUESswFdK+6t7b0WmjgiZJVcO6/dDGTS5QxzU3R9VyMb9uw5hG93XPig1qQnnQqO5CjJzuyxKyCmC/JamaxlVV+41XtN94f5rCfWDne02FfG9DXOeWcmR5qb8+Do5Ax6BpnjwlqIY7g8q4Mzo2uq7W3VeoNgf3p4XN3wphhe2o4PFift2bFi6widNnuCb6wWjqR+VS0A52xVyI1wS8RPCJK2VAL9XX17vrQi/B6pdfLcZSr9197cHa0rW5udldU90AKCT60AEAqAAEOgAAFYBABwCgAhDoAABUAAIdAIAKQKADAFABmIeOfvFTuyrl6wDAUEeFDgBABaBCR7+c9+CdVix3TD7bXfdlkZmBLExDqwCAoYgKHQCACkCgAwBQAQh0AAAqAIEO5EilUu4CAEMJgY6C+fWN345uP/ClW+zZbY+620/8+OfRbQDA4CDQUTCjjjsmCu7ntz9hu+970N3WsaNOPN4AAIOHaWsomKPedLw9/9sn3e0TPnyq/SUIdW9E7WgDAAweKnQUzDET3+yq8b8EoX7MO95sI4MQ1/2RhDkADDoCHQU1+v80uBA/MmhiV6g/fsfd1njKZCtniUTCXQBgKCHQUVBHnniCjTw8XZH7il3XAIDBRR86CuqEM97rLqJ+8zn3rrL++sz09+U9vmfXruh2w5gxvXoOAFQaAh1DRvvu3X0+pzfPAYBKQKCj7PlFXjZt2pT38fjxjRs3GgBUIwIdQ0ZjY6MBAPJjUBwAABWAQAcAoAIk2tvb2YUCvVZfX2+l0traakNRc3Ozuw7+rRkAFAoVOgAAFYBBceiX8x6804rlu5POctdtbW0GAMiPCh0AgApAoAMAUAFocseQsbvIq74x7x3AUEKgo+z1tPOZX0WuN+f21VAdVQ+gOhHoGDIaGscMyjkHs2f3LgOAoYZAR8Foq1Ttf/6er14WHfv1jd+2holvsTH92BP963nWcr99++MHPaevzm8abwAw1DAoDgWlUH+tc290f9d9D2bdBwAMDgIdBdUYVOLbgypdnvjxz+2Yd7zZAACDj0BHQR0TNK//5fEn3e1d9221E854rwEABh+BjoI7ZuKbXZV+7ESqcwAoFAIdBfdXH3qvPfIv37PGaVMMAFAYjHJHwRwTq8jPuneVux59XIMBAAYfFToAABWAQAcAoAIQ6AAAVAACHQCACsCgOPTLHZPPtmJjSVYA6B4VOgAAFYAKHf1yW9t2q1S0BAAYigh0oEjq6+sN6Kv29nYDeoMmdwAAKgAVOlAkpeqm8F0I5dBNUk7fS7mj6wd9RYUOAEAFINCBHKlUyl0AYCgh0AEAqAAEOgAAFYBABwCgAhDoAABUAAIdAIAKQKADAFABCHQAACoAgQ4AQAUg0AEAqAAEOsrKXStutjXLl2Ud27N7t924cIFtbmnJOv7Qpo123by57vHBlEgk3AUAhhI2Z0HZaN261dauWGETppwcHVOIK+QbGhutPRbcNwUB39XRaTvb2gwAQIWOMrJy0eV20fLrDzi+fN26rJBXRd48ZYotWb3aRtXWGgCACh1lQlX4tNlzXCUeN2327APO1TmnzZtvAIAMKnSUnCruLUHT+mnz5xkAoH+o0FFy6g+fs/DioPm8zlA45zeNt/7obitZBg4C5YVAR0lpIJwq9M0ta92lq7PT3dfo9StWrzEAQO8Q6Cipcc1NdumKW6L7O9pa3cj2s4KKHYPrtrbt1h+3b3980F6vv60EAA6OQEdJqZldI9bjRtduOuAYAKBnBDrKip+OlmvOwoV5z//6pnsNAMAod6DiaVBbdwPbAFQOAh0AgApAoAMAUAEIdABFQ/M/UDgEOgAAFYBABwCgAhDoQIVjf3egOhDoAABUAAIdAIAKQKADKBqa/4HCIdABAKgABDoAABWAQAcAoAKw2xr6hX2t+67UPzP+zoDKRoUOAEAFoEJHv9zWtt0q1WBXsieeeKK9fdaZ9rd/d467n7D0SG+taO4HfLv1zVPpR1PBf+mR4Ol1z/3tRKJGJ6ZPC//nl0V3o8fTR9KvofMS6df95fe/b79uabFrf3y3lRqtBEDhEOhAEYw87DCrPep1ytoo0F2o97BZiZ/elQl1LxPkuY/Fn+Nf99DRow1A5aPJHSgSH7a5QX3gvOxE3vPjj+d7rXxfz11qmPcNVAMqdKAYwsCtSfjP0JkmdS87uBOWr3BPhc/MDfL4c3OPsZALUB0IdKAoEgc0m2c9mhO66erdomb5zKtkAttX+LqbL7PT5yVyvxSACkWTO1AEiYTv1z7gkbBpPF3Exwe56XYymb8pPfs6/+NpKUsR6EBVINCBQktE/7N0wCYtGZXNvtr2t2Ppm0iZb5aPV+XuoT40o6fciHqa3YFKR6ADOXoaed4fifTQ9nQIK1xVkaeyv547L3eEejzbw6b3TJDHA77n7zcd55TpQKWjDx0ogl9t+Knt/t3volFt6b7wMKj9vHM/x9zSYe5D/F1nn2vHn/TW9CNhqCeTsTns7v+JqN/df4FEeIwsB6oDgQ4UmEL12R077Plnnw1DO5EZqZ7IDF7TdU0ik/b7XttnXR0v2JtPOdUPio+/arrPXa+W0oeCpH9V92jCEtEHhrBhAECFI9CBIvjghf9o0+bND++pp8unc8JSWc3nieDRIJ6D23/4zW/s1n/8R/e4n66Wyqne/XF/I7fpPZXqfp46gMpCoAPFkFKM17hS2dfQGZmlWtPnBqFek7Bhw9IHXunqss72dgsTO6y4azIhnXIv7vrlo5CPBf5Le/fmfD0AlYhABwot7Nf267fHpQe3p7L608Oz02u3B/7j6qsz/eNRYR+u7575AunXy1qoJvNYfUODAahsBDpQBH75VR+90ah1S8dyoiacL55K93lHzed+gnr47Ncd93o7qnFM1uYs6dyOhtO5fvin//CEdT73nGWPhgdQyQh0oNC6ydLMVLSwCT3qLU8/xwf+X02aZMn9++2JX//a9nZ02gc/daZNOv1D6Slw4S5sieDcZBDq+15+1X588/+132/7lXv9915wgf3PvZvMXn3NeqOrs8Ndj6qtO+D4jtY2G9fc1O1j9Y2N1hBcAJQG89CBIshauy3P+u25c999P7hu1B1db5/85q029WMfs5dffNHuuOpKu/vmf7bU/n3+Bd0XeOGZZ+3bn/ucbbntdre72zlXXmVnXHKpDRs+wnpr8axZdtOChVnH7lpxs312+nRbu2KFe1zh7W1uWWuLgmN6bOm8ue5cAKVBhQ4UQW6RriVda2ry931LfAMWOeTQQ23OZZfZMePG2dqvfNU2ffvbtucPf7DZS5bYkccea7taW+3bn/+8/XnXLjuivt7mf+1rNvakt1kylbTerv2qMB5Vl119t27daltaWuxftj4Y3V+5+HJb1rLOVeYrFy2yr2+611Xmun/dvHk2YcrJ1jxligEoLip0IEf+LU0H9nrxUK2pqYmt7Z7K+pqZYE9Fq8D5cfH6VPCec861z3/39iDEX2//e9999vXzz7dvXvgJuym4VpiPP/lk+9x//Ied8La3xRaGP/j3uGf3bhfcZ+VU52pGv2j59dF9NbnrXFGlrvD2zexqip80fYY9tGmjASg+Ah0osAPnhqcnjSfCCeSpfGEf3yUtFsjqMz/2r//aZl/+RXe/o73dfhtUz6lk0g28++iXrrPRr3udm8eu11ErQKIXib5y0eU2Z+HFB1ToCut4tb1+1SoX2qKwf7KtNep3lz27d1lX0M8PoPhocgeKKFOR+yOJ6HY0d9wX1jXxJd4ym7joPPWRZz8nveDMsJEj0oPp0p3wlopWnune5qAyb2gcY9Nmz3ZN6t2ft9ZV8cvWrXP3FfaTgr71W4Nmd4V869YHXPWu1wJQfFToQDHEtkXNDIQ7YH+1LPGtU1OpzIeBJ37zG7tr2VJ3+5Daw+3/vOlNNmLkSHf/9iuvdIvQpPzUt4Ns3KIA3rB6lQvz9uB2V0eH7Q0q7vawWd1T0Gvg25LVa7JGuas5XmHeFjzeHDS/T5oxI6jyaw1A8VGhA0XggjsK9fBYKr6kqz8rYbkLt4f7qbnDD/3gR7b2qzfYS52d9ldve7t97LovW/2Ysfa7Bx+026++wlrv32K3fPz/s/k33mSN48cHn9gTPW7OogBXE7kGt7n7YfO5Brd9fdMmd3tHa6utWb7MhXl8Wpr/MDB30WL3gUDUdD8xbJIHUFwEOlA04TzzVKYpPRGt055pF08k0mu5ZwbBB/eDPvIN37zV/vNb/+Iq/MlnnGHnXnOt1Qwf5h5/45RJdtGtK+22xYvtj489at/8xCfszM9/ziZ9+CPW084s45qbo+CWTCW+2t1XaN+0cIFNnDHDPdYanjdpxnQX7gp7jY7X4DgNhtM58UF0AIqHJnegKGILxviG9iBnk+ar91RsIHwiXVmH/eNdL3TYv37mM3ZPGOZnBRXxuV/6chjmeo10s3rD2LH2yZW32sSZp7vK+46rr7H//OY37bWXX7beqs8ZBKemd4X1S0EVr2Z1f/EU3u27n3IfAkYHTfG+fx1A8VGhA0XwUueL9pennw6XdY1NY4utzV4T299cAf1yZ3q0eNt/3W9+ZNsbmprsT7993FqWL8/aXS0RvoauDxs12o445hh74dlng4r+W+mw7+Va7qq65yzMTF1TuPc0p7zBTWtbbgBKj0BH0cVHUlfDcqEK1Hv+7d/snm//m1lsO5VMRZ6KwjjrmGVGvfutU3c+9pi7uNfI05SeXkq2+wVrAFQuAh1FpT5ZDZyaNnuOu6+pUFNnz7azFl5slUoBO3Xm4fY37x6WFc5Oyu+sFh4N54/7fdTiu6+lAz4ZLVST8D1maroP+t0TyczXjC1PY7+5f5/99teDt1AOgPJEoKPoNE/ZN+vq+rp5c13VrqZdjbLWvGiNvFbQ++rdHxeNovYDspRmrQ8+cMD55ebEtx5ip509MhbkCTf4ze+alhXz4Y5rSUtX29GY93C+uZufHs4zT7h91MOqP5Xuk0+EnxoU/pr59sqLw4JANwAVjkFxKDlV6365UE2XEoW7RlcryFXV37hggTUc1+jmQPvjO9ra7K5bbnbH1XTvj5enlAtwX3dbWIWnEtnT1Fy17haUqbHMhLVUNJjOb8Pqxsxlb/mSnnvuHqtJv1oi/cEgVRM+AUBFo0JHyamqdlOigku9W30sPY9Zc5tVlSvEJwQBrylWohXJ/I5fxzc1uylVsrOt1bZt3OQq9XKSXoK1xjWRJ4N2cd98nt4iNelCPb26m+//Dituhbpvo09kmt0tNgLeYuenn+MnwQWhntqfPphMZFoGAFQsAh0ltyMIYm36IZpu5ZvWRZW6gv7JoBq38Lia7NOrle3OWpWsvmwH14WD2ywc3R5V32GNrR3Rwj3R0/ymLOFzw+tEOGrOPzM2vj0c5e4H1aWi0XXpSj1FfQ5UAZrcUVJqTleAq1/ch7r61XVRmPt50aNra6Pj45qarGHMce7chzZmdvZSn3q5hnoiCvF0Va4QT6mXXBV1TWw5WN/EHoa9Hk8kMpV3KuGjPBUeS8WmwKXCfvZkuHaNpsIlwm1aqdCBSkeFjqLTDl0aCNfV2ekWI7lo2fJoMJsWMfns9PeFA+Q67YJFi93tbUEfu54jijTfzK7n+ePluw932GxusSloYVO5H7GeqbYTluljtzCvU9EmLO6DgTslmbU4bCqs/BN+oFy4iYs+ECSj1wZQyQh0FJUC+FtbH+z2cVXgp82f50atx6ttBbsf8BbfHEQhPnHG9AOOl5eE297Uh7k7ElvP3Z/jm9Vd83wyjOFEZrUZV+NHQe5HxvsXq8n5iuGY+WTYPE+BDlQ8Ah1lR8GcL5y7C+zyDfI4X3ln5pxbrC5P5d7PU1Cne8KTFoW/X3zGfJWv+zXpxvpwUrqOJffvD/vtAVQyAh1D1rQyG83ek/jCMGaZ1dzSTe7+rMxyMOnxb4moLzwT2NmvGj0v/IzgznLN7plzamqG0eAOVAECHSgw3//tbofHXH+4ZRaMsWiluNg0NL8WbCrdF57hK/Psr+FfN92/7ivyZLh8LG3uQKUj0FFUGtWuHbxy9WUwm1tsZtdT0aj4cpdKZWrrRGZuWVR95yzfbn6aW6aRPajqk5lFZaIPAe7x9LGkv5/w/eWZdWBTlsq77juAykLHGopKYa555VrDfc3yZe625qH3hRaV2bB6lQ0Vsa1SLJyDllkhLpVIrw4XzTzLNMm7EPYTzBNhE3wqEb5MeiBcoqYm1i+f+Yq+lz09dY1/5kA1oEJHUfntONOh3pK1VWd8tbh4//i2jRvdMq9jg4rcryIner4+IJTzGu6Srp2T6f7tVFhVR4PXk7EqPbaYa9QM7698k3zmVaMR8WHVH/XLW9QLH/WrA6h8BDrKgsJZYa4g1/X6oAKfOW++3bXiZjcfXUGuqlzT2RTej219IDg23RqCDwdL5821ZevWle1o9+3bt9v2JWZ/2nW8S9t0vRwL63CxmNxu7ni/tw9vs5xpbukzM8di0+E0Zz2Z2m9Pbt8X3D/Mzm8a3+3r5zrhhBPsySeftEKJfy+97d+n2wDoGYGOsqAmeG2hqrBuCEL9xoULXKBv27TJlrWsc+f43djU5K513f3iMs1TTra9QdCX+/S1h+4ZHguleDD3RjJ2bmztdsv0qWftgx7dGm6//e1OA1D5CHSUBd+37nvTu5uS5kN79JCYe57tRz/6kZVCs9/UpjV7rEJbW1u3z1m/fr0VS0/fR1z8+/d/ptvatlulym1RAQ6GQEdZUMXt+9dVhT8WhLtoDXeNjFfl7rdYHYphDgCFRqCjLGhp15WLLrdRdXVux7VTZs/JOq5A18C4S1bcknfaGwBUu0R7eztDYNFr9fX17rpQTZ0Ka22JmtsfruPF2knNN3XmNlH3V3dN3sVS6q9fCNXU5B68RxvQG1ToKCvdhXb57nUOAOWBFScAAKgABDoAABWAQAcw5LDhDHAgAh0AgApAoAMFRjUJoBgIdAAAKgCBDgBABSDQAQCoAAQ6UOHowweqA4EOAEAFINABAKgABDoAABWAQAcw5CQSCXcBkEGgAwBQAQh0AAAqAIEOAEAFINABAKgABDpQYAzgAlAMBDpQ4fhAAVQHAh0AgApAoAMAUAEIdAAAKgCBDgBABSDQAQCoAAQ6AAAVYLgBGDTNzc39eqwYSv31c7W2thqAwUOFDgBABaBCBwoglUrZvv37LRFcm2lhl+CYpS+5S7zs3bvX6uvrbezYsfbggw9aZ2enO37kkUfaxIkTbefOnfbYY4/ZIYccYslk0o466ig788wz7Wc/+5k9/PDD9rrXvc72B19r2LBhtnXrVps9e7ZdffXVds0117jzdVxua9tu5eD8pvEGYPAR6EABKEiTQcjmkwr+S4SxrrDVufL73//ehXNcTU2NjRw50v76r//6gNepra21t771rQcc16pw+7v52gAqF03uQIHUpNLXrioPy3NdJ5KZGj2VSkW33/zmN7v7XV1d7qLbEyZMyDrmj59xxhmukm9vb7eXXnrJXV5++WW7//77s14TQPWgQke/0Gx6cMpthbquU/62HqhJB3sq1vauEH788cftpJNOstdee80dUxO7jqnafvvb3x6tx37ooYe646ru3/Wud7kqXs/XtZrvAVQnAh0okHifeTJ22x3PCXNRc/sXv/hFe+GFF9z9uro6+8xnPuPuf/rTn47OUx/6tdde60L9H/7hH+zwww93xxX027Zts2984xtWzvyfo62tzQAMHgId/VIuA6wKYbBaH3wVruuaYQlLJdNBlggq6aDjPGqK95W3rhsbG2306NHuvgJdIa2mdQ2Y27dvnwvDhoYGGzVqlDtnzJgxri9dx3Xurl27DEB1ItCBQgmrcFeNJzP92qlwEFz8HHnuuedcxe2DWwH9zDPPuNsXX3xxVNlqkNwf//hHGz58uF1++eXug4Ae0331sbuXZbtUoOoQ6ECB+Wb2gzn++ONt+/btboCbqArXoLgnnnjC/ud//ieafqYKfubMmbZhwwb75S9/aUcccYQ77qetnXLKKQyMA6oQgQ4USNRfHlxqgqI8WZPn8Vgl/dvf/tYNbIvT/REjRkShHafAVxN93q9NhQ5UHaatAQUSr5GTNflPiMeun7YWv6hC903q8cusWbNc8/qrr76adfyRRx4xANWJCh0osG6b3BOZEd8K7UcffdT1m8ePKbDVN64pbOKnp2lqm871A+j8+f65NLkD1YdABwos1cPxeIWukez33HOP/fnPf3b3tfTrjBkz3MC4e++91wW7H+V+wQUX2AMPPGB33HGHa3rXXPXDDjvMfvGLX9iXv/xlAh2oQgQ6UGC+cs5dTMbzzeWanrZ+/XoX6Lqv6Wh+ZTgFvT9X89Wffvppd3/69Ol29NFHR19HI+AV6L4vnr50oHoQ6ECBRc3gifyD47wXX3zRvvWtb9krr7zi7quZXSu/6fm33XZb1utpMRn1r2vAnKpzrQev237ams7RUrD+tQBUPgIdKKJ8Ye6r6PHjx7vd0+K0+YpGv//ud7/L+3r+w4KmrOl1fF/7dddd5y7lyP952Q8dGFwEOlAEfk33fHwoawCcqKr2zec6pup706ZNWQPe9Lhfw90f1wC5hx56yN1+5zvfaaeddpp7/tKlSw1A5SPQgSJI9qIrO1oCVv3fYUg///zzbkS7Bsf1xbRp0+yqq65ytwl0oDoQ6EC50dKwQbirMtcguT/84Q9uilr3pyezFqRRX/ypp57qlpDNXagGQOUi0IESSYQzy3xlnkxlNm/RRi6qzP/mbW+zt7/t7aZJbinLGbWeCv+XZyS7BsrpQqD33l0rbrauzk6bu2hxdGzP7t22Zvky2xH09zc0NtpFy69319LV2WE3LliQ9RrTZs8JLrMNKAUCHSgQ39cdv511LJE9D93fTu1Puns6b39QZe/PnbDuJcOYrwnOTYbnxM5jylrvtW7damtXrLAJU06Ojimwl86ba2ctvNjmBSH/0KaN7v6ydetsVG1dEPJtB3wAqO9mKV6gGPj4DhRQfNCadlzrKWSjx3RVY5mV5BIHvl4yld5hPWF+UF0q2tEtvhQsemflostd9R23t6PT5gRhPjWouBXUp82bHx2Xro4Od7x5ypTo0kCgo4So0IECSMa3SA2l0unbbahrJTgZGU49Q3GoqV1N5blhrPsNseZzVfH+uOxoa3MfqPRhYG9QqU+aPoPmdpQUgQ4UgMJZU8b8lqf5pLdJT7nw1+Xxxx93c9H9YjDxJvr+VNt+3Xd0T33kW1paXDO6mtDzUZBfFzS1yxWr10THxzY3BUHeYRMmT3GBvjb4YCCEOkqFQAcKQOusT5482fa9ts9V5a6/XEu/Bv3dahpPhTu21AT3NYL9jW98oxuVrktPHwIkvnlL7rE4rRzn91ZHfjctXOCa1dUn3h01pd/Wtt0NjFs6f55dsuIWd0wVuS7e6NpaW796FYGOkiHQgQL48Ic/bM8++6ztT+5Pr+K2Pz0a3UVwTXgd/G9f+Liq80J497vfbX/84x8NB1LlrQp9c8tad9EAN91XNa5KXIPixIf9uOZmF9Z6ngK9PTg3PghOt/UaQKnQHgcUwJ49e+z66693O6C5QWw5I9A93ySuZnZd1Ezvrl9OX6Ljr2Ru5zv3lZfT9/e9/Gq04tx3vvMd+6//+i9DfuOCJvNLg2pbo9h1UVirf1y3RU3wn5k+3YW8KOAf2rjRxjY1ufsbgmpcU9o83R/X1GxAqVChAwVQX19vixYtsk996lOuSb2nGWS509miU1XJp8J55hohX5PZtU2PefqwUOPnsoeH1XT/93//927Htk6qxrxUeavSjhtduyk6puuZ8+bbktmz7LDg5ygz58+3SeGqfXMWLrSVwd/xhVMmu/sK80tuWWFAqRDoQAHcdddddsopp9gZZ5xhmzdvdjuf9TRALXfBGBfS5majpw+FAV4TdL7nbsFaE3uuprMdesihds4557iFaVSln3vuuYaDU4AvWb0665hCWxc1r4+qq83qa9dt9afnNs0DpUKTO1AAWktd/ddbtmyx++67z2200mtBeNfEFp/xw93cOLoaDa7LTInLnQKn0fXaxez73/++GzGvYMfAqX+8u8DWccIc5YBABwpATeM//vGP3e0zzzzTVedqBs8ajZ7K+0S3lnsiz2M+xpPdVPqa+qZAnzlzpru/bt06A1A9CHSgABTcRx55pF1++eX2wgsv2JIlS2zUqFGZFdxiy7km/GJwvr9ca7kn8kxFS6VXg/NLuNeEC8Slwq+nvvoVK1bYjh077IILLrCmpqa8C9wAqEwEOlAg6jdftmyZve51r3PXzz33XNSPHsayC1w/Rz13GHxNTnO6GzwX9q1b2BQfrhDrXrerq8s+85nPuOb9VatWRQvUAKgOBDpQIApZVc6+6VsD5BS22gXN9YcnYyu5dbcBixdW5/GmeIW7q7/3Jd0iMqeffrr7gHDHHXdEXxtA9SDQgQLS/PGpU6fa+973PvvlL39p9957b3pv82irtfQ49lSeMI/HccpX6zUH7tA2/NCR7rU1+O6kk06y2bNnu2qdZV+B6sK/eKBQggpZq8C9tm+ftbS0uEMKWwVtMhrilkqv5275d0er8Xummw/4RPRMHdu3f597vVmzZrlja9euddPV/EYvAKoHgQ4UilswRk3rSaurq7MvfelL1tHR4QbKqUpPdrPFqRskF14U3tE/0kTWle0PmuAPGzXKrr/+BnvmmWfsk5/8pFsTXk36AKoPgQ4UUpi+GiB35ZVX2rHHHms33HCDW+d9uNZ4D0e4J8J13pPhRi7Rc8N+cn8o/gFAG7s8//zztmjR5Xb44YfbN7/5zYMuYAOgcvEvHyiArH7uIJGHJWrcgLUf/ehH7tgHPvhBN5BNm7NE68ImMgvKRNPRwob2aHEZv8Rr8FoaYKeBdqKV6RgEB1Q3Ah0okJqws1uru6nqfvWVV92WqjNmzLD/+c1v3MIzanp367P7J6Uyz0nf0H7pKTciPk5hfv/999svfvELmzJlin3gAx+wl196yX0gSHXTlA+gshHoQAEoTpM1OU3kw2rcgDU/QO7ss88+aPgmgsreb9QWr87VrD473Hdb1bl2WBumgXB+gxf3DbCoDFBNCHSggOJrrfvd0tTfrYVmtPDLpz/96fQAOYV0vLM8mYrWenXP89PVwxXhrrjiCmtvb7fLLrvMxowZE60I5/dZd7PiEvzzBqoJ/+KBAlNQu39oYbO5Bq5pa9XXv/719o1vfMN27dplNcOHpSv6ZLrzPN1Mn6nc/a5rqswV5EuXLnUr0GmA3UtqatdAODeiPn2uX1UOQPUg0IECS9b49dbT99089KCi9pu3vP/977cRw0e4zVvSE85TYShb1uoymo6mgXQf/OAH3f27777bHdNcd8etAWsAqhT//IEC8P3eripPpTKJHlbp6vOeOHGinXbaadbW1ub61Q877LB0n7of6B7/FBBQU7tC/Fe/+pW95z3vsb/92791K9HFpYwBcUC1ItCBAnGxWpNILzBTY7GgTq/hrgFyd955p7t93nnnHbAgTDqYE7HbZh/96EfdddZAuNgXJMqB6sX6kEAhpVLhvithMCeyR6uPHj3avva1r9mll15qCxcutFtvvdX1iasZPdqZLXiNQw45xJ3T2dlp11xzjR1zzDGuL94tSJPILCE3PPgCyXDr1USif53orVu3usuc4Pvxujo7bP2qVda+e7eNqquz0+bNt4bGRtsT3N8SjtqPmzh9ho1rbjIAxUOFDhRSIl2h+53SEuFtF/LBbW2icskll9jYsWNt5cqV9sQTT7h+8jiF+1NPPWU33XSTW2nu6quvds/LJxmtUdO/MFdwr1x0ud214uas4ysXLQoe67Rps+fY6No6d46Mrqu1+iDY45fNLWuDoN9lAIqLQAcKwK/y5vYrT6b7xaMmd7fGa3qamTZRUaW+fv16d3/69OnRMbN0Fa/76msXDaTT4Dkdy6rO/dcd4KIyqsIV2nEKeVXicxcttuYpU1zlrkpdx0YF4T5t9uzooqpdJs2YYQCKi0AHCiThd0arSWSFr7sdTjPTEfWFT5gwwc4880xXoX/nO9+JVpBTU/sPf/hDe/jhh90WrJMmTXLn+wrfvbyfr+5fu5/VuW8+jze1i0J7Wcu6rPNUras6z6XKfs7Ciw1A8RHoQKkk0pW8+srVH/7d737XVd4f//jH3aIzvtr+2Mc+5k73A+FcdR57maRrBkhk9kzvp6Xz5tolK75x0PM2rF7l+tAV9HGbgw8DqtynhSvYASguAh1lQVXfjta2A45rcJaCQo/nUlOwHnto08a8j5cjvy1q7nB0VdWatrZixQrXpP6JT3zCVekXXnih7d271w2cO/LII6PmdL/mTMqvEOenx/WTKuvmKScfdCCbzlNo51bxspbqHCgpAh0lpzBWdfid5cuyjis81gTH2sPH1weVYfw5i2fNsm1BmG/buMk9nu8DQSklcpZSVwinognq2X3dCnSNbr/ooovs+OOPtzVr1tiGDRvsX//1X93Srp/73OfcQDjfnJ6qCZvv/Uj4WHHe1z50fTD66erV7vba4AOFLv52/IOS/j62bdpkFy1ffsBrbA5HulOdA6XDtDWUnCq7+nAwlef7c5etW+eadqcGQaHQPiW41n09R4O3fKWoSl5NwfnCplSSNaloupqkov9l9jiPTy/TaPb9QXX+05/+1MaPH28zZ850x7WYjOasD8+ac97Thi7hJupaB7aX/8IvWLT4gGPxvxP9bON/H7mozoHSI9BRUgpuhfFFy6+PKkNR5a0mYB8eGj09rrnZVeMK951tbS5AVJWrwtToa13KSmZdmLTMVudWE5XU6aZyt/Z6cO/VILhPPPFEO//88+22226zs846y0466SRXnQ8bPiz7A0IPc83dxLhhvetT9yPV4zQtzR/Tz3fNsmXu53/jggXROepH12h2qnOgPBDoKClV3UtWr3HN6nG635BTtfuFTOTJ1lZXNe4Mm9k171mvk/uccuJWiAvnpStw003wiawmclXpf/nLX+x73/ueu68R7i+++KKNHD4yMyVNreya117TfY9ZomZgA+T+76Z7o9sK/Pj96Hg4yn3SjOnuAqC06ENHyahPdmJQ4eUL4b0dnQccy23q1QInS4K+X11UKfrFTspFIs/AN9/s7v7hDauJjovmnI8cOdLtk64mdi3zqutzzjnHRh4aBPr+/empacn01qipZPfN7gNdzz23CyR38Rhd/N+HrvM1wwMoLgIdJaFKe0MQxM2Tp7gm9x1trbY3aNrVbdFoa92P0zljm9KjsEfX1bnlRb0PBs2/7WU00t1FtK+Sk+GmLOG8c1XnyXArtXgdrTDfGvz57733XtfMfvvtt9tb3vIWt+jMAw88YCMPOcS9QLr6TmV9YMgN8ERO5Q+g8hHoKJnJQSD/atMmN9hq28aN1tXREa0LPq6pOeqbFfXj7gia2dWPKwr2rljg64OA1hgvF1EXua+ih8U60C0M4P2paPaaqnPNRz/99NPd/R/84Adus5Z77rnH3f/QGWdYjQbNBee5PniX7OFI+uCYH2DnQ9w16Q9wXjqAoYU+dJSEmtkvjI1IVyBrUJw/pgFuE4LLjQsX2KQg+NVfHm+eP2vhxa6J/bT58939+HPLQrjzWbSnue/6zuyjEgvf9Nao1157rT333HO2YMECN3VN09he//rX28UXX2w333yzLVu2zBYvXmyvvPyKJcPV59KvEH4u9xV5Ml35JxNU6EA1SbS3t/OvHr1WX1/vrm9r226DyY92zx0p7VcfU59t7mPxnb4Gc5T7+U3j3XVr0CLQV81hC4Kq632v7UuPNk+kl4GNFoNxaRveCZvlO4LWiYaGBjv88MPdjmpaOU4Vu1/L/eijj3bnaMDcqFGjsr6mln5N1WSmxaXCTxNqmtdzNdBOBvvvrL8G8vP1/M+5XP5MheB/TsF7tAG9QYWOsqDKuyHPtKeepkLpOflWLCsbiXTRrObxqHE9vttaELgKfq0QNzv8c2pUu98vXRW4pqrptpaF/dCHPuTO+9nPfhYFvlOjaeep9NdJpWL97ACqCX3oQAHVKLmT4QIzaiIPKu5ktFqcuc1X7rvvPrv//vvdxiunnnqqC2sXzLrsS7n129W3PnnyZPv5z39umzdvdgPoPHWjD0ulF5Nxm7P4vdcZFAdUFQIdKLD4YjCaO17ju7rDgXCapiYtQfeBwttV3olMZ7vua/raT37yE3foIx/5iDum6t7ThwQ1uyfC57grBsUBVYVABwopaPpO5fwrc2PkgupZA+GuvPJK10d66aWXujXb/T7ofiydb6nXhi0av6A13V944QW76qqrXFN9bhXumvIpzIGqRKADBZYK56BHO6UFIa+Bas8++6xdd911dsQRR9g//dM/ZW2+EqnJrPOuUe833HCD23Xty1/+snt+TaImqv+zqnNCHag6BDpQAPFpadHtWFP7iBEj7MMf/rC7/+Mf/zhqfs+VsuxlYRX42hdd1PQ+YuQINzc9fW54SWTvvlaJrrnmGncBkEGgAwUSbXXqB8El0mGugXBaMEarwr3zne+097znPelR64l0b3silT2gLX5b573vfe9zz9HqcRs3bkwPkEumDthjvZJdffXV7gIgg0AHCimVXqLVjT4PA17XfiDc2rVr3UA4zRePL9eacKvFZqa6+aAfUTPc9r36mpveJprGpuclXS1POztQzQh0oCCioebpME+l+9I1EE4D4LRIzKJFi9xKcG4gXPCYiuz0CPd0P3u8bzxqSg8e3pfcb0cddZR7vnZi07VeNxF+eKiJ1pMl4IFqQqADhZDbh63tyYfV2NNPP2033XSTW/lNS7lqoFuND33T8u6p2LKx+TvCFfpqeteAOo1810C5p556yhJaES4R5jhhDlQdAh0ogPg67QrZ/UFVPXzECJs5c6Y7fvfdd7vK3C3Lqqb2sI+9JrZ5i5/C5rmm+1R6Lrua6KUlXPrWDZAbkR4gpzXc3cuwWhxQVQh0oAAUpQrnhJZ5DZvatYPab37zG5s6daqdfPLJ9sorrxz4xJpENEI9vk+6+uL96HW32lxw0fM1OO69732vbdu2zf7zP//TDZCrSWWPsgdQHQh0oAD8FDL1hSfTC7rb3Llz3WOadqaBcH7TFD8YzlfluSPcXbDnNL/ruJ6vFeT0QUH8evAK/ERNgpXigCpDoAMFlFR1ftih9ulPf8btovblL33J7aoWNcmHIe5HwXcbwtHWqOFKconMeu11dXVuTrYWpvnCF75gh4w6LJqbDqB6EOhAAbjAHZZeEW7Xzp1uP/NjjjnGrrjyyqwV4XJDPB7U0RS2cN/zVHoY/AHzzTVATnOyjz32WLvxxhtt165dUR87gOpBoAMFsn+fBsINt5kf+pC7v379ercm+8HCtttqPdxHPXesmz40qMr3c9O1M5u+Rnzzlkpz7bXXuguADAIdKABV11oRTqPQH3nkEXv/+99v73jHO1yg91YU6G6P8/Rcdk1uS8a+hr9Wn/yUKVPc13n44YdduGsgXqVi6VfgQAQ6UAA14UC3888/393/7ne/m9ka1Z+THivnpqH5ijwaBGeZAXGpMMxdaR6rznOb6l995dVonffzzjuPUe5AlSHQgUIIAvbTn/60Wzhm+fLlbiGZ3IDVHuaqtlN+c5VYxZ0V1v7STT6rbz19fspqa2vd19PXveSSS/Ju+AKgMvGvHSiA3bt32y233GJveMMb7PLLL8+/NWpMfABcbqUenZPIPt/9p/P884PzFeT6escdd5z98z//s/3pT38yANWBQAcKwM8J19ao6jfXwLXudlDLJ76oTCpcVMY9L5Gp4N1/Oi8259wPkPNz08866ywDUB2Y2wIUwIMPPmhnnHGGnXTSSemtUXOavhN5ForJfVzH9Dw/T/1g/CYu6qufNGmSfeADH3Crx1Wy85vGG4A0KnSgQDQQTiu59dSPHQ/yeHN7/Hi+DwO5K8q53dzC0Nf5CvU777yTPnSgilChAwWwcuVKO/zww9166/mq63ifub/OPdaTfEGdSD85Wn1OA+Suv/56u+yyy6xS3da23SoVrQ/oKz6+AwVw4YUXHtDUnq/fPLdCz5I4YFG4vNLVefZr6Ov6pWABVAcqdKAAtEpb7kC4fEu8erkD5vwHAf0/36rsqsD9OdGAObeXerT/qlstLsma7kDVINCBAlDYuqVX3ZZrmeP55pp3d61QTnbTXJ+v8tdiNpbKNL0b/edAVeFfPFBIua3oOZuyxCv1A5rku+lLz63uo8F0Zpk90y2zYE25yR30V6rXACoNgQ4UQE9hk2/jldz7+ZrKU0aAAegegQ4UWSJsFs83Ut0HeU24TWpWH7wdfPS7ULkC1YlAB4qkxm+64hZmT0ThnW/OeXopV+u2SZ4mZwC5GBQHFEMqNgUtFf0vfTfPuu3DgtTfZ8m8VXl67XazAzZG94+HA/GSBD5QVajQgWKIUjh9OxXrR/dVeTzUk26J9pqsgXH+8f1+AZqevl4y5bZnBVA9CHSgCNziLxbvD+/mPP0vdq7bLz3chCWZyuyulqjpRX96b84BUDFocgeKIL34SzhlLQzsA0a6hxedmwiXiUsloqdFffC5aoKu+GTso3mqpvcD6ABUDip0oABcWKuaDkK5u6bvVKzpPJFM96r7yWop138e9odbzyPXXXd67OFqCPOPf/zj7gIgg0AHCsEFbCKd1sNiAZuvGVwD2muym+ETQcntF4lx97upzt1o95p0n3syFb5WFfSd//u//7u7AMgg0IFCSIT93GHfd3Q4eWDaKquTlq7SfQu7Ar4mLNcPtkiNV+OXmQ2+bjkPiMu3sA6AgaMPHSi0VM7NnCxTxrtNWBJqos/MVU+FH7cPFn4J/7rh+cxP75+7VtxsXZ2dNnfR4ujYnt27bc3yZbajtdUaGhvtouXXu2tvc0tLcFnrntc8ZYqdtXChjaqtM6AUqNCBAohvwnJQiXSTudvLPNbM3muxZnzq3v5p3brV1q5YYTtb26JjXZ0dtnTeXJs8fYZduXqNTZoxw93XcVGYrw0+BJy18GK7aNly97PfsGq1AaVCoAMFki/MC7LYy/704LtEbPGaFMneJysXXe6q77i9HZ02JwjrqbNnW31QlZ82b350XHzFrsp8XHOzTQyC/6FNGw0oFZrcgQJQM7n2Q/fbmSbDqB2Ws5Rrf/qSD3he1hJ06YF40ZaqbKF6UGpqnzZ7TlZTuuh+QxDmnqp4f1wU5J6qdoV5/BhQbAQ6UADlGKTnN403ZFMf+Zag6XzZunVBP3lb3nMU5NcFTe1yRdD0nmvlokWuH11V+iUrbjGgVPj4DqBq3bRwgWtW72kgm6ru29q227KWde58X6l7Fy1f7h6fFlTzS8PgB0qBCh0oAL3BlwtfmZfL91QuLQUKZlXoqq79SHXdVzWuStwPfvNhrwpcoa3nKeTbg3NH1dVGj6uPfcOqVe41cpvvgWKgQgdysDVpdRjX3GSXBk3kGqWui8JaQazboib4z0yf7gJaXD/5xo02tqnJ3d+welXQ/74ier3cPnag2KjQAVQlVda5g9hG126Kjul6ZlB1L5k9yw6rrXXHZs6f76avyQeDx76zfJldOGWye1zDFOlDRykR6ABg6QBfsjp7HvmchQvdJbd5XVSJK8BVuXd1dLqpbUApEegAcBA9hbVCntXhUA7oQwdKyFV34eArABgIKnSgRLSgibY61aCr+sbjosFYANAfBDpQAgrx9t1PuTnMsm1jeslQrQ++s63Vjg6aeDUgS/Oe1VerMfej1bQb9OO66VGrV7lR2Bqp7ZckBVDdaHIHSkCDrCaEo6ldOLe1uaZ3HZs6a04U8AryCxYtduf7wVmi6VOaZqUPBt2tcAaguhDoQAmosn5s6wPutirsPbt3uU0/1AzfHtweXZceZDU6HGw1Kpw2pcFXCn7/+KTpM6xhzHEGADS5AyWgYG5oHON2+RpVl749OmhO12plqtafbG3t8bmaYqWFTJ4Mmuc/GTbbA6huifb2dpbEQq/V19e763Ja2nSw+aVJW3sI1e40Nze76778fFRxx6c95d7v7fO6U65Lv/bn5+vdcMMN7vr9ly+ySuV/TsF7tAG9QYUOlFhuKPd2TnM1z33+9re/7a5v3/64AUijDx0oknY3sn23DQRz1gF0h0AHikT95ZqWpv2z169eZX2lEe0bVq02AMiHJnf0S7lsgTmUaOCbpp7JmuXLXLWtgPfzyTUN7b7gvuaf6/GzgnPXBwGuTT8Oq6t1I9rFBXvwgUDHNcVNr+N3+koF/1XTAjX6+QFII9CBEtB0NE1T03xyBfBDmzbanl1P2c7YQDEFvaanjWtqcgHuA/2nwW1NddOCM6r6p82eEy04853wg0K8f91vBVuJ/c368wNII9DRL9Uwyr3QNE0tdz75uOZmNxd9XFOzq8S7OtJ95rmrwem5MuqA+erlP1DummuuscFySvBhplLd17LWgL4g0IEi0eIxa1essB1trS7A880nV7P7dfPm2bKWda7SvnHBguj5U4PH3PWs2UHor3BhPzHcm/tBVfh5tvgsR1dffbW7bmsb+Ap3F1bwHHwCHX1FoANFsmT1mgOOqfLObSJXmIuOXRE8p91t3pLevtP3wc8NKnn/PH0gmBx8QJg4YzrbeAJVjFHuQIkdLIS724vbP08D6pqCSr+vYZ47ha4/U+L2DHAaXn8lEgl3AZBBoAM5NIjMDyQbCtLLyDb2+XnXzZubFeKLZ83qVUDvaG11A/bio+sBlB5N7kCF85Vs7kBGDcDTvHY148eDWYG9YbXmu6ds7uLFbjT+lpYWNwZgzsKLbcu6Fnds7uJFbjzAto219tiDW93AvLFBa4HGB2jbVw3s2xuE/txFiw1A4RHoQJVSACuQfaU9LRwxrilyuq3HNM9bj6mvf2xnk23btNEmhtPn3M5vQbDv7ex0Ia4Bfpo/n0ilxwbofqGmlVXyVDygv2hyB6qYgvc+V31nmtp937oqbIW3b87XBwAf5t1x8+uDgPf8tDoAhUeFDhTAUOlbVhWtee8XLb/eNauLpsJtblnr5sh/MAh8Dcrz9zX4ruG4RrvrlhVuMF4+k2ZMd8vb6megCh5AcbB9KvqkGrZP/dj4E911f+ZJ++1Ty9FAt3SV3m7r+tgDW23CyUET/LJl7sNC3EB+vl5TU/rDRCU3ubN9KvqKCh0ogAlTTrZy8djWB6yv+rulqz+3K2h214C73BXu5Nprr3XX5557rgEYPAQ6UABLVpfPrmh9Wco2Pjd9IKvOTQtXtcvHL/1KoAODi0AHclRzBel3L9MUtbFB98HMPBU2gPJEoAM5qrmC9EvLatEZ9X3n26pVO8NpNLu2dFXga115v8VrsT4AdDe3HqhmTFsDKlxfV77zo97Fb9V6waLFQbD/uzt2fFOzC/4/tra5kewa/a7R8m2sGgeUFBU6Sk4BokFU8RXFVBlqkRL16Wo/cK1Q5udDayUzPRan0Jk0Y4ZhYPRzTwT/+Z+1VoTL3ao19/zutngdavR7pd9DfTiJ27Zxo+1oa3PT93LHBujPr8V2JD5nHygFKnSUlCo8bSm6szV7CtPSoMlXleClK24J3iTHZK04lh64lbCzgpD3F02RwsB9fWF6u1b9nahp/bR581yTun7+uUEnmnOuUfT6exzK67ormLVcrf7ccTqmZXAV5vrzqSsi/hx/X/Pt9Ttbqs1qAKFCR0kpKOKLmogqIoW478/V9ebpa90bqkJF1dKE4DpfwGBgloZbt8bFt2qN83uR527xOhStDVqJ9PvUvvup6JgqdvEzFlSdXzhlsgttVeLfCVqJ9GEyXrVrvAFr16NUqNBRMmpq15rhuc2UCuzcsG6ecnI0pUpvqNr0Qx8GbgwqqB2t/V+gpNTah0hF198tXocCjezX75xfy97T5jWXBC1Enq++fReEHstugmeNLpQWgY6S0JujqvLT5s/L+1guhb4/riVHNcpaG4LosnT+3CHX3OubeNWsfR1NtSWjlgdV5/HgzqVKXR8el8ye5VqL8n240d/fQ5s2DflxBBjaaHJHSSjMNNAt35ujr4Di9Mbrq8DcN01VuaqyhlITvEJEI8cbwoFWvpUhvk2pBltpUNrOtlY34ErXmjqmBV/0fI0u1/3u1lT3mOLVPY0P8K1E3bWWNIxpdC1EGrexYdUq9/cV/71VmKv//ILFixkUh5KiQkfRqZre40J4ratONWL9ySCs/ACjsU3NB1SsTwZVknb/ktw33voe3ozLmd783d7jq1a7LgR9kFFYKDwU7BpopRaIabNmu3neqg4V8lvch5eTXcirzxb94+bYBwGd3nymxQ3u04epzbHxHKLw1t/LRcuXu597/HF90FSY60PBpOnMskBpUaGj6FRRXhpr4vT7bmuAkWjktCpQP/hIoafA9hX4reGIa52vN1SF3NQelhotR6qu9edTP62mgymY/YcS7Wbmt+Nwy692ptdG91Wh/syja9NVuUaho//0O+R/7rnXGpx537qWrN9V9ZPHq/Prgp+/wtwP4ARKiUBH0ekNMbd5fHTtpuiYHleTsyofDTN6KQizJasya6NrVLwe04cAPaYwnzbEAl3bkqpfVpu4qHVCI6P1wUQhr+b3nppu9Vxfmau6HFfGO7yVM/2M40GsliONcvfHmrVbXNB6pIGXmkKpCl5hPyf84KnH9Pelqt5Pq9TfBf3oKBW2T0WfFHv71J6mQ/VlS8++8JuZtIbTlvrCb5/a259Pvm1Ke/vn6e25/s9TLn3oA/n5en39OfeG2/Y1CPXcpnO/sMzYoGVJ0yX9z/wx9wEgu6tHLSqD1fTO9qnoKyp0lLWepkMNdpCXwkC3KcXgGRXOnMg1ccYMd8k1gXUQUGYYFAeUiCpCVXj+gt7r6/r0QDWgQgdKZEe4uYmof/bSW26h6gbQbwQ6UCLN4fK1GtynkdIKcz/aXV0NGlylgVdaREcDr+YuXmx7du22LetabG9Hh7vPBwAAHk3uQAntCZvbNUpfTfCq2rXgjIJa1bt2MtOoa81/1mObgzDX/PPc+dAAQKADJaRFYvwceq0KNypcJU9TqvaG25LG7QxHhuvxiSxkAiCGJnegRDQdSn3nnta1V/O6tvDUYjtaX9zvte1ptLVW2PPLvhorjQIIEehAieSbDqXm9fj8ci2iI37hHPW5F2r+PYChjSZ3oMwcLKj1eLWHuTac8ZvOAEgj0AEAqAAEOgAAFYBABwCgAjAoDigAvwIcCstvYAKAQEc/8Ubas+vmzbVyw98ZUNkIdABDVrlsCVsIfABDXxHo6BfeSHtWyT+fgSKogMJgUBwAABWAQAcAoAIQ6ACGnFQq5S4AMgh0AAAqAIEOAEAFINABAKgABDoAABWAQAcAoAIQ6AAAVAACHcCQk0gk3AVABoEOAEAFINABAKgABDoAABWA3dZQcnetuNm6Ojtt7qLF0bE9u3fbmuXLrD24HtfUZHMWXmwNjY0HPPehTRttw6pVdsXqNVaN9DOaNmuOjWtucve7OjuCn+cKe2jjRhtdV2dTZ8+2U4LLqNo629Ha6s7PZ+6iJdFrVKuefg/1s9Pv30XLr8/6PWzdutXWr15lZy24uOp/fig9KnSUlN4Q1wYBtLO1Lev40nlz7fimZrt0xS3BG+gYW7no8gOeqzdbhbleo1opaBTiop/H4lmz3O0rgw84Cib9XK+bN88daxjTaGcFH4zOch+OxrhLdH/McVbN8v0e6ueq38PJ02e4n+ekGTPcff/z1gcAhf3O2N8BUEoEOkpKQa2qJ25bUF0qbOYsXGj1QTWka1XqucG9NnhDnTZ7jiFNP4/mKSe7INfPrXnKlOBnuzyozmttc0uLq9J1TBdVmQ3hObrosWqW7/dwb0enaxlSK4d+nqfNmx8dF7WALGtZ5x4DygGBjpK5Kwzk3Kb0HW1tLmTiFFQKdU8B1b77qeD5sw1pO4Ofmw+dOP2Mq7kV42C6+z3U/fjvl/8Z+vPy/ayBUiLQURJqHt4ShPJp8+flfSyX3kT9cTVvqhq9MKg+kbG3o8NG1dUecFw/u/Y8P1P0/HvoKcjPbxofdF3MPaCKB8oJgY6SuGnhAtecma+pd3SeUFKI+7DSoK98FRXy6+qgf7c7Pf0eemotuq1tu2te1/m0dqBcEegoOr0hqjLa3LLWVT0aWPRkW6u7LWObmg+o0p9sbbVxwXEFuwbCPbb1AXe+f46ud+QMrKs26pZQtZlLMwEmzphuyHaw30P9rsUHu41rbnZN8AQ6yhXT1lB0mt6j0evejuBNVH3iGm0tk4LwUZO63mxVhWskt5qMVSnpDTZ3ipregBmprT7dea6CHNvU5EZky4bV6VkAc8KfbTlIpVLuuq2ttB/ADvZ7qA+INwY/T1Xm+j3U756mA14Qm9YGlBMCHUXnR1vHja7dFB3T4wogTRHSW/9LnZ22ZNXqbp8r+Y5VG1WQ6uPViO1/WbwofSxo1VgSfACie+JAB/s91PXMefNtyexZdlhturtn5vz50YcloNwk2tvbUwb0Un19vbtWn2IxqDIv9rQgDYCS1qBloK+ag1CVYv18uuObistxOtrHxp/orgdSoRf756zfQ43hKObP0/8eBu/RBvQGfegoa8zx7R8FTyXPLVezvW+6Lwb9Hlb7XH2UPwIdAIAKQKADOYpd/QHAYCDQAQCoAAQ6AAAVgEAHAKACEOgAAFQAAh1AUSUSCXcp9WsAlYZABwCgAhDoAABUANZyB3Jce+217vrcc881ABgqCHQgxzXXXOOuCXQAQwlN7gAAVAAqdPSL3wkK+a1dscJQePweAhkEOlAAd6242QCgmAh09Eup9/supIFUfQsXLjQUD7+HQAaBDgyiBQsWGACUAoEO5PCj3AFgKCHQgRxXX321u25razMAGCqYtgZgyEmlUu4CIINABwCgAhDoAABUAAIdAIAKwKA4YBA1Nzcbeqe1tdUADB4qdAAAKgAVOlAA5z14p5WLOyaf7a7L5Xvy3w+AwUWFDuRIJBLuAgBDCRU6gCHn2muvdddvOu+jBiCNQAcw5PjleW8j0IEITe7AIGIFs4PjZwQUBoEOAD3o6uyw9t273XU+ekwXoNRockfZ0htoV0en1Tc25n3cv4l29zjQF5+d/j5raBxjS1avjo5tWL3K1q9aZccEx/fs3mVTZ8+2sxZeHD1+66LLrW3rg8HzGt3jy9ats1G1dQaUAoGOksv3Rrq5Za3dtWJF9EZ60fLrrXnKFPfYniDIVwZvpC91dro3Tz2+ZPUa96YK9MddK24+4Jh+z/Q7uKxlXRjYu23J7Fk2c/5893u3uaXF/Q5+fdMmd/53li9z589dtNiAUqDJHSXV3RvpykWL7IogpBXyCvMbFy6ImjzXBs8Z19xsS4M3Wj0+acYMV0kB/aHft21BKM+JVd6iEF8ehrm/L3uDViPRh87T5s2Pzp+zcKELeaBUqNBRMvE30i2xN8LWrVttYhDS/g1Ulfm4pibb0drmbs9dnF0BqcldjwH9oQ+ICuZ8LTz63dIHyceC30n9XqrJ3Z+nLp94d4+qdq1eoN9rWotQClToKJnu3kh3trXa8U3Za6IfH1TkO9rSa3/rjVMXhbgqIl1UHZUDFqU5uHL6GaUr6oRNC4K6O6rI9YFTgT6qtjY63tXZecC58ceBYiPQURI9vZH6Js04BXhXzvHWBx/IquyHsr1P7XGX7u6/1rk3636x5H4fBzs+lKiS1ofKg30Y1AfOS1bc4vrSFeoPbdzojucLb73m6DpCHaVBoKPoDvZGqjfQvTlThFSdj8p5o1R1rz50DUK6KehjH8qef/wJe/yOu6P7v77p2+7iPfKt79lffvukFdsj///37IEvrTjg+P1fuMGeuPtnNpR1deh3LGFL582zz06f7n6H9Hum27KjtdUe2rQx6zlqKdrZlu7eaZ5yctBllHlcYa+xHYxyR6nQh46ii7+RuvtheOuNVCOG1U+eO1hOb65zFqQHLWkAnCp7/8Y5rrnJPT6UHTPxzfbwt74f3Vf1+2rni9H9Z7c9am/5xDlWCn95/En39fU9+u/l1Re7bKhT+PoR6qJAXrtiRTTbYlRdnX1HgzGDlqFxQRfQnqd2uZYlDcYU/Q5qsOa4sHtIMy9yB9YBxUSgo+gO9kaqQG93U4ZutknT32+b1611z1Fwix67ddEimzkvPX1o/ep/D95c59hQNqJ2tI2sHeWa1hWgR554vLuv8Bx93DHucV1KYfx5H7Ld9z0YBfoTP/65nXDGe63SaICbnxopainSdEj9bqprx91ftTprsOYnly13j6v16LT583vsiwcKjUBHyeW+kYp/I9Xc3rFBkF+0fHn02AVBE7sqJf9GqgqpXAbFDYQCc1cQnK++uNca3zvFhfuzv3rUjgqufZiW6vtSk7++H1Xm+pBx8hkL3PdWSRTUub9HOhb/3cul2Ri6AOWAQEfJ9eeNVJVQpVVDx7zjza4S/kvQnz71q5e5Y1u+8BXX/F7qilgfMLYHffyj/88x9pYLS9P0D6BnDIoDyoSr0H/+gLvtm9h1eT5ogi9lhS5/9aH3usr88e/e7T54ACg/VOhAGTlq/Amu/zy6H9wuhxnb+mCh7+XVzq6gT7/B9v7pWQNQXgh0oIy8J2xq90o1st07+arMdMC3X/rx6LZaDErdagAgG03uAABUAAIdAIAKQKADAFABCHQAACoAgQ4AQAVglDuAkmhubjYAg4cKHQCACkCFjrJzftP4vMcTicItsZJKpQzF1d7ebv1VX19vALIR6Kho+hBw+OGH5z2+d+9eF+TJZNIAYKgj0FFxhg8fbsOGDbOXX37Z3vnOd9pXvvIVe+SRR6ympsb+/Oc/21NPPWVve9vf2N/+7TttwoQJBa38AaBYCHRUnKOPPtr+9Kc/2U9/+lO76qqr7KabbrK1a9e6avzOO++0Sy+91H71q1/bnj173PmJoLWdBvehqbvuGaAaMSgOFWHEiBEusFVtP/3007Z791N2//33u2pdlbmnil3HOjs7ouMpCnQAFYAKHUPKiJEj7dVXXnG31ayu/vFXX33VXnrppag/XEH9/e/faUuXLrVTTjnFDjnkkOj5yWSqKAPg7ph8tpWbcvye+msgA+qASkWgo19K1dSpMH/++eddlf3aa6/ZkUceaY2NjUHF3Wknn3yyLVq0yD7ykY/Y7Nmz7GMf+5h749+0aVP0/Oeea7fXv/7YrNdUgU6TO4ChjkDHkPPMM8+4QN+3b58L9MMOO8xGjx5tJ510ks2aNcueffZZGzdunN1+++22f/9++/KXv+ya4WX9+vU2fvz4glfpVJAAio1AR58UI6h6mmOsvnIFsqgpXcGuJnc1tatKV9V+1FFHueb4s88+26ZPn+5Gsj/88MPuOX//93/vnhMf2U51DqASMCgOQ4qqcoWxLrrd1dVldXV1Vltba62trfaGN7zBfvvbx+3FF190Ia9zNN/cU/gr7AGg0hDoGLIU2MuXL7edO3fa7//we9u6datrjr/jjv8ImtY3uMFx/uKpaV5YGQ5ApUkETai8s6GsdNfknrsAjO4rmHPDWffHjHmDPfXUbtfHPnLkSNev7sP96quvtre85S1uvvrUqVOj18mlir+v/IYj9KEDKDb60DFk+RD2Qa+m9FGjRtknPvGJoBIfFfWrxyt0f76a3jdv3mwAUCkIdAx5Cmw1pavf/IUXXnDVuML9d7/7nb3pTW/q8bk6j7XcAVQCAh1DkoJYA96koaHBLfX63HPPuYpcU9a0jrtoVLw/T3LnnPcU5uzXDWAoIdAxJCmktRZ7vL/d31bY+2b4eJgLA0YAVCoCHUOSKm9V5nGal+7npA8GBrYBGEoIdAwZ8ZHoWkAm1yvhGu8AUI0IdJQdKmMA6DsWlgEAoAIQ6AAAVAACHQCACvD/AMkIeFVjbLt+AAAAAElFTkSuQmCC"
+                                                    }
+                               },
+                  "nodes":  {
+                                "node-1773416508579":  {
+                                                           "label":  "Fire Exit 1",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "fire_exit",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  37.69607847556495
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416512559":  {
+                                                           "label":  "Fire Exit 2",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "fire_exit",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  487.40780644417174
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416530740":  {
+                                                           "label":  "Restroom 1",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "restroom",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  105.69607847556495
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416533880":  {
+                                                           "label":  "Restroom 2",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "restroom",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  458.40780644417174
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416540391":  {
+                                                           "label":  "403",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  446
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416542301":  {
+                                                           "label":  "404",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  431.51172796860664
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416543731":  {
+                                                           "label":  "405",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  369.40780644417174
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416545272":  {
+                                                           "label":  "40",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  351.40780644417174
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416547071":  {
+                                                           "label":  "Deep Tech",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  177.69607847556495
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416548502":  {
+                                                           "label":  "411",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  136.69607847556495
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416551012":  {
+                                                           "label":  "429",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  259,
+                                                                                             "y":  210
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416560341":  {
+                                                           "label":  "IOT",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  289,
+                                                                                             "y":  429
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416565493":  {
+                                                           "label":  "430",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  295,
+                                                                                             "y":  446
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416592343":  {
+                                                           "label":  "435_B",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  295,
+                                                                                             "y":  311
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "435"
+                                                                        }
+                                                       },
+                                "node-1773416594993":  {
+                                                           "label":  "433_A",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  300.9081738012764,
+                                                                                             "y":  332
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "433"
+                                                                        }
+                                                       },
+                                "node-1773416596382":  {
+                                                           "label":  "427_B",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  287,
+                                                                                             "y":  332
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "427"
+                                                                        }
+                                                       },
+                                "node-1773416599012":  {
+                                                           "label":  "433_B",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  295,
+                                                                                             "y":  360
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "433"
+                                                                        }
+                                                       },
+                                "node-1773416601512":  {
+                                                           "label":  "432_A",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  301.82050184384036,
+                                                                                             "y":  371
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "432"
+                                                                        }
+                                                       },
+                                "node-1773416602732":  {
+                                                           "label":  "432_B",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  295,
+                                                                                             "y":  390
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "432"
+                                                                        }
+                                                       },
+                                "node-1773416604212":  {
+                                                           "label":  "431_A",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  295,
+                                                                                             "y":  408
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "431"
+                                                                        }
+                                                       },
+                                "node-1773416606943":  {
+                                                           "label":  "431_B",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  303,
+                                                                                             "y":  429
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416614253":  {
+                                                           "label":  "Meeting Zone",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room",
+                                                                            "position":  {
+                                                                                             "x":  287,
+                                                                                             "y":  371
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416657172":  {
+                                                           "label":  "Intersection 1",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  295,
+                                                                                             "y":  429
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416661591":  {
+                                                           "label":  "Intersection 2",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  295,
+                                                                                             "y":  371
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416666951":  {
+                                                           "label":  "Intersection 3",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  207,
+                                                                                             "y":  224
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416671944":  {
+                                                           "label":  "Intersection 4",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  259,
+                                                                                             "y":  224
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416673533":  {
+                                                           "label":  "435_A",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  295,
+                                                                                             "y":  224
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  "435"
+                                                                        }
+                                                       },
+                                "node-1773416679192":  {
+                                                           "label":  "Stairs 4",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "stairs",
+                                                                            "position":  {
+                                                                                             "x":  233,
+                                                                                             "y":  237.25087456271868
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416685442":  {
+                                                           "label":  "Elevator 4",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "elevator",
+                                                                            "position":  {
+                                                                                             "x":  233,
+                                                                                             "y":  210
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416690523":  {
+                                                           "label":  "Intersection 6",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  233,
+                                                                                             "y":  224
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773416944745":  {
+                                                           "label":  "Intersection 8",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "intersection",
+                                                                            "position":  {
+                                                                                             "x":  295,
+                                                                                             "y":  332
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       },
+                                "node-1773417578630":  {
+                                                           "label":  "427_A",
+                                                           "metadata":  {
+                                                                            "floor":  4,
+                                                                            "type":  "room_access",
+                                                                            "position":  {
+                                                                                             "x":  295,
+                                                                                             "y":  249
+                                                                                         },
+                                                                            "accessible":  true,
+                                                                            "room_id":  ""
+                                                                        }
+                                                       }
+                            },
+                  "edges":  [
+                                {
+                                    "source":  "node-1773416508579",
+                                    "source_label":  "Fire Exit 1",
+                                    "target":  "node-1773416530740",
+                                    "target_label":  "Restroom 1",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  68,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416530740",
+                                    "source_label":  "Restroom 1",
+                                    "target":  "node-1773416548502",
+                                    "target_label":  "411",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  31,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416548502",
+                                    "source_label":  "411",
+                                    "target":  "node-1773416547071",
+                                    "target_label":  "Deep Tech",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  41,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416547071",
+                                    "source_label":  "Deep Tech",
+                                    "target":  "node-1773416666951",
+                                    "target_label":  "Intersection 3",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  46.303921524435054,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416666951",
+                                    "source_label":  "Intersection 3",
+                                    "target":  "node-1773416690523",
+                                    "target_label":  "Intersection 6",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  26,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416690523",
+                                    "source_label":  "Intersection 6",
+                                    "target":  "node-1773416685442",
+                                    "target_label":  "Elevator 1",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  14,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416690523",
+                                    "source_label":  "Intersection 6",
+                                    "target":  "node-1773416679192",
+                                    "target_label":  "Stairs 1",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  13.250874562718678,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416690523",
+                                    "source_label":  "Intersection 6",
+                                    "target":  "node-1773416671944",
+                                    "target_label":  "Intersection 4",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  26,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416671944",
+                                    "source_label":  "Intersection 4",
+                                    "target":  "node-1773416551012",
+                                    "target_label":  "429",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  14,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416671944",
+                                    "source_label":  "Intersection 4",
+                                    "target":  "node-1773416673533",
+                                    "target_label":  "435_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  36,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773417578630",
+                                    "source_label":  "427_A",
+                                    "target":  "node-1773416673533",
+                                    "target_label":  "435_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  25,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773417578630",
+                                    "source_label":  "427_A",
+                                    "target":  "node-1773416592343",
+                                    "target_label":  "435_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  62,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416592343",
+                                    "source_label":  "435_B",
+                                    "target":  "node-1773416944745",
+                                    "target_label":  "Intersection 8",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  21,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416944745",
+                                    "source_label":  "Intersection 8",
+                                    "target":  "node-1773416596382",
+                                    "target_label":  "427_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  8,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416594993",
+                                    "source_label":  "433_A",
+                                    "target":  "node-1773416944745",
+                                    "target_label":  "Intersection 8",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  5.908173801276405,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416944745",
+                                    "source_label":  "Intersection 8",
+                                    "target":  "node-1773416599012",
+                                    "target_label":  "433_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  28,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416599012",
+                                    "source_label":  "433_B",
+                                    "target":  "node-1773416661591",
+                                    "target_label":  "Intersection 2",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  11,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416661591",
+                                    "source_label":  "Intersection 2",
+                                    "target":  "node-1773416614253",
+                                    "target_label":  "Meeting Zone",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  8,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416661591",
+                                    "source_label":  "Intersection 2",
+                                    "target":  "node-1773416601512",
+                                    "target_label":  "432_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  6.820501843840361,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416661591",
+                                    "source_label":  "Intersection 2",
+                                    "target":  "node-1773416602732",
+                                    "target_label":  "432_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  19,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416602732",
+                                    "source_label":  "432_B",
+                                    "target":  "node-1773416604212",
+                                    "target_label":  "431_A",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  18,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416604212",
+                                    "source_label":  "431_A",
+                                    "target":  "node-1773416657172",
+                                    "target_label":  "Intersection 1",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  21,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416657172",
+                                    "source_label":  "Intersection 1",
+                                    "target":  "node-1773416560341",
+                                    "target_label":  "IOT",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  6,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416657172",
+                                    "source_label":  "Intersection 1",
+                                    "target":  "node-1773416606943",
+                                    "target_label":  "431_B",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  8,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416657172",
+                                    "source_label":  "Intersection 1",
+                                    "target":  "node-1773416565493",
+                                    "target_label":  "430",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  19.941331103314837,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416540391",
+                                    "source_label":  "403",
+                                    "target":  "node-1773416565493",
+                                    "target_label":  "430",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  88.01336090549093,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416666951",
+                                    "source_label":  "Intersection 3",
+                                    "target":  "node-1773416545272",
+                                    "target_label":  "40",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  127.40780644417174,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416545272",
+                                    "source_label":  "40",
+                                    "target":  "node-1773416543731",
+                                    "target_label":  "405",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  18,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416543731",
+                                    "source_label":  "405",
+                                    "target":  "node-1773416542301",
+                                    "target_label":  "404",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  62.103921524434895,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416542301",
+                                    "source_label":  "404",
+                                    "target":  "node-1773416540391",
+                                    "target_label":  "403",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  14.488272031393365,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416540391",
+                                    "source_label":  "403",
+                                    "target":  "node-1773416533880",
+                                    "target_label":  "Restroom 2",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  12.40780644417174,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                },
+                                {
+                                    "source":  "node-1773416533880",
+                                    "source_label":  "Restroom 2",
+                                    "target":  "node-1773416512559",
+                                    "target_label":  "Fire Exit 2",
+                                    "metadata":  {
+                                                     "type":  "hallway",
+                                                     "distance":  29,
+                                                     "accessible":  true,
+                                                     "bidirectional":  true
+                                                 }
+                                }
+                            ]
+              }
+}

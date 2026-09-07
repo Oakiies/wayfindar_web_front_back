@@ -1,0 +1,244 @@
+frame,t,x,y,reason_shipping,reason_shipping_raw,held_shipping_s,n_shipping,visible_shipping,reason_v2,reason_v2_raw,held_v2_s,n_v2,visible_v2,instruction,turn_distance_px,pin_visible,arrived
+6474,108.01,,,no_fix,no_fix,,0,0,no_fix,no_fix,,0,0,GO STRAIGHT,,0,0
+6477,108.06,,,no_fix,no_fix,,0,0,no_fix,no_fix,,0,0,GO STRAIGHT,,0,0
+6480,108.11,203.3,69.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6483,108.16,203.3,68.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6486,108.21,203.3,68.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6489,108.26,203.2,68.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6492,108.31,203.2,68.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6495,108.36,203.2,68.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6498,108.41,203.2,68.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6501,108.46,203.2,68.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6504,108.51,203.2,67.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6507,108.56,203.1,67.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6510,108.61,203.1,67.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6513,108.66,203.1,67.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6516,108.71,203.1,67.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6519,108.76,203.1,67.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6522,108.81,203.0,66.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6525,108.86,203.0,66.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6528,108.91,203.0,66.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6531,108.96,203.0,66.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6534,109.01,202.9,66.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6537,109.06,202.9,66.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6540,109.11,202.9,65.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6543,109.16,202.8,65.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6546,109.21,202.8,65.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6549,109.26,202.8,65.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6552,109.31,202.8,65.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6555,109.36,202.8,64.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6558,109.41,202.7,64.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6561,109.46,202.7,64.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6564,109.51,202.7,64.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6567,109.56,202.7,64.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6570,109.61,202.6,63.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6573,109.66,202.6,63.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6576,109.71,202.6,63.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6579,109.76,202.6,63.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6582,109.81,202.6,63.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6585,109.86,202.6,62.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6588,109.91,202.6,62.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6591,109.96,202.6,62.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6594,110.01,202.6,62.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6597,110.06,202.5,62.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6600,110.11,202.5,61.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6603,110.16,202.5,61.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6606,110.21,202.5,61.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6609,110.26,202.5,61.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6612,110.31,202.5,61.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6615,110.36,202.5,60.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6618,110.41,202.5,60.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6621,110.46,202.5,60.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6624,110.51,202.5,60.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6627,110.56,202.5,60.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6630,110.61,202.5,59.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6633,110.66,202.5,59.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6636,110.71,202.5,59.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6639,110.76,202.5,59.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6642,110.81,202.5,59.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6645,110.86,202.5,58.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6648,110.91,202.5,58.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6651,110.96,202.4,58.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6654,111.01,202.5,58.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6657,111.06,202.4,58.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,GO STRAIGHT,,0,0
+6660,111.11,202.4,57.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6663,111.16,202.4,57.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6666,111.21,202.4,57.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6669,111.26,202.4,57.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6672,111.31,202.4,57.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6675,111.36,202.4,57.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6678,111.41,202.4,56.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6681,111.46,202.4,56.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6684,111.51,202.4,56.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6687,111.56,202.4,56.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6690,111.61,202.3,56.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6693,111.66,202.3,56.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6696,111.71,202.3,55.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6699,111.76,202.2,55.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6702,111.81,202.2,55.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6705,111.86,202.2,55.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6708,111.91,202.1,55.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6711,111.96,202.1,55.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6714,112.01,202.1,54.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6717,112.06,202.1,54.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6720,112.11,202.0,54.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6723,112.16,202.0,54.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6726,112.21,202.0,54.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6729,112.26,201.9,54.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6732,112.31,201.9,54.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6735,112.36,201.9,53.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6738,112.41,201.9,53.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6741,112.46,201.9,53.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6744,112.51,201.8,53.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6747,112.56,201.8,53.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6750,112.61,201.8,53.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6753,112.66,201.8,52.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6756,112.71,201.8,52.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6759,112.76,201.8,52.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6762,112.81,201.8,52.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6765,112.86,201.8,52.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6768,112.91,201.7,52.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6771,112.96,201.7,52.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6774,113.01,201.7,52.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6777,113.06,201.7,51.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6780,113.11,201.7,51.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6783,113.16,201.7,51.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6786,113.21,201.7,51.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6789,113.26,201.7,51.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6792,113.31,201.6,51.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6795,113.36,201.6,51.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6798,113.41,201.7,51.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6801,113.46,201.7,50.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6804,113.51,201.7,50.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6807,113.56,201.6,50.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6810,113.61,201.7,50.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6813,113.66,201.7,50.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6816,113.71,201.7,50.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6819,113.76,201.7,50.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6822,113.81,201.7,50.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6825,113.86,201.7,50.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6828,113.91,201.8,49.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6831,113.96,201.8,49.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6834,114.01,201.8,49.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6837,114.06,201.9,49.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6840,114.11,201.9,49.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6843,114.16,201.9,49.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6846,114.21,202.0,49.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6849,114.26,202.0,49.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6852,114.31,202.1,48.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6855,114.36,202.1,48.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6858,114.41,202.2,48.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6861,114.46,202.2,48.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6864,114.51,202.3,48.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6867,114.56,202.3,48.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6870,114.61,202.4,48.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6873,114.66,202.4,48.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6876,114.71,202.5,47.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6879,114.76,202.6,47.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6882,114.81,202.6,47.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6885,114.86,202.7,47.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6888,114.91,202.7,47.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6891,114.96,202.8,47.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6894,115.02,202.9,47.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6897,115.07,203.0,47.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6900,115.12,203.0,47.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6903,115.17,203.1,47.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6906,115.22,203.2,47.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6909,115.27,,,no_fix,no_fix,,0,0,no_fix,no_fix,,0,0,YOU HAVE ARRIVED,0.0,0,1
+6912,115.32,,,no_fix,no_fix,,0,0,no_fix,no_fix,,0,0,YOU HAVE ARRIVED,0.0,0,1
+6915,115.37,,,no_fix,no_fix,,0,0,no_fix,no_fix,,0,0,YOU HAVE ARRIVED,0.0,0,1
+6918,115.42,203.4,47.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6921,115.47,203.5,48.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6924,115.52,203.7,48.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6927,115.57,203.9,48.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6930,115.62,204.0,48.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6933,115.67,204.1,48.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6936,115.72,204.3,49.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6939,115.77,204.4,49.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6942,115.82,204.6,49.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6945,115.87,204.7,49.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6948,115.92,204.8,49.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6951,115.97,204.9,49.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6954,116.02,205.0,49.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6957,116.07,205.1,49.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6960,116.12,205.2,49.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6963,116.17,205.4,49.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6966,116.22,205.5,49.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6969,116.27,205.6,49.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6972,116.32,205.7,49.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6975,116.37,205.8,49.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6978,116.42,205.8,48.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6981,116.47,205.9,48.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6984,116.52,206.0,47.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6987,116.57,206.0,47.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6990,116.62,206.1,46.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6993,116.67,206.3,46.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6996,116.72,206.4,46.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+6999,116.77,206.6,45.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7002,116.82,206.6,45.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7005,116.87,206.7,45.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7008,116.92,206.8,45.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7011,116.97,207.0,45.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7014,117.02,207.1,45.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7017,117.07,207.2,45.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7020,117.12,207.4,45.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7023,117.17,207.5,45.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7026,117.22,207.6,45.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7029,117.27,207.8,45.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7032,117.32,207.9,45.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7035,117.37,208.0,45.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7038,117.42,208.1,45.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7041,117.47,208.1,45.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7044,117.52,208.2,45.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7047,117.57,208.3,45.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7050,117.62,208.5,45.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7053,117.67,208.5,45.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7056,117.72,208.6,45.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7059,117.77,208.8,46.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7062,117.82,208.9,46.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7065,117.87,209.0,46.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7068,117.92,209.1,46.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7071,117.97,209.2,46.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7074,118.02,209.3,46.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7077,118.07,209.4,46.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7080,118.12,209.5,46.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7083,118.17,209.7,47.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7086,118.22,209.8,47.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7089,118.27,209.9,47.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7092,118.32,210.0,47.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7095,118.37,210.1,47.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7098,118.42,210.2,47.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7101,118.47,210.2,48.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7104,118.52,210.3,48.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7107,118.57,210.4,48.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7110,118.62,210.5,48.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7113,118.67,210.5,48.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7116,118.72,210.6,48.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7119,118.77,210.6,49.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7122,118.82,210.7,49.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7125,118.87,210.7,49.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7128,118.92,210.8,49.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7131,118.97,210.8,49.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7134,119.02,210.8,50.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7137,119.07,210.9,50.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7140,119.12,210.9,50.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7143,119.17,210.9,50.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7146,119.22,211.0,50.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7149,119.27,211.0,51.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7152,119.32,211.0,51.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7155,119.37,211.0,51.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7158,119.42,211.0,51.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7161,119.47,211.1,51.9,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7164,119.52,211.1,52.1,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7167,119.57,211.1,52.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7170,119.62,211.1,52.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7173,119.67,211.1,52.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7176,119.72,211.1,53.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7179,119.77,211.1,53.2,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7182,119.82,211.1,53.4,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7185,119.87,211.1,53.6,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7188,119.92,211.1,53.8,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7191,119.97,211.1,54.0,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7194,120.02,211.1,54.3,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7197,120.07,211.1,54.5,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1
+7200,120.12,211.0,54.7,no_anchors,no_anchors,,0,0,no_anchors,no_anchors,,0,0,YOU HAVE ARRIVED,0.0,1,1

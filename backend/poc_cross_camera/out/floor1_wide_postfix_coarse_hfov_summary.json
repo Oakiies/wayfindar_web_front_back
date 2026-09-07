@@ -1,0 +1,200 @@
+{
+  "experiment": "paper-backed fixed-map query-side sweep",
+  "pipeline_locked": {
+    "retrieval": "MegaLoc",
+    "local_features": "SuperPoint",
+    "matcher": "LightGlueMatcher",
+    "pose": "PnP-RANSAC",
+    "top_k": 4,
+    "map_data": "D:\\wayfindar\\WebNav_front_back\\backend\\app\\data\\map_data\\result_floor1_4",
+    "map_rebuilt": false
+  },
+  "camera": {
+    "K": [
+      [
+        1400.0,
+        0.0,
+        964.7
+      ],
+      [
+        0.0,
+        1400.0,
+        546.2
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "keyframe_size": [
+      1920,
+      1080
+    ],
+    "size_inferred_by_current_code": [
+      1929,
+      1092
+    ],
+    "map_hfov_deg": 68.87797861760724
+  },
+  "sampling": {
+    "fps": 38.542229297552375,
+    "video_frames": 20337,
+    "step_seconds": 20.0,
+    "sampled_frames": 27
+  },
+  "results": {
+    "per_config": {
+      "raw_production": {
+        "attempts": 27,
+        "successes": 15,
+        "success_rate": 0.5555555555555556,
+        "median_inliers_on_success": 12.0,
+        "median_reproj_on_success": 2.683551848863802,
+        "failure_stages": {
+          "local_matching": 2,
+          "pnp_insufficient_inliers": 10,
+          "quality_or_pose_gate": 0
+        }
+      },
+      "raw_exact_1920x1080": {
+        "attempts": 27,
+        "successes": 15,
+        "success_rate": 0.5555555555555556,
+        "median_inliers_on_success": 12.0,
+        "median_reproj_on_success": 3.475464392926469,
+        "failure_stages": {
+          "local_matching": 2,
+          "pnp_insufficient_inliers": 9,
+          "quality_or_pose_gate": 1
+        }
+      },
+      "vc_hfov_70_yaw_+0": {
+        "attempts": 27,
+        "successes": 17,
+        "success_rate": 0.6296296296296297,
+        "median_inliers_on_success": 12.0,
+        "median_reproj_on_success": 3.2569575353498035,
+        "failure_stages": {
+          "local_matching": 2,
+          "pnp_insufficient_inliers": 8,
+          "quality_or_pose_gate": 0
+        }
+      },
+      "vc_hfov_80_yaw_+0": {
+        "attempts": 27,
+        "successes": 15,
+        "success_rate": 0.5555555555555556,
+        "median_inliers_on_success": 12.0,
+        "median_reproj_on_success": 3.752689057545603,
+        "failure_stages": {
+          "local_matching": 2,
+          "pnp_insufficient_inliers": 10,
+          "quality_or_pose_gate": 0
+        }
+      },
+      "vc_hfov_90_yaw_+0": {
+        "attempts": 27,
+        "successes": 16,
+        "success_rate": 0.5925925925925926,
+        "median_inliers_on_success": 12.0,
+        "median_reproj_on_success": 3.3274840064703053,
+        "failure_stages": {
+          "local_matching": 0,
+          "pnp_insufficient_inliers": 11,
+          "quality_or_pose_gate": 0
+        }
+      },
+      "vc_hfov_100_yaw_+0": {
+        "attempts": 27,
+        "successes": 18,
+        "success_rate": 0.6666666666666666,
+        "median_inliers_on_success": 11.0,
+        "median_reproj_on_success": 3.558668933348028,
+        "failure_stages": {
+          "local_matching": 1,
+          "pnp_insufficient_inliers": 8,
+          "quality_or_pose_gate": 0
+        }
+      },
+      "vc_hfov_110_yaw_+0": {
+        "attempts": 27,
+        "successes": 18,
+        "success_rate": 0.6666666666666666,
+        "median_inliers_on_success": 12.0,
+        "median_reproj_on_success": 3.4684503039573076,
+        "failure_stages": {
+          "local_matching": 1,
+          "pnp_insufficient_inliers": 8,
+          "quality_or_pose_gate": 0
+        }
+      },
+      "vc_hfov_120_yaw_+0": {
+        "attempts": 27,
+        "successes": 16,
+        "success_rate": 0.5925925925925926,
+        "median_inliers_on_success": 12.5,
+        "median_reproj_on_success": 3.699373502283585,
+        "failure_stages": {
+          "local_matching": 0,
+          "pnp_insufficient_inliers": 11,
+          "quality_or_pose_gate": 0
+        }
+      }
+    },
+    "multi_view_per_hfov": {
+      "vc_multi_hfov_70": {
+        "frames": 27,
+        "successes_any_yaw": 17,
+        "success_rate": 0.6296296296296297,
+        "selection": "max inliers, then max inlier ratio, then min median reprojection error"
+      },
+      "vc_multi_hfov_80": {
+        "frames": 27,
+        "successes_any_yaw": 15,
+        "success_rate": 0.5555555555555556,
+        "selection": "max inliers, then max inlier ratio, then min median reprojection error"
+      },
+      "vc_multi_hfov_90": {
+        "frames": 27,
+        "successes_any_yaw": 16,
+        "success_rate": 0.5925925925925926,
+        "selection": "max inliers, then max inlier ratio, then min median reprojection error"
+      },
+      "vc_multi_hfov_100": {
+        "frames": 27,
+        "successes_any_yaw": 18,
+        "success_rate": 0.6666666666666666,
+        "selection": "max inliers, then max inlier ratio, then min median reprojection error"
+      },
+      "vc_multi_hfov_110": {
+        "frames": 27,
+        "successes_any_yaw": 18,
+        "success_rate": 0.6666666666666666,
+        "selection": "max inliers, then max inlier ratio, then min median reprojection error"
+      },
+      "vc_multi_hfov_120": {
+        "frames": 27,
+        "successes_any_yaw": 16,
+        "success_rate": 0.5925925925925926,
+        "selection": "max inliers, then max inlier ratio, then min median reprojection error"
+      }
+    }
+  },
+  "papers_and_official_code": {
+    "360Loc": "https://openaccess.thecvf.com/content/CVPR2024/html/Huang_360Loc_A_Dataset_and_Benchmark_for_Omnidirectional_Visual_Localization_with_CVPR_2024_paper.html",
+    "360Loc_code": "https://github.com/HuajianUP/360Loc/blob/main/process.py",
+    "MegaLoc": "https://arxiv.org/abs/2502.17237",
+    "SuperPoint": "https://openaccess.thecvf.com/content_cvpr_2018_workshops/w9/html/DeTone_SuperPoint_Self-Supervised_Interest_CVPR_2018_paper.html",
+    "LightGlue": "https://openaccess.thecvf.com/content/ICCV2023/html/Lindenberger_LightGlue_Local_Feature_Matching_at_Light_Speed_ICCV_2023_paper.html"
+  },
+  "limitations": [
+    "Source HFoV is swept because the MOV file does not provide calibrated K/distortion.",
+    "The source is not panoramic; invalid virtual-camera rays remain black.",
+    "Success means the unchanged production quality gates accepted PnP, not metric accuracy against ground truth."
+  ],
+  "outputs": {
+    "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_postfix_coarse_hfov.csv",
+    "trajectory": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_postfix_coarse_hfov_trajectory.png"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "source_csv": "poc_cross_camera\\out\\floor1_wide_pare_canonical_topk20.csv",
+  "method": "MAD-based outlier flag (|modified z| > 3.5) on consecutive position-jump and heading-jump magnitudes, each divided by the elapsed time between the two accepted poses (px/s, deg/s) since failed timestamps leave gaps of 10/20/30s+ that would otherwise dominate the statistic. No absolute meters-per-pixel scale is available for this map, so this is a relative/self-normalizing check, not an absolute speed gate.",
+  "per_config": [
+    {
+      "config": "raw_production",
+      "total_timestamps": 34,
+      "gate_pass_successes": 33,
+      "gate_pass_rate": 0.9705882352941176,
+      "trajectory_consistent_successes": 33,
+      "trajectory_consistent_rate": 0.9705882352941176,
+      "flagged_as_position_or_heading_outlier": 0,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 6.926853037924932,
+      "median_heading_speed_deg_per_s": 4.981587669947832
+    },
+    {
+      "config": "raw_exact_1920x1080",
+      "total_timestamps": 34,
+      "gate_pass_successes": 32,
+      "gate_pass_rate": 0.9411764705882353,
+      "trajectory_consistent_successes": 32,
+      "trajectory_consistent_rate": 0.9411764705882353,
+      "flagged_as_position_or_heading_outlier": 0,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 6.9693149640361005,
+      "median_heading_speed_deg_per_s": 4.758984355475583
+    }
+  ]
+}

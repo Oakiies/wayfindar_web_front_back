@@ -1,0 +1,7 @@
+id,name,floor,floorThai,hours,logo,color,address,category,logoSrc
+1,KFC,Floor 1,ชั้น 2A,"เปิด - ปิด 21:00",🍗,bg-red-600,เคเอฟซี สยามพารากอน,อาหารฟาสต์ฟู้ด,/logo/KFC_logo.png
+2,Starbuck,Floor 2,ชั้น 2,"เปิด - ปิด 22:00",☕,bg-green-700,สตาร์บัคส์ สยามพารากอน,คาเฟ่,/logo/starbuck_logo.png
+3,Nose tee,Floor 2,ชั้น 2,"เปิด - ปิด 22:00",🍵,bg-green-600,โนสที สยามพารากอน,ชา/เครื่องดื่ม,/logo/nose_tee_logo.png
+4,Fuku Matcha,Floor M,ชั้น M,"เปิด - ปิด 22:00",🍵,bg-amber-600,ฟูกุ มัทฉะ สยามพารากอน,ของหวาน,/logo/fuku_matcha.png
+5,TeeNoi,Floor M,ชั้น M,"เปิด - ปิด 22:00",🍜,bg-red-500,ตีนัว สยามพารากอน,อาหารฟาสต์ฟู้ด,/logo/teenoi_logo.jpg
+6,Pizza Hut,Floor 2,ชั้น 3,"เปิด - ปิด 21:00",🍕,bg-red-700,พิซซ่าฮัท สยามพารากอน,อาหารฟาสต์ฟู้ด,/logo/pizza_hut_logo.png

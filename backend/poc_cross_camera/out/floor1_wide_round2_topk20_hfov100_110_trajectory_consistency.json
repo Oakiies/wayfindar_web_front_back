@@ -1,0 +1,54 @@
+{
+  "source_csv": "out\\floor1_wide_round2_topk20_hfov100_110.csv",
+  "method": "MAD-based outlier flag (|modified z| > 3.5) on consecutive position-jump and heading-jump magnitudes, each divided by the elapsed time between the two accepted poses (px/s, deg/s) since failed timestamps leave gaps of 10/20/30s+ that would otherwise dominate the statistic. No absolute meters-per-pixel scale is available for this map, so this is a relative/self-normalizing check, not an absolute speed gate.",
+  "per_config": [
+    {
+      "config": "raw_production",
+      "total_timestamps": 53,
+      "gate_pass_successes": 28,
+      "gate_pass_rate": 0.5283018867924528,
+      "trajectory_consistent_successes": 28,
+      "trajectory_consistent_rate": 0.5283018867924528,
+      "flagged_as_position_or_heading_outlier": 0,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 4.907606690273805,
+      "median_heading_speed_deg_per_s": 3.1918610471518667
+    },
+    {
+      "config": "raw_exact_1920x1080",
+      "total_timestamps": 53,
+      "gate_pass_successes": 29,
+      "gate_pass_rate": 0.5471698113207547,
+      "trajectory_consistent_successes": 27,
+      "trajectory_consistent_rate": 0.5094339622641509,
+      "flagged_as_position_or_heading_outlier": 2,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 4.560104596515362,
+      "median_heading_speed_deg_per_s": 2.7163713418093227
+    },
+    {
+      "config": "vc_hfov_100_yaw_+0",
+      "total_timestamps": 53,
+      "gate_pass_successes": 29,
+      "gate_pass_rate": 0.5471698113207547,
+      "trajectory_consistent_successes": 29,
+      "trajectory_consistent_rate": 0.5471698113207547,
+      "flagged_as_position_or_heading_outlier": 0,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 4.698600578175949,
+      "median_heading_speed_deg_per_s": 2.9792021223345677
+    },
+    {
+      "config": "vc_hfov_110_yaw_+0",
+      "total_timestamps": 53,
+      "gate_pass_successes": 29,
+      "gate_pass_rate": 0.5471698113207547,
+      "trajectory_consistent_successes": 29,
+      "trajectory_consistent_rate": 0.5471698113207547,
+      "flagged_as_position_or_heading_outlier": 0,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 4.2982944516460595,
+      "median_heading_speed_deg_per_s": 3.19729202122335
+    }
+  ]
+}

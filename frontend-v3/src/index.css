@@ -1,0 +1,233 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens — one palette, one radius scale, two shadows.
+   Everything in the app should reference these instead of ad-hoc hex values.
+   ========================================================================== */
+@theme static {
+  /* Surfaces: warm neutral paper -> white cards. */
+  --color-paper: #f2f1ee;
+  --color-paper-2: #e9e8e4;
+  --color-surface: #ffffff;
+  --color-surface-2: #f6f5f2;
+
+  /* Floor rail selection colour carried over from the original frontend. */
+  --color-floor-active: #e8e0d5;
+  --color-floor-active-line: #d6cdbf;
+  --color-floor-active-ink: #7a6e62;
+
+  /* Ink: 4 steps, enough for a whole app. */
+  --color-ink: #111315;
+  --color-ink-2: #55595f;
+  --color-ink-3: #8a8f96;
+  --color-ink-4: #b6bac0;
+
+  /* Hairlines. */
+  --color-line: #e4e2dd;
+  --color-line-2: #efedea;
+
+  /* One accent, shared with the route colour drawn on the map canvas. */
+  --color-accent: #0d6efd;
+  --color-accent-soft: #e8f0ff;
+  --color-danger: #e5484d;
+  --color-warn: #f59e0b;
+  --color-ok: #22c55e;
+
+  /* Radii. */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  /* Exactly two elevations. */
+  --shadow-card: 0 1px 2px rgb(17 19 21 / 0.04), 0 8px 24px -12px rgb(17 19 21 / 0.16);
+  --shadow-float: 0 2px 6px rgb(17 19 21 / 0.06), 0 18px 40px -18px rgb(17 19 21 / 0.28);
+
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Tabular figures keep the big ETA number from jittering as it updates. */
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+/* ==========================================================================
+   Component primitives
+   ========================================================================== */
+@layer components {
+  /* Translucent chrome that floats over the map. */
+  .glass {
+    background: rgb(255 255 255 / 0.86);
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    border: 1px solid rgb(255 255 255 / 0.7);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Same treatment, dark — used over the camera feed. */
+  .glass-dark {
+    background: rgb(17 19 21 / 0.58);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid rgb(255 255 255 / 0.16);
+  }
+
+  .press {
+    transition:
+      transform 150ms var(--ease-out),
+      background-color 150ms var(--ease-out),
+      border-color 150ms var(--ease-out),
+      color 150ms var(--ease-out);
+  }
+
+  .press:active {
+    transform: scale(0.97);
+  }
+
+  /* 44px minimum hit target — every interactive control gets this. */
+  .tap {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Primary action: solid ink. */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 52px;
+    border-radius: var(--radius-md);
+    background: var(--color-ink);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .btn-primary:hover {
+    background: #24282c;
+  }
+
+  /* Secondary action: quiet surface. */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 52px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-line);
+    color: var(--color-ink-2);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-paper-2);
+    color: var(--color-ink);
+  }
+
+  /* Field-looking button (the From / To rows). */
+  .field {
+    width: 100%;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-line);
+    padding: 0.625rem 0.75rem;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+
+  .field:hover {
+    background: var(--color-paper-2);
+  }
+
+  /* Small uppercase section label. */
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-4);
+  }
+}
+
+/* ==========================================================================
+   Motion & utilities
+   ========================================================================== */
+@keyframes sheet-in {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-sheet-in {
+  animation: sheet-in 260ms var(--ease-out) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 200ms var(--ease-out) both;
+}
+
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar,
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.custom-shadow {
+  box-shadow: var(--shadow-card);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press {
+    transition-duration: 0.01ms;
+  }
+
+  .press:active {
+    transform: none;
+  }
+
+  .animate-sheet-in,
+  .animate-fade-in {
+    animation: none;
+  }
+}

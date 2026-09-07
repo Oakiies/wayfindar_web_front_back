@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#07101d" />
+    <title>PDR × VaL fusion POC</title>
+    <style>
+      :root { color-scheme: dark; --bg: #07101d; --panel: #0c1728; --line: rgba(148,163,184,.2); --text: #e5eefc; --muted: #8da0b9; --accent: #4ade80; --blue: #60a5fa; --orange: #fb923c; --mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-width: 320px; color: var(--text); background: radial-gradient(circle at 10% 0%, #112744 0%, var(--bg) 45%); font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; overscroll-behavior: contain; }
+      button, input { font: inherit; }
+      .shell { width: min(100% - 24px, 980px); margin: 0 auto; padding: 22px 0 34px; }
+      .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
+      .eyebrow { color: var(--accent); font: 11px var(--mono); letter-spacing: .12em; }
+      h1 { margin: 7px 0 5px; font-size: clamp(23px, 5.5vw, 38px); line-height: 1.08; letter-spacing: -.04em; }
+      .subtitle { max-width: 670px; margin: 0; color: var(--muted); font-size: 13px; }
+      .live-chip { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: rgba(12,23,40,.7); font: 10px var(--mono); }
+      .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; box-shadow: 0 0 0 4px rgba(100,116,139,.14); }
+      .live-chip.active .live-dot { background: var(--accent); box-shadow: 0 0 0 4px rgba(74,222,128,.14); }
+      .panel { border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg, rgba(15,31,52,.94), rgba(8,17,30,.96)); box-shadow: 0 16px 50px rgba(0,0,0,.2); overflow: hidden; margin-bottom: 16px; }
+      .panel-header { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 15px 16px; border-bottom: 1px solid var(--line); }
+      .panel-title { font-weight: 700; }
+      .panel-meta { color: var(--muted); font: 10px var(--mono); text-align: right; }
+      .map-wrap { position: relative; margin: 16px; aspect-ratio: 16 / 9; max-height: 62vh; border: 1px solid rgba(148,163,184,.14); border-radius: 14px; overflow: hidden; background: #000; }
+      canvas { display: block; width: 100%; height: 100%; }
+      #cameraVideo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000; }
+      .minimap { position: absolute; top: 10px; right: 10px; width: 40%; max-width: 230px; aspect-ratio: 1 / 1; border-radius: 10px; overflow: hidden; border: 2px solid rgba(148,163,184,.45); box-shadow: 0 8px 22px rgba(0,0,0,.55); background: #0a1323; }
+      .map-legend { position: absolute; left: 12px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 10px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); background: rgba(7,12,21,.78); font: 10px var(--mono); }
+      .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+      .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+      .legend-line { width: 14px; height: 2px; display: inline-block; }
+      .legend-pdr .legend-line { background: repeating-linear-gradient(90deg, #94a3b8 0 3px, transparent 3px 6px); }
+      .legend-fused .legend-line { background: var(--accent); }
+      .legend-fix { background: var(--orange); }
+      .legend-dest { background: #f472b6; }
+      .nav-banner { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); padding: 8px 18px; border-radius: 999px; background: rgba(7,12,21,.82); backdrop-filter: blur(6px); color: var(--text); font: 700 15px/1.3 system-ui, sans-serif; letter-spacing: .02em; box-shadow: 0 6px 18px rgba(0,0,0,.4); white-space: nowrap; }
+      .landscape-debug { display: none; position: fixed; left: 12px; right: 12px; bottom: max(10px, env(safe-area-inset-bottom)); z-index: 60; background: rgba(7,12,21,.82); backdrop-filter: blur(6px); border-radius: 10px; padding: 6px 10px; color: var(--muted); font: 11px var(--mono); text-align: center; white-space: nowrap; overflow-x: auto; }
+      .event-log { margin: 0 16px 16px; padding: 8px 10px; max-height: 130px; overflow-y: auto; border: 1px solid rgba(148,163,184,.14); border-radius: 12px; background: #0a1323; color: var(--muted); font: 11px/1.6 var(--mono); }
+      .event-log:empty::before { content: "ยังไม่มี event · เริ่มแล้วเดินเพื่อดู step + VaL fix แบบสด"; }
+      .event-log div:first-child { color: var(--text); }
+      .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 16px 15px; }
+      .stat { padding: 10px; border: 1px solid var(--line); border-radius: 11px; background: rgba(7,12,21,.25); }
+      .stat-label { color: var(--muted); font: 10px var(--mono); }
+      .stat-value { margin-top: 4px; font: 500 14px var(--mono); }
+      .settings { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 16px 10px; color: var(--muted); font: 11px var(--mono); }
+      .settings label { display: inline-flex; align-items: center; gap: 8px; }
+      .settings input[type="number"], .settings input[type="text"] { width: 110px; min-height: 40px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 9px; color: var(--text); background: rgba(7,12,21,.5); font: 12px var(--mono); }
+      .settings input[type="checkbox"] { width: 18px; min-height: 18px; accent-color: var(--accent); }
+      .settings input[type="range"] { width: 118px; accent-color: var(--accent); }
+      .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; padding: 4px 16px 16px; }
+      .btn { min-height: 46px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; color: var(--text); background: rgba(148,163,184,.1); cursor: pointer; }
+      .btn:active { transform: translateY(1px); } .btn:focus-visible, input:focus-visible { outline: 3px solid rgba(74,222,128,.65); outline-offset: 2px; }
+      .btn:disabled { opacity: .45; cursor: not-allowed; }
+      .btn-primary { color: #052e16; background: var(--accent); border-color: var(--accent); font-weight: 800; }
+      .btn-orange { color: #431407; background: var(--orange); border-color: var(--orange); font-weight: 700; }
+      .notice { margin: 15px 0 0; padding: 13px 15px; border: 1px solid rgba(251,191,36,.24); border-radius: 14px; color: #fde68a; background: rgba(251,191,36,.08); font-size: 12px; }
+      .footer { margin-top: 15px; color: var(--muted); text-align: center; font: 11px/1.6 var(--mono); }
+      @media (max-width: 650px) { .topbar { flex-direction: column; } .live-chip { align-self: flex-start; } .stats { grid-template-columns: repeat(2, 1fr); } .controls { grid-template-columns: 1fr; } .settings { align-items: flex-start; flex-direction: column; gap: 5px; } .settings label { min-height: 40px; } }
+      /* holding the phone sideways to walk with the camera up is the real
+         "in use" state — let the camera+minimap take over the whole screen
+         instead of sitting in a small 16:9 box inside the scrolling page */
+      @media (orientation: landscape) and (max-height: 650px) {
+        .map-wrap { position: fixed; inset: 0; margin: 0; aspect-ratio: unset; max-height: none; border-radius: 0; border: none; z-index: 50; }
+        .minimap { width: 34vw; max-width: 320px; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); }
+        /* the fullscreen camera box sits on top of everything else in normal
+           flow, so float the controls and status chip above it (higher
+           z-index) instead of leaving them stuck underneath, unreachable */
+        .controls { position: fixed; left: 12px; right: 12px; bottom: max(40px, calc(env(safe-area-inset-bottom) + 30px)); z-index: 60; background: rgba(7,12,21,.82); backdrop-filter: blur(6px); border-radius: 12px; padding: 5px; margin: 0; gap: 6px; }
+        .controls .btn { min-height: 30px; padding: 5px 8px; font-size: 12px; border-radius: 8px; }
+        .live-chip { position: fixed; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left)); z-index: 60; }
+        .landscape-debug { display: block; }
+      }
+      @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">PDR + VAL LOOSELY-COUPLED FUSION POC</div>
+          <h1>PDR เดินต่อเนื่อง แก้ดริฟท์ด้วย backend จริง</h1>
+          <p class="subtitle">กด เริ่ม → ขอกล้อง → full localize ครั้งแรก (โหลดแผนที่จริงของชั้นที่เจอ) → PDR วิ่งต่อเนื่องจากจุดนั้น → เดินสะสม drift เกิน dmax เมื่อไหร่เรียก <code>/api/live-localize</code> แก้ดริฟท์อัตโนมัติ (ไม่ใช่ timer ตายตัว) ด้วยสูตร confidence-weighted blend จาก WebARNav paper — สแกน 2D บนแผนที่จริงเท่านั้น ยังไม่ใช่ 3D AR overlay</p>
+        </div>
+        <div class="live-chip" id="liveChip"><span class="live-dot"></span><span id="topStatus">READY TO START</span></div>
+      </header>
+
+      <section class="panel" aria-label="fusion demo">
+        <div class="panel-header"><div class="panel-title">Trajectory: PDR-only vs Fused</div><div class="panel-meta" id="sensorMeta">IMU + camera permission required</div></div>
+        <div class="map-wrap">
+          <video id="cameraVideo" autoplay muted playsinline></video>
+          <div class="nav-banner" id="navBanner" hidden></div>
+          <div class="landscape-debug" id="landscapeDebugBar"></div>
+          <div class="minimap"><canvas id="routeCanvas" aria-label="เส้นทาง PDR เทียบ fused"></canvas></div>
+          <div class="map-legend">
+            <span class="legend-item legend-pdr"><i class="legend-line"></i>PDR-only</span>
+            <span class="legend-item legend-fused"><i class="legend-line"></i>Fused</span>
+            <span class="legend-item"><i class="legend-dot legend-fix"></i>VaL fix</span>
+            <span class="legend-item"><i class="legend-dot legend-dest"></i>ปลายทาง</span>
+          </div>
+        </div>
+        <div class="event-log" id="eventLog"></div>
+        <div class="stats">
+          <div class="stat"><div class="stat-label">STEPS / DIST</div><div class="stat-value" id="stepsValue">0 · 0.00 m</div></div>
+          <div class="stat"><div class="stat-label">VAL CALLS</div><div class="stat-value" id="valCallsValue">0</div></div>
+          <div class="stat"><div class="stat-label">LAST FIX</div><div class="stat-value" id="lastFixValue">—</div></div>
+          <div class="stat"><div class="stat-label">DRIFT BUDGET</div><div class="stat-value" id="driftValue">0.00 / 5.00 m</div></div>
+          <div class="stat"><div class="stat-label">SCALE (map/m)</div><div class="stat-value" id="scaleValue">not yet</div></div>
+          <div class="stat"><div class="stat-label">INLIERS</div><div class="stat-value" id="inlierValue">—</div></div>
+          <div class="stat"><div class="stat-label">LOCALIZE TIME</div><div class="stat-value" id="localizeTimeValue">—</div></div>
+          <div class="stat"><div class="stat-label">FLOOR</div><div class="stat-value" id="floorValue">auto</div></div>
+          <div class="stat"><div class="stat-label">MODE</div><div class="stat-value" id="modeValue">—</div></div>
+          <div class="stat"><div class="stat-label">HEADING DEBUG</div><div class="stat-value" id="headingDebugValue" style="font-size:12px;">—</div></div>
+        </div>
+        <div class="settings"><label for="destinationSelect">ไปที่ <select id="destinationSelect"><option value="">— ไม่เลือกปลายทาง (แค่ track ตำแหน่ง) —</option></select></label><span id="destinationHint">โหลดรายชื่อห้อง…</span></div>
+        <div class="settings"><label for="floorInput">FLOOR ID <input id="floorInput" type="text" placeholder="ว่าง = auto" /></label><span>ปล่อยว่างให้ backend เดาชั้นจากภาพ</span></div>
+        <div class="settings"><label for="dmaxInput">DRIFT BUDGET (dmax) <input id="dmaxInput" type="number" min="1" max="30" step="0.5" value="5" /> m</label><span>เดินไกลเกินนี้แล้วยังไม่มี fix ใหม่ → เรียก backend</span></div>
+        <div class="settings"><label for="valEnabledInput"><input id="valEnabledInput" type="checkbox" checked /> เปิด VaL correction</label><span id="valHint">ปิดไว้ดู PDR-only drift ล้วน ๆ ได้</span></div>
+        <div class="settings"><label for="heightInput">HEIGHT <input id="heightInput" type="number" min="80" max="250" step="1" value="170" inputmode="numeric" /> cm</label><span>optional height prior สำหรับความยาวก้าว</span></div>
+        <div class="settings"><label for="autoStepLengthInput"><input id="autoStepLengthInput" type="checkbox" checked /> ADAPTIVE STEP LENGTH</label><span id="calibrationHint">Weinberg model · per-step length</span></div>
+        <div class="settings"><label for="stepLengthInput">STEP LENGTH <input id="stepLengthInput" type="number" min="0.35" max="1.20" step="0.01" value="0.71" inputmode="decimal" /> m</label><span>ปิด adaptive แล้วใส่ค่าคงที่เอง — วิธี calibrate: เดินระยะที่รู้จริง (เช่น 10m) นับก้าวจาก STEPS/DIST แล้วหาร 10/จำนวนก้าว ใส่ค่านั้น</span></div>
+        <div class="controls">
+          <button class="btn btn-primary" id="startBtn" type="button">เริ่ม</button>
+          <button class="btn btn-orange" id="localizeBtn" type="button" disabled>Localize Now</button>
+          <button class="btn" id="clearBtn" type="button">ล้างเส้นทาง</button>
+        </div>
+        <div class="settings"><label for="forceHeadingBtn">Debug fallback <button class="btn" id="forceHeadingBtn" type="button" disabled style="min-height:36px;padding:6px 12px;">บังคับเชื่อทันที</button></label><span>ปกติไม่ต้องใช้ — ทิศทางที่พลิกจะแก้เองเมื่อเดินแล้วมี VaL fix ใหม่จากจุดที่ต่างออกไปเห็นพ้องกัน 2 ครั้ง ใช้ปุ่มนี้เฉพาะตอนทดสอบ/รอนานเกินไป</span></div>
+      </section>
+
+      <div class="notice">
+        <strong>ข้อจำกัดของ POC นี้:</strong> (1) เป็นการเทียบตำแหน่ง 2D เท่านั้น ยังไม่ใช่ 3D AR camera overlay จริง (2) scale (map-unit ↔ เมตร) และการจัดแนวทิศทาง คำนวณอัตโนมัติจาก fix 2 ครั้งแรก — ถ้าเห็น fused trajectory วิ่งผิดทิศทางชัดเจน (มุมมองกลับด้าน) ให้บันทึกไว้บอกเป็นจุดที่ต้องแก้ต่อ ไม่ใช่แปลว่า PDR พัง (3) backend ต้องรันอยู่แล้ว (<code>npm run dev</code> หรือ <code>dev:https</code>) หน้านี้เรียก <code>/api/live-localize</code> แบบ same-origin ผ่าน Vite proxy
+      </div>
+      <div class="footer" id="motionText">ยังไม่เริ่ม tracking</div>
+    </main>
+
+    <canvas id="captureCanvas" style="display:none;"></canvas>
+
+    <script>
+      const routeCanvas = document.getElementById('routeCanvas');
+      const routeCtx = routeCanvas.getContext('2d');
+      const startBtn = document.getElementById('startBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const localizeBtn = document.getElementById('localizeBtn');
+      const floorInput = document.getElementById('floorInput');
+      const dmaxInput = document.getElementById('dmaxInput');
+      const valEnabledInput = document.getElementById('valEnabledInput');
+      const valHint = document.getElementById('valHint');
+      const motionText = document.getElementById('motionText');
+      const sensorMeta = document.getElementById('sensorMeta');
+      const topStatus = document.getElementById('topStatus');
+      const liveChip = document.getElementById('liveChip');
+      const stepsValue = document.getElementById('stepsValue');
+      const valCallsValue = document.getElementById('valCallsValue');
+      const lastFixValue = document.getElementById('lastFixValue');
+      const driftValue = document.getElementById('driftValue');
+      const scaleValue = document.getElementById('scaleValue');
+      const inlierValue = document.getElementById('inlierValue');
+      const localizeTimeValue = document.getElementById('localizeTimeValue');
+      const floorValue = document.getElementById('floorValue');
+      const cameraVideo = document.getElementById('cameraVideo');
+      const captureCanvas = document.getElementById('captureCanvas');
+      const destinationSelect = document.getElementById('destinationSelect');
+      const destinationHint = document.getElementById('destinationHint');
+      const navBanner = document.getElementById('navBanner');
+      const heightInput = document.getElementById('heightInput');
+      const autoStepLengthInput = document.getElementById('autoStepLengthInput');
+      const stepLengthInput = document.getElementById('stepLengthInput');
+      const calibrationHint = document.getElementById('calibrationHint');
+      const modeValue = document.getElementById('modeValue');
+      const forceHeadingBtn = document.getElementById('forceHeadingBtn');
+      const headingDebugValue = document.getElementById('headingDebugValue');
+      const landscapeDebugBar = document.getElementById('landscapeDebugBar');
+
+      let running = false;
+      let raf = 0;
+      let startedAt = 0;
+      let sensorsAttached = false;
+      let cameraStream = null;
+      let path = [{ x: 0, y: 0 }]; // PDR-only, never corrected — same math as poc-pdr
+      let fusedPath = [{ x: 0, y: 0 }]; // corrected trajectory shown alongside it
+      let fixMarkers = []; // {x,y} in fused-meters space, one per successful VaL fix
+      let eventLog = [];
+      const eventLogEl = document.getElementById('eventLog');
+      let latestImu = { gx: 0, gy: 0, gz: 0 };
+      let latestCompassAlphaDeg = null;
+      let mapImage = null; // real floor-plan <img>, loaded after the first successful localize
+      const MAP_COORD_RANGE = 500; // matches frontend-v3's MapCanvas MAP_SIZE / MAP_COORDINATE_RANGE
+      let rooms = []; // from /api/rooms?all=1 — {id,name,type,floor_id,x,y}
+
+      let pdr = {};
+      let val = {}; // fusion state, see resetVal()
+
+      // Rooms list is independent of the camera/PDR flow — load it as soon as the
+      // page opens so the destination picker is ready before the user even starts.
+      async function loadRooms() {
+        try {
+          const res = await fetch('/api/rooms?all=1');
+          const data = await res.json();
+          rooms = Array.isArray(data.rooms) ? data.rooms : [];
+          if (!rooms.length) { destinationHint.textContent = data.error || 'ยังไม่มีรายชื่อห้อง (backend ยังไม่พร้อม?)'; return; }
+          rooms.sort((a, b) => (a.floor_id || '').localeCompare(b.floor_id || '') || a.name.localeCompare(b.name));
+          destinationSelect.innerHTML = '<option value="">— ไม่เลือกปลายทาง (แค่ track ตำแหน่ง) —</option>' +
+            rooms.map((room, i) => `<option value="${i}">${room.name} · ${room.floor_id}</option>`).join('');
+          destinationHint.textContent = `${rooms.length} ห้อง — เลือกแล้วจะขอเส้นทาง+ทิศทางจาก backend ทุกครั้งที่ localize`;
+        } catch (error) {
+          destinationHint.textContent = `โหลดรายชื่อห้องไม่สำเร็จ: ${error.message} (backend ยังไม่พร้อม? กด เริ่ม แล้วลองเลือกใหม่ทีหลังได้)`;
+        }
+      }
+
+      function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+      function normalizeAngle(angle) { return Math.atan2(Math.sin(angle), Math.cos(angle)); }
+      function isFiniteAcceleration(value) { return value && Number.isFinite(value.x) && Number.isFinite(value.y) && Number.isFinite(value.z); }
+      function isFinitePoint(p) { return p && Number.isFinite(p.x) && Number.isFinite(p.y); }
+
+      function resetPdr() {
+        pdr = {
+          gravity: { x: 0, y: 0, z: 9.81 }, gravityInitialized: false,
+          dynamic: 0, previousDynamic: 0, peak: 0, peakTime: 0, candidateValley: 0, trailingMin: null,
+          stepArmed: false, armTime: 0, lastStepTime: -Infinity, maxRotationDuringArm: 0, fallStreak: 0, avgStepInterval: null,
+          stepCount: 0, heading: 0, headingTarget: 0, baseAlpha: null, lastMotionTime: 0,
+          warmupUntil: performance.now() + 800, calibrationReadyUntil: 0, calibrationSamples: [], noiseFloor: 0,
+          adaptiveStepLength: 0, peakThreshold: 0.36, prominenceThreshold: 0.09, minStepInterval: 280, lastImuTime: 0,
+          basePeakThreshold: 0.36, relax: 1, lastEvent: '',
+        };
+      }
+
+      // Fusion state, following WebARNav (Huang et al., IEEE TMC 2025) Section III-B:
+      // a loosely-coupled framework where VaL corrections trigger only once PDR's
+      // accumulated drift crosses a threshold (dmax), then blend with weights that
+      // ramp linearly from full-PDR-trust to full-VaL-trust as drift grows — the
+      // paper found this simple blend outperforms an EKF for this exact setup.
+      function resetVal() {
+        val = {
+          originMap: null, originPdr: null, headingOffsetRad: null, scale: null,
+          lastFixMap: null, lastFixPdr: null, fixCount: 0, callInFlight: false,
+          driftSinceFix: 0, dmax: clamp(Number(dmaxInput.value) || 5, 1, 30),
+          lastLocalizeMs: 0, lastInlierRatio: 0, lastFloorId: '', floorId: floorInput.value.trim(),
+          coordDivisor: 1,
+          navText: '', routePath: [], destinationCoords: null, lastFixAt: 0,
+          pendingFlipHeading: null, pendingFlipCount: 0, forceHeadingOnce: false,
+        };
+        mapImage = null;
+        navBanner.hidden = true;
+      }
+
+      // Mirrors frontend-v3's inferIncomingCoordinateDivisor (src/lib/geometry.ts) —
+      // some backend configs return raw building-graph coordinates far bigger than
+      // the MAP_COORD_RANGE square the map image is plotted into; normalize once,
+      // from the very first fix, and keep using that same divisor for consistency.
+      function inferDivisor(x, y) {
+        const maxCoordinate = Math.max(Math.abs(x), Math.abs(y));
+        if (!Number.isFinite(maxCoordinate) || maxCoordinate <= MAP_COORD_RANGE * 1.1) return 1;
+        return Math.max(1, Math.round(maxCoordinate / MAP_COORD_RANGE));
+      }
+
+      function loadMapImage(floorId) {
+        const img = new Image();
+        img.onload = () => { mapImage = img; drawRoute(); };
+        img.onerror = () => logEvent(`map image load failed for floor ${floorId}`);
+        img.src = `/api/map-image?floor_id=${encodeURIComponent(floorId)}&t=${Date.now()}`;
+      }
+
+      // Inverse of the map->PDR-meters transform in applyValFix, used only for
+      // drawing the PDR-only/fused trajectories on top of the real floor image.
+      function toMapSpace(pdrPoint) {
+        if (!val.scale || !val.originMap || !val.originPdr) return null;
+        const rel = rotateVector((pdrPoint.x - val.originPdr.x) * val.scale, (pdrPoint.y - val.originPdr.y) * val.scale, val.headingOffsetRad);
+        return { x: val.originMap.x + rel.dx, y: val.originMap.y + rel.dy };
+      }
+
+      function applyPdrThresholds() {
+        const noiseFloor = pdr.noiseFloor || 0.01;
+        pdr.basePeakThreshold = clamp((noiseFloor * 2.2 + 0.28) / 0.80, 0.30, 0.65);
+        applyRelaxedThresholds();
+      }
+      function applyRelaxedThresholds() {
+        pdr.peakThreshold = clamp(pdr.basePeakThreshold * pdr.relax, 0.18, 0.65);
+        pdr.prominenceThreshold = clamp(pdr.peakThreshold * 0.28, 0.07, 0.22);
+      }
+      function updatePdrWatchdog(timestamp) {
+        if (!pdr.calibrationReadyUntil || timestamp < pdr.calibrationReadyUntil) return;
+        const sinceStep = pdr.lastStepTime === -Infinity ? timestamp - pdr.calibrationReadyUntil : timestamp - pdr.lastStepTime;
+        const sinceMotion = timestamp - pdr.lastMotionTime;
+        const relaxBefore = pdr.relax;
+        if (sinceMotion < 400 && sinceStep > 1200) pdr.relax = clamp(pdr.relax - 0.004, 0.55, 1);
+        else if (sinceStep < 400) pdr.relax = clamp(pdr.relax + 0.01, 0.55, 1);
+        if (pdr.relax !== relaxBefore) applyRelaxedThresholds();
+      }
+      function finalizePdrCalibration() {
+        if (pdr.calibrationReadyUntil) return;
+        const samples = pdr.calibrationSamples.slice().sort((a, b) => a - b);
+        pdr.noiseFloor = Math.max(0.01, samples.length ? samples[Math.floor((samples.length - 1) * 0.95)] : 0);
+        applyPdrThresholds();
+        pdr.calibrationReadyUntil = performance.now() + 1200;
+      }
+      function getHeightStepLength() { const heightCm = Number(heightInput.value); return Number.isFinite(heightCm) && heightCm >= 80 && heightCm <= 250 ? clamp((heightCm / 100) * 0.415, 0.35, 1.20) : 0.70; }
+
+      // Calibrating this against real distance: walk a known length (e.g. a
+      // 10m hallway), read STEPS/DIST's total metres off the PDR-only number,
+      // then either raise/lower HEIGHT (shifts the whole curve) or turn off
+      // ADAPTIVE and type a fixed metres/step from real_distance / step_count.
+      function getStepLength(peak, valley) {
+        if (!autoStepLengthInput.checked) return clamp(Number(stepLengthInput.value) || getHeightStepLength(), 0.35, 1.20);
+        const amplitude = clamp(peak - valley, 0.08, 6.0);
+        const weinbergLength = clamp((0.70 / Math.cbrt(Math.max(0.25, peak))) * Math.pow(amplitude, 0.25), 0.35, 1.20);
+        const rawLength = clamp(weinbergLength * 0.65 + getHeightStepLength() * 0.35, 0.35, 1.20);
+        pdr.adaptiveStepLength = clamp(pdr.adaptiveStepLength ? pdr.adaptiveStepLength * 0.65 + rawLength * 0.35 : rawLength, 0.35, 1.20);
+        stepLengthInput.value = pdr.adaptiveStepLength.toFixed(2);
+        return pdr.adaptiveStepLength;
+      }
+
+      function registerPdrStep(peak, timestamp) {
+        const elapsed = timestamp - pdr.lastStepTime;
+        if (elapsed < pdr.minStepInterval || timestamp < pdr.warmupUntil) { pdr.lastEvent = 'reject:too-fast'; return; }
+        const stepLength = getStepLength(peak, pdr.candidateValley);
+        const previous = path[path.length - 1];
+        const next = { x: previous.x + stepLength * Math.sin(pdr.heading), y: previous.y - stepLength * Math.cos(pdr.heading) };
+        path.push(next);
+        // carry the same incremental motion into the fused trajectory — VaL
+        // fixes nudge fusedPath's *position*, PDR still supplies its *shape*
+        const prevFused = fusedPath[fusedPath.length - 1];
+        fusedPath.push({ x: prevFused.x + (next.x - previous.x), y: prevFused.y + (next.y - previous.y) });
+        val.driftSinceFix += stepLength;
+        if (Number.isFinite(elapsed)) pdr.avgStepInterval = pdr.avgStepInterval === null ? elapsed : pdr.avgStepInterval * 0.7 + elapsed * 0.3;
+        pdr.lastStepTime = timestamp; pdr.stepCount += 1;
+        stepsValue.textContent = `${pdr.stepCount} · ${pathLength(path).toFixed(2)} m`;
+        driftValue.textContent = `${val.driftSinceFix.toFixed(2)} / ${val.dmax.toFixed(2)} m`;
+        calibrationHint.textContent = `${autoStepLengthInput.checked ? 'adaptive' : 'manual'} · ${stepLength.toFixed(2)} m/step`;
+        pdr.lastEvent = `STEP #${pdr.stepCount} · ${stepLength.toFixed(2)}m`;
+        maybeTriggerLocalize();
+      }
+
+      function pathLength(pts) { let d = 0; for (let i = 1; i < pts.length; i++) d += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y); return d; }
+
+      function updatePdrFromMotion(event) {
+        pdr.lastEvent = '';
+        const linear = isFiniteAcceleration(event.acceleration) ? event.acceleration : null;
+        const acceleration = linear || (isFiniteAcceleration(event.accelerationIncludingGravity) ? event.accelerationIncludingGravity : null);
+        if (!acceleration) return;
+        const timestamp = performance.now();
+        const magnitude = Math.hypot(acceleration.x, acceleration.y, acceleration.z);
+        let dynamic;
+        if (linear) dynamic = magnitude;
+        else {
+          if (!pdr.gravityInitialized) { pdr.gravity = { x: acceleration.x, y: acceleration.y, z: acceleration.z }; pdr.gravityInitialized = true; }
+          else { const alpha = 0.90; pdr.gravity.x = pdr.gravity.x * alpha + acceleration.x * (1 - alpha); pdr.gravity.y = pdr.gravity.y * alpha + acceleration.y * (1 - alpha); pdr.gravity.z = pdr.gravity.z * alpha + acceleration.z * (1 - alpha); }
+          dynamic = Math.hypot(acceleration.x - pdr.gravity.x, acceleration.y - pdr.gravity.y, acceleration.z - pdr.gravity.z);
+        }
+        pdr.previousDynamic = pdr.dynamic; pdr.dynamic = pdr.dynamic * 0.55 + dynamic * 0.45;
+        if (timestamp < pdr.warmupUntil) { if (pdr.calibrationSamples.length < 180) pdr.calibrationSamples.push(pdr.dynamic); return; }
+        if (pdr.dynamic > 0.28) pdr.lastMotionTime = timestamp;
+        updatePdrWatchdog(timestamp);
+        pdr.trailingMin = pdr.trailingMin === null ? pdr.dynamic : Math.min(pdr.trailingMin, pdr.dynamic) + Math.max(0, pdr.dynamic - pdr.trailingMin) * 0.015;
+        const rotationRateMagnitude = Math.hypot(latestImu.gx, latestImu.gy, latestImu.gz);
+        if (!pdr.stepArmed) {
+          const enoughTime = timestamp - pdr.lastStepTime > pdr.minStepInterval;
+          if (enoughTime && pdr.dynamic > pdr.peakThreshold) { pdr.stepArmed = true; pdr.armTime = timestamp; pdr.candidateValley = pdr.trailingMin; pdr.peak = pdr.dynamic; pdr.peakTime = timestamp; pdr.maxRotationDuringArm = rotationRateMagnitude; pdr.fallStreak = 0; pdr.lastEvent = `arm ${pdr.dynamic.toFixed(2)}`; }
+          return;
+        }
+        if (pdr.dynamic > pdr.peak) { pdr.peak = pdr.dynamic; pdr.peakTime = timestamp; pdr.fallStreak = 0; }
+        else if (pdr.dynamic < pdr.previousDynamic) pdr.fallStreak += 1;
+        pdr.maxRotationDuringArm = Math.max(pdr.maxRotationDuringArm, rotationRateMagnitude);
+        const dropMargin = Math.max(pdr.peak * 0.15, pdr.prominenceThreshold * 0.5, 0.06);
+        const droppedFromPeak = pdr.fallStreak >= 2 && pdr.peak - pdr.dynamic > dropMargin;
+        if (droppedFromPeak) {
+          const prominence = pdr.peak - pdr.candidateValley;
+          const riseDuration = pdr.peakTime - pdr.armTime;
+          const waveDuration = timestamp - pdr.armTime;
+          const previousInterval = pdr.lastStepTime === -Infinity ? Infinity : pdr.peakTime - pdr.lastStepTime;
+          const validShape = riseDuration >= 50 && riseDuration <= 500 && waveDuration >= 140 && waveDuration <= 950;
+          const validPeak = pdr.peak > pdr.peakThreshold;
+          const validProminence = prominence > pdr.prominenceThreshold;
+          const validRotation = pdr.maxRotationDuringArm < 150;
+          const validRhythm = pdr.avgStepInterval === null || previousInterval === Infinity || previousInterval >= pdr.avgStepInterval * 0.72;
+          if (validPeak && validProminence && validShape && validRotation && validRhythm) registerPdrStep(pdr.peak, pdr.peakTime);
+          else if (!validPeak) pdr.lastEvent = `reject:weak (${pdr.peak.toFixed(2)}<${pdr.peakThreshold.toFixed(2)})`;
+          else if (!validProminence) pdr.lastEvent = `reject:prominence (${prominence.toFixed(2)}<${pdr.prominenceThreshold.toFixed(2)})`;
+          else if (!validShape) pdr.lastEvent = `reject:shape (rise ${Math.round(riseDuration)}ms wave ${Math.round(waveDuration)}ms)`;
+          else if (!validRotation) pdr.lastEvent = `reject:rotation (${Math.round(pdr.maxRotationDuringArm)}°/s)`;
+          else if (!validRhythm) pdr.lastEvent = `reject:rhythm (${Math.round(previousInterval)}ms<${Math.round(pdr.avgStepInterval * 0.72)}ms)`;
+          pdr.stepArmed = false; pdr.peak = 0; pdr.candidateValley = 0;
+        }
+      }
+
+      function onDeviceMotion(event) {
+        const linear = isFiniteAcceleration(event.acceleration) ? event.acceleration : null;
+        if (!linear && !isFiniteAcceleration(event.accelerationIncludingGravity)) return;
+        const rotation = event.rotationRate || {};
+        latestImu = { gx: Number(rotation.alpha || 0), gy: Number(rotation.beta || 0), gz: Number(rotation.gamma || 0) };
+        // pdr.heading is CLOCKWISE-positive, to match its only consumer:
+        // dx=sin(θ), dy=-cos(θ) on a y-down canvas (θ=0 up, θ=90° right), i.e.
+        // increasing θ = right turn. Both W3C heading sources are the OPPOSITE
+        // handedness — deviceorientation.alpha and rotationRate.alpha are both
+        // CCW-positive (verified on-device: turning right 90° took α 0°→270°,
+        // a decrease). So BOTH must be negated — here AND in onDeviceOrientation
+        // below. Negating only one (tried earlier) makes the compass corrector
+        // fight the gyro and the compass wins (its weight gives it a <1s time
+        // constant), which is why that first attempt looked like it did nothing.
+        // A rotation-offset-only bug can never explain "correct facing one way,
+        // mirrored facing perpendicular" (reported across several sessions) —
+        // only an actual reflection (this one) produces that axis-dependent
+        // pattern, which is why the earlier "+180° to backend orientation"
+        // patches never converged: they were chasing a mirror with a rotation.
+        if (pdr.lastImuTime) { const dt = clamp((performance.now() - pdr.lastImuTime) / 1000, 0, 0.1); pdr.heading = normalizeAngle(pdr.heading - latestImu.gx * Math.PI / 180 * dt); }
+        pdr.lastImuTime = performance.now(); updatePdrFromMotion(event);
+        sensorMeta.textContent = `IMU active · ${linear ? 'linear a' : 'a+gravity'} · camera ${cameraStream ? 'on' : 'off'}`;
+        if (pdr.lastEvent) logEvent(pdr.lastEvent);
+      }
+
+      function onDeviceOrientation(event) {
+        if (!Number.isFinite(event.alpha)) return;
+        latestCompassAlphaDeg = event.alpha;
+        const alpha = event.alpha * Math.PI / 180;
+        if (pdr.baseAlpha === null) { pdr.baseAlpha = alpha; return; }
+        pdr.headingTarget = normalizeAngle(pdr.baseAlpha - alpha); // CCW-positive alpha → CW-positive heading, paired with the gyro negation above
+        const diff = normalizeAngle(pdr.headingTarget - pdr.heading);
+        const correctionWeight = Math.abs(diff) > Math.PI / 3 ? 0.01 : 0.04;
+        pdr.heading = normalizeAngle(pdr.heading + diff * correctionWeight);
+      }
+
+      function logEvent(text) {
+        eventLog.unshift(`${((Date.now() - startedAt) / 1000).toFixed(1)}s · ${text}`);
+        if (eventLog.length > 60) eventLog.length = 60;
+        eventLogEl.innerHTML = eventLog.map((line) => `<div>${line}</div>`).join('');
+      }
+
+      function rotateVector(dx, dy, angleRad) {
+        const cos = Math.cos(angleRad), sin = Math.sin(angleRad);
+        return { dx: dx * cos - dy * sin, dy: dx * sin + dy * cos };
+      }
+
+      // PDR heading is compass-like (0 = up, clockwise-positive), while the
+      // map frame uses atan2 coordinates (0 = right/east, +90 = down/south).
+      function pdrHeadingToMapAngle(headingRad) {
+        return normalizeAngle(headingRad - Math.PI / 2);
+      }
+
+      // Core of the WebARNav-style loosely-coupled fusion (Section III-B, eq. 2-4):
+      // Pf = w1*P1 + w2*P2, w1 = 1-Δd/dmax, w2 = Δd/dmax — full PDR trust right
+      // after a fix, ramping to full VaL trust as accumulated drift nears dmax.
+      function applyValFix(response) {
+        const currentPdrPoint = path[path.length - 1];
+        if (val.fixCount === 0) val.coordDivisor = inferDivisor(response.position.x, response.position.y);
+        const mapPoint = { x: response.position.x / val.coordDivisor, y: response.position.y / val.coordDivisor };
+        // Backend orientation already uses the map frame shared with MapCanvas:
+        // 0 = right/east and +90 = down/south. PDR's 0° points up, so calibrate
+        // against its atan2-equivalent map angle exactly once.
+        // correctly and uniformly (clean ~180°/~90°/~90° deltas matching the
+        // physical turns exactly) — but the *rendered* map heading is a clean
+        // 180° off for all four simultaneously (front↔back AND left↔right both
+        // swapped together). A uniform, axis-independent 180° miss is the
+        // signature of a missing constant, not a mirror — most likely because
+        // `dx=sin(θ),dy=-cos(θ)` embeds pdr.heading with an inherent -90°
+        // reference shift relative to atan2's own zero, and/or backend's
+        // `orientation` uses a compass-style "0°=up" zero rather than atan2's
+        // "0°=right" zero — two independent -90° shifts landing in the same
+        // direction would sum to exactly this 180°. Correcting it at the
+        // source (here) keeps every downstream use — initial calibration AND
+        // every later fix's implied-offset comparison — consistent.
+        const orientationRad = normalizeAngle(Number(response.orientation || 0) * Math.PI / 180);
+        // confidence weight computed up front (before driftSinceFix resets) so
+        // it can drive BOTH the position blend and the heading blend below —
+        // the paper's eq. 2-4 actually blends the full [x,y,z,α,β,γ] pose, not
+        // just translation; only correcting x/y left heading to drift forever
+        // once the client-side gyro integration goes bad, with nothing to pull
+        // it back — exactly the "heading sticks" symptom this fixes
+        const w2 = clamp(val.driftSinceFix / val.dmax, 0, 1);
+        const w1 = 1 - w2;
+
+        if (val.fixCount === 0) {
+          val.originMap = mapPoint;
+          val.originPdr = { ...currentPdrPoint };
+          val.headingOffsetRad = normalizeAngle(orientationRad - pdrHeadingToMapAngle(pdr.heading));
+        } else {
+          if (val.lastFixMap && val.lastFixPdr) {
+            const mapDist = Math.hypot(mapPoint.x - val.lastFixMap.x, mapPoint.y - val.lastFixMap.y);
+            const pdrDist = Math.hypot(currentPdrPoint.x - val.lastFixPdr.x, currentPdrPoint.y - val.lastFixPdr.y);
+            if (pdrDist > 0.3 && mapDist > 0) {
+              const newScale = mapDist / pdrDist; // map-units per metre
+              val.scale = val.scale ? val.scale * 0.5 + newScale * 0.5 : newScale;
+            }
+          }
+          // Correct pdr.heading itself here, NOT val.headingOffsetRad. Found
+          // directly from a user report ("position jumps weird right after
+          // fuse"): toMapSpace() projects EVERY point in path/fusedPath using
+          // the *current* headingOffsetRad at render time, since they're
+          // stored as raw PDR-metres. Nudging headingOffsetRad therefore
+          // retroactively re-rotates the *entire already-drawn trajectory*
+          // around the origin on every single fix — old points don't stay
+          // put. headingOffsetRad is a one-time geometric calibration (PDR's
+          // arbitrary zero vs. the map's true zero) and should stay fixed
+          // after fix #0 (bar the rare full-flip correction below); ongoing
+          // per-fix drift correction belongs on pdr.heading instead, exactly
+          // like the existing compass nudge — it only affects steps taken
+          // *after* this point, so history never swings.
+          const impliedHeading = normalizeAngle(orientationRad - val.headingOffsetRad + Math.PI / 2);
+          const headingDiff = normalizeAngle(impliedHeading - pdr.heading);
+          const NEAR_180 = 2.4; // rad ≈ 137°
+          if (val.forceHeadingOnce) {
+            pdr.heading = impliedHeading; // user-confirmed override — trust this one fix fully, no wait
+            val.pendingFlipHeading = null; val.pendingFlipCount = 0; val.forceHeadingOnce = false;
+            logEvent(`heading forced by user → pdr ${Math.round(pdr.heading * 180 / Math.PI)}°`);
+          } else if (Math.abs(headingDiff) > NEAR_180) {
+            // A single fix landing ~180° from where PDR currently believes it's
+            // facing is more likely a front-back pose ambiguity in the vision
+            // solve (known failure mode in symmetric/texture-poor scenes) than
+            // genuine drift, which accumulates gradually, not in one jump — so
+            // don't snap on it. Require two independent fixes to *agree* with
+            // each other before trusting a flip this large — a real flip is
+            // consistent, a one-off ambiguous frame isn't.
+            if (val.pendingFlipHeading !== null && Math.abs(normalizeAngle(impliedHeading - val.pendingFlipHeading)) < 0.5) {
+              pdr.heading = impliedHeading; // two independent fixes agree — trust it fully
+              val.pendingFlipHeading = null; val.pendingFlipCount = 0;
+              logEvent(`heading flip confirmed (2 agreeing fixes) → pdr ${Math.round(pdr.heading * 180 / Math.PI)}°`);
+            } else {
+              val.pendingFlipHeading = impliedHeading; val.pendingFlipCount = 1;
+              pdr.heading = normalizeAngle(pdr.heading + headingDiff * w2 * 0.1);
+            }
+          } else {
+            val.pendingFlipHeading = null; val.pendingFlipCount = 0;
+            pdr.heading = normalizeAngle(pdr.heading + headingDiff * w2);
+          }
+        }
+        val.lastFixMap = mapPoint; val.lastFixPdr = { ...currentPdrPoint }; val.fixCount += 1;
+
+        let fixInMeters;
+        if (val.scale && val.originMap && val.originPdr) {
+          const rel = rotateVector(mapPoint.x - val.originMap.x, mapPoint.y - val.originMap.y, -val.headingOffsetRad);
+          fixInMeters = { x: val.originPdr.x + rel.dx / val.scale, y: val.originPdr.y + rel.dy / val.scale };
+        } else {
+          fixInMeters = fusedPath[fusedPath.length - 1]; // no scale yet (first fix) — nothing to blend against
+        }
+
+        const prevFused = fusedPath[fusedPath.length - 1];
+        const blended = { x: w1 * prevFused.x + w2 * fixInMeters.x, y: w1 * prevFused.y + w2 * fixInMeters.y };
+        fusedPath.push(blended);
+        fixMarkers.push({ ...blended });
+        val.driftSinceFix = 0; val.lastFixAt = performance.now();
+        driftValue.textContent = `0.00 / ${val.dmax.toFixed(2)} m`;
+        scaleValue.textContent = val.scale ? val.scale.toFixed(1) : 'not yet (need 2nd fix)';
+        logEvent(`VAL FIX #${val.fixCount} · floor ${response.floor_id} · inliers ${response.num_inliers} (${(response.inlier_ratio * 100).toFixed(0)}%) · w2=${w2.toFixed(2)}`);
+
+        // navigation fields — same response shape frontend-v3's own live-camera
+        // loop consumes (App.tsx applyLiveStreamUpdate), only present when a
+        // destination was requested and a route was found
+        val.routePath = Array.isArray(response.path) ? response.path.map((p) => ({ x: p[0] / val.coordDivisor, y: p[1] / val.coordDivisor })) : [];
+        val.destinationCoords = response.destination_coords ? { x: response.destination_coords.x / val.coordDivisor, y: response.destination_coords.y / val.coordDivisor } : null;
+        val.navText = response.nav_text || '';
+        if (val.navText) {
+          const thaiNav = { 'Turn Right': 'เลี้ยวขวา', 'Turn Left': 'เลี้ยวซ้าย', 'Straight': 'ตรงไป' }[val.navText] || val.navText;
+          navBanner.textContent = `${thaiNav} · ${Math.round(response.relative_bearing || 0)}°`;
+          navBanner.hidden = false;
+        } else {
+          navBanner.hidden = true;
+        }
+      }
+
+      // Reference maps are usually built from landscape footage, so keep every
+      // frame sent to the backend landscape too — regardless of how the phone is
+      // physically held — by rotating a portrait capture 90° instead of relying
+      // on the camera constraints or the OS to do it (inconsistent across browsers).
+      async function captureJpegBlob() {
+        if (!cameraStream) return null;
+        const w = cameraVideo.videoWidth, h = cameraVideo.videoHeight;
+        if (!w || !h) return null;
+        const ctx = captureCanvas.getContext('2d');
+        if (h > w) {
+          captureCanvas.width = h; captureCanvas.height = w;
+          ctx.save();
+          ctx.translate(h / 2, w / 2);
+          ctx.rotate(-Math.PI / 2); // rotate portrait capture counter-clockwise into landscape
+          ctx.drawImage(cameraVideo, -w / 2, -h / 2, w, h);
+          ctx.restore();
+        } else {
+          captureCanvas.width = w; captureCanvas.height = h;
+          ctx.drawImage(cameraVideo, 0, 0, w, h);
+        }
+        return new Promise((resolve) => captureCanvas.toBlob(resolve, 'image/jpeg', 0.82));
+      }
+
+      // Returns the parsed backend response on success, null on skip/error/no-match
+      // — callers that need the very first fix (start()) can await + branch on it.
+      async function callLocalize(manual) {
+        if (val.callInFlight) return null;
+        if (!valEnabledInput.checked && !manual) return null;
+        const blob = await captureJpegBlob();
+        if (!blob) { logEvent('VAL skip: camera frame not ready'); return null; }
+        val.callInFlight = true;
+        localizeBtn.disabled = true;
+        logEvent('VAL request sent…');
+        try {
+          const form = new FormData();
+          form.append('frame', blob, 'frame.jpg');
+          form.append('floor_id', floorInput.value.trim());
+          form.append('auto_floor', '1');
+          const selectedRoom = rooms[Number(destinationSelect.value)];
+          if (selectedRoom) { form.append('destination', selectedRoom.name); form.append('destination_floor', selectedRoom.floor_id); }
+          const startedMs = performance.now();
+          const res = await fetch('/api/live-localize', { method: 'POST', body: form });
+          const data = await res.json();
+          const elapsedMs = performance.now() - startedMs;
+          val.lastLocalizeMs = elapsedMs;
+          localizeTimeValue.textContent = `${elapsedMs.toFixed(0)} ms (srv ${((data.localize_time || 0) * 1000).toFixed(0)}ms)`;
+          if (!data.success || !isFinitePoint(data.position)) {
+            inlierValue.textContent = `fail · ${data.method || 'unknown'}`;
+            logEvent(`VAL fail: ${data.message || data.error || 'no match'} (inliers ${data.num_inliers || 0})`);
+            return null;
+          }
+          floorValue.textContent = data.floor_id || 'auto';
+          val.floorId = data.floor_id || val.floorId;
+          inlierValue.textContent = `${data.num_inliers} pts (${((data.inlier_ratio || 0) * 100).toFixed(0)}%)`;
+          lastFixValue.textContent = `(${data.position.x.toFixed(0)}, ${data.position.y.toFixed(0)})`;
+          applyValFix(data);
+          valCallsValue.textContent = String(val.fixCount);
+          return data;
+        } catch (error) {
+          logEvent(`VAL error: ${error.message}`);
+          return null;
+        } finally {
+          val.callInFlight = false;
+          localizeBtn.disabled = false;
+        }
+      }
+
+      function maybeTriggerLocalize() {
+        if (!valEnabledInput.checked || val.callInFlight) return;
+        if (val.driftSinceFix >= val.dmax) callLocalize(false);
+      }
+
+      // getUserMedia() can hang forever with no error and no console output —
+      // reproduced directly: some contexts never resolve or reject the promise
+      // at all (no permission dialog shown, no rejection), which reads to the
+      // user as "pressed start, nothing happens." Race it against a timeout so
+      // a stuck camera request fails loudly instead of hanging silently.
+      async function enableCamera() {
+        try {
+          const request = navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 }, aspectRatio: { ideal: 16 / 9 } }, audio: false });
+          const timeout = new Promise((_, reject) => window.setTimeout(() => reject(new Error('camera request timed out (10s) — no permission dialog answered?')), 10000));
+          cameraStream = await Promise.race([request, timeout]);
+          cameraVideo.srcObject = cameraStream;
+          await cameraVideo.play().catch(() => {});
+        } catch (error) {
+          logEvent(`camera error: ${error.message} · VaL correction จะใช้ไม่ได้`);
+          cameraStream = null;
+        }
+      }
+
+      // getUserMedia resolving doesn't mean a decodable frame exists yet — a
+      // fixed delay before the first capture was too short on some devices,
+      // silently failing the initial localize (blob comes back null) and
+      // leaving the map never loaded. Poll actual readiness instead.
+      function waitForVideoReady(timeoutMs = 4000) {
+        return new Promise((resolve) => {
+          const startedAt = performance.now();
+          const check = () => {
+            if (cameraVideo.readyState >= 2 && cameraVideo.videoWidth > 0) { resolve(true); return; }
+            if (performance.now() - startedAt > timeoutMs) { resolve(false); return; }
+            window.setTimeout(check, 100);
+          };
+          check();
+        });
+      }
+
+      async function enableSensors() {
+        if (!('DeviceMotionEvent' in window)) throw new Error('DeviceMotionEvent is not supported');
+        const requestPermission = (request) => Promise.race([request(), new Promise((_, reject) => window.setTimeout(() => reject(new Error('sensor permission timed out')), 12000))]);
+        const motionPermission = typeof DeviceMotionEvent.requestPermission === 'function' ? await requestPermission(() => DeviceMotionEvent.requestPermission()) : 'granted';
+        let orientationPermission = 'granted';
+        if ('DeviceOrientationEvent' in window && typeof DeviceOrientationEvent.requestPermission === 'function') orientationPermission = await requestPermission(() => DeviceOrientationEvent.requestPermission());
+        if (motionPermission !== 'granted' || orientationPermission !== 'granted') throw new Error('sensor permission denied');
+        if (!sensorsAttached) { window.addEventListener('devicemotion', onDeviceMotion, true); window.addEventListener('deviceorientation', onDeviceOrientation, true); sensorsAttached = true; }
+      }
+
+      function resizeCanvas() { const ratio = Math.max(1, window.devicePixelRatio || 1); const rect = routeCanvas.getBoundingClientRect(); routeCanvas.width = Math.round(rect.width * ratio); routeCanvas.height = Math.round(rect.height * ratio); drawRoute(); }
+
+      function drawRoute() {
+        const ratio = Math.max(1, window.devicePixelRatio || 1), w = routeCanvas.clientWidth || 500, h = routeCanvas.clientHeight || 350;
+        routeCtx.setTransform(ratio, 0, 0, ratio, 0, 0); routeCtx.clearRect(0, 0, w, h); routeCtx.fillStyle = '#0a1323'; routeCtx.fillRect(0, 0, w, h);
+
+        if (!mapImage) {
+          // no map image yet (still downloading — a separate async step *after*
+          // localize itself already succeeded) — draw PDR's own trajectory on
+          // an auto-fit grid instead of a static "please wait" placeholder, so
+          // walking is visibly reflected immediately instead of appearing frozen
+          routeCtx.strokeStyle = 'rgba(148,163,184,.10)'; routeCtx.lineWidth = 1;
+          for (let x = 0; x <= w; x += 32) { routeCtx.beginPath(); routeCtx.moveTo(x, 0); routeCtx.lineTo(x, h); routeCtx.stroke(); }
+          for (let y = 0; y <= h; y += 32) { routeCtx.beginPath(); routeCtx.moveTo(0, y); routeCtx.lineTo(w, y); routeCtx.stroke(); }
+          const maxAbs = Math.max(2, ...path.flatMap((p) => [Math.abs(p.x), Math.abs(p.y)]));
+          const gridScale = Math.min(w, h) * 0.35 / maxAbs;
+          const gridOrigin = { x: w / 2, y: h / 2 };
+          const gridToScreen = (p) => ({ x: gridOrigin.x + p.x * gridScale, y: gridOrigin.y + p.y * gridScale });
+          if (path.length > 1) {
+            routeCtx.beginPath();
+            path.forEach((p, i) => { const q = gridToScreen(p); if (i === 0) routeCtx.moveTo(q.x, q.y); else routeCtx.lineTo(q.x, q.y); });
+            routeCtx.strokeStyle = '#94a3b8'; routeCtx.lineWidth = 2; routeCtx.lineJoin = 'round'; routeCtx.lineCap = 'round'; routeCtx.stroke();
+          }
+          const current = gridToScreen(path[path.length - 1]);
+          routeCtx.fillStyle = '#60a5fa'; routeCtx.beginPath(); routeCtx.arc(current.x, current.y, 6, 0, Math.PI * 2); routeCtx.fill();
+          routeCtx.fillStyle = 'rgba(226,232,240,.75)'; routeCtx.font = '11px sans-serif'; routeCtx.textAlign = 'center';
+          routeCtx.fillText('PDR only · กำลังโหลดแผนที่จริง…', w / 2, h - 10);
+          return;
+        }
+
+        // the real floor image is plotted into a fixed MAP_COORD_RANGE square,
+        // stretched non-uniformly (preserveAspectRatio="none") to match exactly
+        // how frontend-v3's MapCanvas renders the same backend coordinates
+        const mapScale = Math.min(w, h) / MAP_COORD_RANGE;
+        const mapOrigin = { x: (w - MAP_COORD_RANGE * mapScale) / 2, y: (h - MAP_COORD_RANGE * mapScale) / 2 };
+        routeCtx.drawImage(mapImage, mapOrigin.x, mapOrigin.y, MAP_COORD_RANGE * mapScale, MAP_COORD_RANGE * mapScale);
+        const toScreen = (mapPoint) => ({ x: mapOrigin.x + mapPoint.x * mapScale, y: mapOrigin.y + mapPoint.y * mapScale });
+
+        if (!val.scale) {
+          // scale (map-units per metre) isn't known until the 2nd VaL fix, so
+          // the walked *distance* can't be placed on the real map yet — but
+          // heading is already live and correct, so still show it rotating at
+          // the fix point instead of a static dot (which reads as "frozen")
+          if (val.originMap) {
+            const q = toScreen(val.originMap);
+            const dir = rotateVector(Math.sin(pdr.heading), -Math.cos(pdr.heading), val.headingOffsetRad);
+            const angle = Math.atan2(dir.dy, dir.dx);
+            const fanRadius = 24, halfAngle = 32 * Math.PI / 180;
+            routeCtx.save(); routeCtx.translate(q.x, q.y);
+            routeCtx.beginPath(); routeCtx.moveTo(0, 0); routeCtx.arc(0, 0, fanRadius, angle - halfAngle, angle + halfAngle); routeCtx.closePath();
+            routeCtx.fillStyle = '#0d6efd'; routeCtx.globalAlpha = 0.32; routeCtx.fill();
+            routeCtx.globalAlpha = 0.62; routeCtx.strokeStyle = '#0d6efd'; routeCtx.lineWidth = 1.4; routeCtx.stroke();
+            routeCtx.globalAlpha = 1;
+            routeCtx.beginPath(); routeCtx.arc(0, 0, 6, 0, Math.PI * 2); routeCtx.fillStyle = '#0d6efd'; routeCtx.fill();
+            routeCtx.restore();
+          }
+          routeCtx.fillStyle = 'rgba(226,232,240,.85)'; routeCtx.font = '11px sans-serif'; routeCtx.textAlign = 'center';
+          routeCtx.fillText('เดินต่อจน drift ครบ dmax เพื่อ calibrate scale (fix ที่ 2)', w / 2, h - 10);
+          return;
+        }
+
+        // route + destination come straight from the backend response in map
+        // units already — no PDR transform needed, unlike the trajectories below
+        if (val.routePath.length > 1) {
+          routeCtx.beginPath();
+          val.routePath.forEach((p, i) => { const q = toScreen(p); if (i === 0) routeCtx.moveTo(q.x, q.y); else routeCtx.lineTo(q.x, q.y); });
+          routeCtx.strokeStyle = 'rgba(244,114,182,.85)'; routeCtx.lineWidth = 3; routeCtx.setLineDash([2, 6]); routeCtx.lineCap = 'round'; routeCtx.stroke(); routeCtx.setLineDash([]);
+        }
+        if (val.destinationCoords) {
+          const q = toScreen(val.destinationCoords);
+          routeCtx.fillStyle = '#f472b6'; routeCtx.beginPath(); routeCtx.arc(q.x, q.y, 6, 0, Math.PI * 2); routeCtx.fill();
+          routeCtx.strokeStyle = '#fff'; routeCtx.lineWidth = 1.5; routeCtx.stroke();
+        }
+
+        const pdrScreen = path.map(toMapSpace).filter(Boolean).map(toScreen);
+        const fusedScreen = fusedPath.map(toMapSpace).filter(Boolean).map(toScreen);
+        if (pdrScreen.length > 1) {
+          routeCtx.beginPath(); routeCtx.setLineDash([5, 5]);
+          pdrScreen.forEach((q, i) => { if (i === 0) routeCtx.moveTo(q.x, q.y); else routeCtx.lineTo(q.x, q.y); });
+          routeCtx.strokeStyle = '#94a3b8'; routeCtx.lineWidth = 2; routeCtx.stroke(); routeCtx.setLineDash([]);
+        }
+        if (fusedScreen.length > 1) {
+          routeCtx.beginPath();
+          fusedScreen.forEach((q, i) => { if (i === 0) routeCtx.moveTo(q.x, q.y); else routeCtx.lineTo(q.x, q.y); });
+          routeCtx.strokeStyle = '#4ade80'; routeCtx.lineWidth = 3; routeCtx.lineJoin = 'round'; routeCtx.lineCap = 'round'; routeCtx.stroke();
+        }
+        for (const marker of fixMarkers) {
+          const q = toScreen(marker);
+          routeCtx.fillStyle = '#fb923c'; routeCtx.beginPath(); routeCtx.arc(q.x, q.y, 5, 0, Math.PI * 2); routeCtx.fill();
+        }
+        if (pdrScreen.length) { const s = pdrScreen[0]; routeCtx.fillStyle = '#4ade80'; routeCtx.beginPath(); routeCtx.arc(s.x, s.y, 5, 0, Math.PI * 2); routeCtx.fill(); }
+        if (fusedScreen.length) {
+          const c = fusedScreen[fusedScreen.length - 1];
+          // same marker as production MapCanvas.tsx (POSE_COLOR #0d6efd, a 32°
+          // "radar fan" pointing the heading + a plain disc, no halo — see this
+          // repo's own note that a halo/shadow is reserved for the user marker
+          // specifically to stay visually distinct from the route line, which
+          // shares the same accent colour) — driven live off pdr.heading, not
+          // just refreshed at each VaL fix
+          const mapHeadingDir = rotateVector(Math.sin(pdr.heading), -Math.cos(pdr.heading), val.headingOffsetRad);
+          const arrowAngle = Math.atan2(mapHeadingDir.dy, mapHeadingDir.dx);
+          const fanRadius = 24, halfAngle = 32 * Math.PI / 180;
+          routeCtx.save();
+          routeCtx.translate(c.x, c.y);
+          routeCtx.beginPath();
+          routeCtx.moveTo(0, 0);
+          routeCtx.arc(0, 0, fanRadius, arrowAngle - halfAngle, arrowAngle + halfAngle);
+          routeCtx.closePath();
+          routeCtx.fillStyle = '#0d6efd'; routeCtx.globalAlpha = 0.32; routeCtx.fill();
+          routeCtx.globalAlpha = 0.62; routeCtx.strokeStyle = '#0d6efd'; routeCtx.lineWidth = 1.4; routeCtx.lineJoin = 'round'; routeCtx.stroke();
+          routeCtx.globalAlpha = 1;
+          routeCtx.beginPath(); routeCtx.arc(0, 0, 6, 0, Math.PI * 2); routeCtx.fillStyle = '#0d6efd'; routeCtx.fill();
+          routeCtx.restore();
+        }
+      }
+
+      // Renders continuously from the moment sensors are granted (see start()),
+      // *not* gated behind `running` — PDR/IMU processing already happens in
+      // the background during camera open + the localize retry loop (up to
+      // ~4 attempts, several seconds each), so the old "only render once
+      // running" behaviour meant the canvas sat frozen that whole time even
+      // though PDR was quietly already tracking, reading as "PDR takes a
+      // while to show up." Status *text* below is still gated to `running` so
+      // it doesn't fight the more important "requesting camera/localizing…"
+      // messages start() is setting during that same window.
+      function tick(now) {
+        if (running) {
+          const seconds = (Date.now() - startedAt) / 1000;
+          if (now < pdr.warmupUntil) motionText.textContent = 'กำลัง calibrate IMU · อยู่นิ่ง 1 วินาที';
+          else if (!pdr.calibrationReadyUntil) { finalizePdrCalibration(); motionText.textContent = '✓ CALIBRATE เสร็จแล้ว · เริ่มเดินได้'; topStatus.textContent = 'READY TO WALK'; }
+          else motionText.textContent = `PDR tracking · ${pdr.stepCount} steps · ${seconds.toFixed(0)}s · heading ${Math.round(pdr.heading * 180 / Math.PI)}°`;
+        }
+        // This POC never does full 6-DoF (that needs the ar_world K/R/t payload,
+        // not used here) — it's always 2D (x, y, yaw), either pure PDR
+        // dead-reckoning or that dead-reckoning corrected by a 2D VaL pose fix.
+        if (val.fixCount === 0) modeValue.textContent = running ? 'PDR only · no fix yet' : 'warming up…';
+        else {
+          const sinceFixSec = (performance.now() - val.lastFixAt) / 1000;
+          modeValue.textContent = sinceFixSec < 1.5 ? 'VaL fix (2D)' : `PDR · ${sinceFixSec.toFixed(0)}s since fix`;
+        }
+        // raw numbers to pin down which sign is actually wrong instead of
+        // guessing again — compare α (raw compass) against pdr° (integrated
+        // gyro heading) while turning: if they track each other 1:1 same
+        // direction the gyro sign is right; if they mirror, it's still wrong.
+        // map° is what the heading arrow on the minimap actually renders.
+        {
+          const pdrDeg = Math.round(normalizeAngle(pdr.heading) * 180 / Math.PI);
+          const offsetDeg = val.headingOffsetRad === null ? null : Math.round(normalizeAngle(val.headingOffsetRad) * 180 / Math.PI);
+          // exact same computation the minimap arrow uses, so this number is
+          // never off from what's actually drawn (atan2's 0°=right reference
+          // differs from pdr.heading's own 0°=up reference by a constant ~90°,
+          // approximating it instead of reusing this would just add confusion)
+          let mapDeg = null;
+          if (val.headingOffsetRad !== null) {
+            const mapAngle = pdrHeadingToMapAngle(pdr.heading) + val.headingOffsetRad;
+            mapDeg = Math.round(mapAngle * 180 / Math.PI);
+          }
+          const headingDebugText = `α${latestCompassAlphaDeg === null ? '—' : Math.round(latestCompassAlphaDeg)}° pdr${pdrDeg}° off${offsetDeg === null ? '—' : offsetDeg}° map${mapDeg === null ? '—' : mapDeg}°`;
+          headingDebugValue.textContent = headingDebugText;
+          // same numbers, floated at the bottom of the fullscreen landscape
+          // camera view (CSS hides this element entirely in portrait) — the
+          // .stats grid sits underneath the fixed .map-wrap there and is
+          // unreachable, so without this the debug readout was invisible
+          // exactly when testing heading live while holding the phone up
+          landscapeDebugBar.textContent = `${headingDebugText} · ${stepsValue.textContent} · ${modeValue.textContent}`;
+        }
+        drawRoute();
+        raf = requestAnimationFrame(tick);
+      }
+
+      // iOS Safari only honours DeviceMotionEvent.requestPermission() when it's
+      // called with ZERO `await`s between the click and the call — iOS Safari
+      // ties "was this triggered by a real user gesture" to the currently
+      // executing synchronous task, and that flag is gone the instant the first
+      // `await` yields control back to the event loop, *whichever promise it
+      // was*. Proven directly: putting `await enableCamera()` before
+      // `enableSensors()` still broke it, even though enableSensors() itself
+      // was already "right after the tap" — the earlier await was enough to
+      // drop the gesture. requestPermission() then throws synchronously
+      // ("...requires a user gesture to prompt") instead of showing a dialog.
+      // Fix: call it truly first, before any other awaited call.
+      async function start() {
+        if (running) { stop(); return; }
+        startBtn.disabled = true;
+        resetPdr(); resetVal();
+        path = [{ x: 0, y: 0 }]; fusedPath = [{ x: 0, y: 0 }]; fixMarkers = []; eventLog = []; eventLogEl.innerHTML = '';
+        stepsValue.textContent = '0 · 0.00 m'; valCallsValue.textContent = '0'; lastFixValue.textContent = '—';
+        driftValue.textContent = `0.00 / ${val.dmax.toFixed(2)} m`; scaleValue.textContent = 'not yet'; inlierValue.textContent = '—'; localizeTimeValue.textContent = '—'; floorValue.textContent = 'auto';
+
+        topStatus.textContent = 'REQUESTING SENSOR'; sensorMeta.textContent = 'กด Allow ใน permission prompt'; motionText.textContent = 'กำลังขอสิทธิ์ Motion/Orientation';
+        try {
+          await enableSensors();
+          startedAt = Date.now();
+          raf = requestAnimationFrame(tick); // render from here — PDR is already live, don't wait for localize
+        } catch (error) {
+          topStatus.textContent = 'SENSOR ERROR'; motionText.textContent = `เปิดเซนเซอร์ไม่สำเร็จ: ${error.message} — กด เริ่ม ใหม่เพื่อลองอีกครั้ง`;
+          startBtn.disabled = false;
+          return;
+        }
+
+        topStatus.textContent = 'REQUESTING CAMERA'; sensorMeta.textContent = 'กด Allow ให้กล้อง'; motionText.textContent = 'กำลังขอสิทธิ์กล้อง';
+        await enableCamera();
+        if (!cameraStream) { topStatus.textContent = 'CAMERA ERROR'; motionText.textContent = 'เปิดกล้องไม่สำเร็จ — VaL ต้องใช้กล้อง กด เริ่ม ใหม่เพื่อลองอีกครั้ง'; startBtn.disabled = false; return; }
+
+        topStatus.textContent = 'LOCALIZING'; motionText.textContent = 'รอกล้องพร้อม…';
+        const cameraReady = await waitForVideoReady();
+        if (!cameraReady) logEvent('camera never reported a frame — capturing anyway');
+
+        // Reverted the "3 required fixes at startup" attempt — it didn't work
+        // and actively hurt things: those 3 fixes all happen while standing in
+        // the same spot, so the solver sees nearly the same image 3 times and
+        // just reproduces the same (possibly ambiguous) answer — no genuine
+        // new evidence, so the 2-agreeing-fixes defense can't actually catch
+        // anything. It also delayed `scale` (which needs real walking distance
+        // between fixes) and made PDR look frozen. Back to: trust fix #1, start
+        // tracking immediately. Front-back ambiguity is a real, occasional
+        // limitation of vision-only pose estimation in symmetric scenes — it
+        // self-corrects within the first couple of *natural* walking-triggered
+        // fixes (genuinely different vantage points), via applyValFix's
+        // existing 2-agreeing-fixes logic. A frame can also just fail to match
+        // outright (motion blur, blank wall), hence the retry budget below.
+        let initialFix = null;
+        for (let attempt = 1; attempt <= 4 && !initialFix; attempt++) {
+          motionText.textContent = `กำลังหาตำแหน่งเริ่มต้น (full localize) — ครั้งที่ ${attempt}/4…`;
+          initialFix = await callLocalize(true);
+          if (!initialFix && attempt < 4) await new Promise((resolve) => window.setTimeout(resolve, 500));
+        }
+        if (!initialFix) {
+          topStatus.textContent = 'LOCALIZE FAILED'; motionText.textContent = 'หาตำแหน่งเริ่มต้นไม่สำเร็จหลัง 4 ครั้ง (ดู event log) — กด เริ่ม ใหม่เพื่อลองอีกครั้ง';
+          startBtn.disabled = false;
+          return; // sensors stay attached — retrying won't need another iOS permission dance
+        }
+        loadMapImage(initialFix.floor_id);
+
+        running = true; startedAt = Date.now(); // reset so the "Xs" counter reads time-since-tracking, not time-since-permission
+        topStatus.textContent = 'TRACKING'; liveChip.classList.add('active'); startBtn.textContent = 'หยุด'; localizeBtn.disabled = false; forceHeadingBtn.disabled = false;
+        // tick() is already running (started right after enableSensors()) — no second requestAnimationFrame here
+        startBtn.disabled = false;
+      }
+
+      function stop() {
+        running = false; cancelAnimationFrame(raf);
+        if (sensorsAttached) { window.removeEventListener('devicemotion', onDeviceMotion, true); window.removeEventListener('deviceorientation', onDeviceOrientation, true); sensorsAttached = false; }
+        if (cameraStream) { cameraStream.getTracks().forEach((track) => track.stop()); cameraStream = null; }
+        liveChip.classList.remove('active'); startBtn.textContent = 'เริ่ม'; topStatus.textContent = 'READY TO START'; localizeBtn.disabled = true; forceHeadingBtn.disabled = true;
+        motionText.textContent = 'หยุด tracking';
+      }
+
+      function clearRoute() {
+        path = [{ x: 0, y: 0 }]; fusedPath = [{ x: 0, y: 0 }]; fixMarkers = []; resetPdr(); resetVal();
+        stepsValue.textContent = '0 · 0.00 m'; valCallsValue.textContent = '0'; lastFixValue.textContent = '—';
+        driftValue.textContent = `0.00 / ${val.dmax.toFixed(2)} m`; scaleValue.textContent = 'not yet'; inlierValue.textContent = '—';
+        motionText.textContent = running ? 'ล้างแล้ว · calibrate IMU ใหม่' : 'ยังไม่เริ่ม tracking';
+        drawRoute();
+      }
+
+      resetPdr(); resetVal();
+      startBtn.addEventListener('click', start);
+      clearBtn.addEventListener('click', clearRoute);
+      localizeBtn.addEventListener('click', () => callLocalize(true));
+      forceHeadingBtn.addEventListener('click', () => { val.forceHeadingOnce = true; logEvent('force-heading armed for next fix'); callLocalize(true); });
+      dmaxInput.addEventListener('input', () => { val.dmax = clamp(Number(dmaxInput.value) || 5, 1, 30); driftValue.textContent = `${val.driftSinceFix.toFixed(2)} / ${val.dmax.toFixed(2)} m`; });
+      valEnabledInput.addEventListener('change', () => { valHint.textContent = valEnabledInput.checked ? 'trigger อัตโนมัติเมื่อ drift เกิน dmax' : 'ปิดไว้ดู PDR-only drift ล้วน ๆ ได้'; });
+      function updateStepLengthFromHeight() { stepLengthInput.value = getHeightStepLength().toFixed(2); calibrationHint.textContent = `height prior · ${stepLengthInput.value} m/step`; }
+      heightInput.addEventListener('input', updateStepLengthFromHeight);
+      autoStepLengthInput.addEventListener('change', () => { pdr.adaptiveStepLength = 0; calibrationHint.textContent = autoStepLengthInput.checked ? 'Weinberg model · per-step length' : `manual · ${Number(stepLengthInput.value || 0).toFixed(2)} m/step`; });
+      stepLengthInput.addEventListener('input', () => { autoStepLengthInput.checked = false; calibrationHint.textContent = `manual · ${Number(stepLengthInput.value || 0).toFixed(2)} m/step`; });
+      updateStepLengthFromHeight();
+      window.addEventListener('resize', resizeCanvas);
+      window.addEventListener('orientationchange', () => window.setTimeout(resizeCanvas, 200));
+      resizeCanvas();
+      loadRooms();
+    </script>
+  </body>
+</html>

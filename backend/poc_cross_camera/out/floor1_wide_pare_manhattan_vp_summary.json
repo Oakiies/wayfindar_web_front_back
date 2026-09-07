@@ -1,0 +1,410 @@
+{
+  "experiment": "Manhattan vanishing-point focal self-calibration (query-side only)",
+  "paper": {
+    "Manhattan self-calibration (Simon et al., IJCV 2015)": "https://link.springer.com/article/10.1007/s11263-015-0854-5"
+  },
+  "map_focal_px": 1400.0,
+  "n_frames_with_valid_estimate": 22,
+  "n_frames_attempted": 34,
+  "median_focal_ratio_query_over_map": 0.6543431766658814,
+  "mean_focal_ratio_query_over_map": 0.6223321018741289,
+  "std_focal_ratio_query_over_map": 0.19057479930614968,
+  "rows": [
+    {
+      "frame": 1500,
+      "time_s": 50.018,
+      "focal_ratio_query_over_map": 0.6356452363620975,
+      "focal_px": 889.9033309069365,
+      "vp_vertical": [
+        1207.0302734375,
+        5233.25537109375
+      ],
+      "vp_horizontal": [
+        971.9048461914062,
+        370.1263427734375
+      ],
+      "n_vertical_lines": 129,
+      "n_horizontal_lines": 81,
+      "n_vertical_inliers": 12,
+      "n_horizontal_inliers": 24
+    },
+    {
+      "frame": 1800,
+      "time_s": 60.021,
+      "focal_ratio_query_over_map": 0.6501771753204071,
+      "focal_px": 910.2480454485699,
+      "vp_vertical": [
+        1129.3040771484375,
+        6093.01318359375
+      ],
+      "vp_horizontal": [
+        932.8321533203125,
+        391.12127685546875
+      ],
+      "n_vertical_lines": 87,
+      "n_horizontal_lines": 468,
+      "n_vertical_inliers": 12,
+      "n_horizontal_inliers": 189
+    },
+    {
+      "frame": 2100,
+      "time_s": 70.025,
+      "focal_ratio_query_over_map": 0.555347543778542,
+      "focal_px": 777.4865612899588,
+      "vp_vertical": [
+        1356.9757080078125,
+        6237.47802734375
+      ],
+      "vp_horizontal": [
+        957.3140869140625,
+        433.5647888183594
+      ],
+      "n_vertical_lines": 123,
+      "n_horizontal_lines": 82,
+      "n_vertical_inliers": 9,
+      "n_horizontal_inliers": 21
+    },
+    {
+      "frame": 2700,
+      "time_s": 90.032,
+      "focal_ratio_query_over_map": 0.1367448717904987,
+      "focal_px": 191.4428205066982,
+      "vp_vertical": [
+        630.842041015625,
+        965.831298828125
+      ],
+      "vp_horizontal": [
+        887.1151733398438,
+        397.7318420410156
+      ],
+      "n_vertical_lines": 40,
+      "n_horizontal_lines": 210,
+      "n_vertical_inliers": 7,
+      "n_horizontal_inliers": 20
+    },
+    {
+      "frame": 3000,
+      "time_s": 100.035,
+      "focal_ratio_query_over_map": 0.6766229389366959,
+      "focal_px": 947.2721145113742,
+      "vp_vertical": [
+        1091.6708984375,
+        4110.103515625
+      ],
+      "vp_horizontal": [
+        599.9518432617188,
+        301.5002746582031
+      ],
+      "n_vertical_lines": 153,
+      "n_horizontal_lines": 76,
+      "n_vertical_inliers": 15,
+      "n_horizontal_inliers": 26
+    },
+    {
+      "frame": 3300,
+      "time_s": 110.039,
+      "focal_ratio_query_over_map": 0.6597967750819861,
+      "focal_px": 923.7154851147806,
+      "vp_vertical": [
+        932.6491088867188,
+        4725.51611328125
+      ],
+      "vp_horizontal": [
+        955.4654541015625,
+        335.640625
+      ],
+      "n_vertical_lines": 164,
+      "n_horizontal_lines": 72,
+      "n_vertical_inliers": 18,
+      "n_horizontal_inliers": 25
+    },
+    {
+      "frame": 3600,
+      "time_s": 120.042,
+      "focal_ratio_query_over_map": 0.6585091780113557,
+      "focal_px": 921.912849215898,
+      "vp_vertical": [
+        1238.1572265625,
+        7637.228515625
+      ],
+      "vp_horizontal": [
+        1012.5015258789062,
+        417.67333984375
+      ],
+      "n_vertical_lines": 145,
+      "n_horizontal_lines": 94,
+      "n_vertical_inliers": 15,
+      "n_horizontal_inliers": 36
+    },
+    {
+      "frame": 3900,
+      "time_s": 130.046,
+      "focal_ratio_query_over_map": 0.6643528326108594,
+      "focal_px": 930.0939656552032,
+      "vp_vertical": [
+        1245.4976806640625,
+        7884.421875
+      ],
+      "vp_horizontal": [
+        987.9837036132812,
+        420.6122741699219
+      ],
+      "n_vertical_lines": 144,
+      "n_horizontal_lines": 67,
+      "n_vertical_inliers": 13,
+      "n_horizontal_inliers": 38
+    },
+    {
+      "frame": 4200,
+      "time_s": 140.049,
+      "focal_ratio_query_over_map": 0.6815251897446033,
+      "focal_px": 954.1352656424447,
+      "vp_vertical": [
+        1236.241455078125,
+        8671.7578125
+      ],
+      "vp_horizontal": [
+        990.1555786132812,
+        426.5107421875
+      ],
+      "n_vertical_lines": 144,
+      "n_horizontal_lines": 104,
+      "n_vertical_inliers": 13,
+      "n_horizontal_inliers": 20
+    },
+    {
+      "frame": 4500,
+      "time_s": 150.053,
+      "focal_ratio_query_over_map": 0.6295766277762751,
+      "focal_px": 881.4072788867852,
+      "vp_vertical": [
+        1074.9368896484375,
+        5517.7998046875
+      ],
+      "vp_horizontal": [
+        -1251.11181640625,
+        434.7066650390625
+      ],
+      "n_vertical_lines": 66,
+      "n_horizontal_lines": 202,
+      "n_vertical_inliers": 10,
+      "n_horizontal_inliers": 24
+    },
+    {
+      "frame": 4800,
+      "time_s": 160.056,
+      "focal_ratio_query_over_map": 0.6796896227167232,
+      "focal_px": 951.5654718034124,
+      "vp_vertical": [
+        1189.8525390625,
+        6763.05322265625
+      ],
+      "vp_horizontal": [
+        983.37451171875,
+        393.1243896484375
+      ],
+      "n_vertical_lines": 69,
+      "n_horizontal_lines": 173,
+      "n_vertical_inliers": 7,
+      "n_horizontal_inliers": 23
+    },
+    {
+      "frame": 5100,
+      "time_s": 170.06,
+      "focal_ratio_query_over_map": 0.5210817356854279,
+      "focal_px": 729.514429959599,
+      "vp_vertical": [
+        1144.1011962890625,
+        4110.603515625
+      ],
+      "vp_horizontal": [
+        1165.029052734375,
+        379.84844970703125
+      ],
+      "n_vertical_lines": 167,
+      "n_horizontal_lines": 149,
+      "n_vertical_inliers": 14,
+      "n_horizontal_inliers": 14
+    },
+    {
+      "frame": 5700,
+      "time_s": 190.067,
+      "focal_ratio_query_over_map": 0.6192944024252691,
+      "focal_px": 867.0121633953768,
+      "vp_vertical": [
+        1291.4742431640625,
+        4936.13525390625
+      ],
+      "vp_horizontal": [
+        -2012.3656005859375,
+        592.9210205078125
+      ],
+      "n_vertical_lines": 40,
+      "n_horizontal_lines": 251,
+      "n_vertical_inliers": 7,
+      "n_horizontal_inliers": 24
+    },
+    {
+      "frame": 6000,
+      "time_s": 200.07,
+      "focal_ratio_query_over_map": 0.6692728840457551,
+      "focal_px": 936.9820376640572,
+      "vp_vertical": [
+        1239.7137451171875,
+        6778.20654296875
+      ],
+      "vp_horizontal": [
+        933.7123413085938,
+        399.934326171875
+      ],
+      "n_vertical_lines": 129,
+      "n_horizontal_lines": 76,
+      "n_vertical_inliers": 12,
+      "n_horizontal_inliers": 12
+    },
+    {
+      "frame": 6300,
+      "time_s": 210.074,
+      "focal_ratio_query_over_map": 0.12221999638490823,
+      "focal_px": 171.1079949388715,
+      "vp_vertical": [
+        1448.410400390625,
+        918.9480590820312
+      ],
+      "vp_horizontal": [
+        961.741455078125,
+        459.45263671875
+      ],
+      "n_vertical_lines": 100,
+      "n_horizontal_lines": 122,
+      "n_vertical_inliers": 9,
+      "n_horizontal_inliers": 17
+    },
+    {
+      "frame": 7200,
+      "time_s": 240.085,
+      "focal_ratio_query_over_map": 0.6438066562037059,
+      "focal_px": 901.3293186851884,
+      "vp_vertical": [
+        1323.1490478515625,
+        5179.3583984375
+      ],
+      "vp_horizontal": [
+        1138.922119140625,
+        350.347412109375
+      ],
+      "n_vertical_lines": 110,
+      "n_horizontal_lines": 51,
+      "n_vertical_inliers": 10,
+      "n_horizontal_inliers": 21
+    },
+    {
+      "frame": 7500,
+      "time_s": 250.088,
+      "focal_ratio_query_over_map": 0.6345067628390664,
+      "focal_px": 888.3094679746929,
+      "vp_vertical": [
+        1239.7144775390625,
+        4784.75927734375
+      ],
+      "vp_horizontal": [
+        646.4024658203125,
+        374.2900085449219
+      ],
+      "n_vertical_lines": 57,
+      "n_horizontal_lines": 116,
+      "n_vertical_inliers": 10,
+      "n_horizontal_inliers": 19
+    },
+    {
+      "frame": 7800,
+      "time_s": 260.092,
+      "focal_ratio_query_over_map": 0.8946224980783521,
+      "focal_px": 1252.471497309693,
+      "vp_vertical": [
+        1193.208984375,
+        7199.72900390625
+      ],
+      "vp_horizontal": [
+        1029.211181640625,
+        301.5236511230469
+      ],
+      "n_vertical_lines": 156,
+      "n_horizontal_lines": 241,
+      "n_vertical_inliers": 12,
+      "n_horizontal_inliers": 16
+    },
+    {
+      "frame": 8100,
+      "time_s": 270.095,
+      "focal_ratio_query_over_map": 0.6727346247176559,
+      "focal_px": 941.8284746047182,
+      "vp_vertical": [
+        1001.5745849609375,
+        5556.29541015625
+      ],
+      "vp_horizontal": [
+        939.8539428710938,
+        362.85052490234375
+      ],
+      "n_vertical_lines": 96,
+      "n_horizontal_lines": 125,
+      "n_vertical_inliers": 11,
+      "n_horizontal_inliers": 26
+    },
+    {
+      "frame": 8400,
+      "time_s": 280.099,
+      "focal_ratio_query_over_map": 0.6689728742315917,
+      "focal_px": 936.5620239242284,
+      "vp_vertical": [
+        1046.375,
+        5501.36181640625
+      ],
+      "vp_horizontal": [
+        956.7177124023438,
+        362.7706298828125
+      ],
+      "n_vertical_lines": 48,
+      "n_horizontal_lines": 58,
+      "n_vertical_inliers": 6,
+      "n_horizontal_inliers": 17
+    },
+    {
+      "frame": 8700,
+      "time_s": 290.102,
+      "focal_ratio_query_over_map": 1.065519594302986,
+      "focal_px": 1491.7274320241804,
+      "vp_vertical": [
+        1043.5643310546875,
+        5481.0419921875
+      ],
+      "vp_horizontal": [
+        998.986083984375,
+        88.51322174072266
+      ],
+      "n_vertical_lines": 105,
+      "n_horizontal_lines": 111,
+      "n_vertical_inliers": 11,
+      "n_horizontal_inliers": 10
+    },
+    {
+      "frame": 9900,
+      "time_s": 330.116,
+      "focal_ratio_query_over_map": 0.5512862201860718,
+      "focal_px": 771.8007082605005,
+      "vp_vertical": [
+        898.4841918945312,
+        4959.09033203125
+      ],
+      "vp_horizontal": [
+        939.9378051757812,
+        404.44903564453125
+      ],
+      "n_vertical_lines": 100,
+      "n_horizontal_lines": 58,
+      "n_vertical_inliers": 8,
+      "n_horizontal_inliers": 8
+    }
+  ]
+}

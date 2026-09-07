@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3f5f8" />
+    <title>Wayfindar — Frontend home comparison</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --ink: #111827;
+        --muted: #667085;
+        --line: #dfe4eb;
+        --canvas: #f3f5f8;
+        --blue: #0d6efd;
+      }
+
+      * { box-sizing: border-box; }
+      html { background: var(--canvas); }
+      body { margin: 0; min-width: 320px; color: var(--ink); background: var(--canvas); }
+      button { font: inherit; cursor: pointer; }
+
+      main { width: min(1240px, 100%); margin: 0 auto; padding: 36px 22px 56px; }
+      .eyebrow { margin: 0 0 8px; color: var(--blue); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      h1 { max-width: 760px; margin: 0; font-size: clamp(28px, 4vw, 46px); line-height: 1.06; letter-spacing: -.045em; }
+      .lead { max-width: 720px; margin: 14px 0 26px; color: var(--muted); font-size: 15px; line-height: 1.65; }
+
+      .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 28px; }
+      .toolbar-label { color: var(--muted); font-size: 13px; font-weight: 700; }
+      .floor-picker { display: flex; flex-wrap: wrap; gap: 6px; }
+      .floor-picker button { min-width: 44px; min-height: 40px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: #fff; font-size: 13px; font-weight: 700; transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease; }
+      .floor-picker button:hover { border-color: #a9c7fa; color: var(--ink); }
+      .floor-picker button:active { transform: scale(.97); }
+      .floor-picker button[aria-pressed="true"] { border-color: var(--ink); color: #fff; background: var(--ink); }
+      .floor-picker button:focus-visible, .home-card button:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+
+      .comparison { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: start; }
+      .version-card { min-width: 0; }
+      .version-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+      .version-head h2 { margin: 0; font-size: 18px; letter-spacing: -.02em; }
+      .version-tag { color: var(--muted); font-size: 11px; font-weight: 700; }
+      .description { min-height: 60px; margin: 12px 4px 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+
+      .home-card { position: relative; isolation: isolate; overflow: hidden; aspect-ratio: 9 / 17; width: min(100%, 360px); margin: 0 auto; border: 1px solid #d8dde5; border-radius: 32px; background: #f2f1ee; box-shadow: 0 24px 48px -26px rgb(16 24 40 / 42%); }
+      .home-card::after { position: absolute; inset: 0; z-index: 5; pointer-events: none; border: 1px solid rgb(255 255 255 / 60%); border-radius: inherit; content: ""; }
+      .map-layer { position: absolute; inset: 0; background: #e9e8e4; }
+      .map-layer img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: .95; }
+      .map-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(242 241 238 / 20%) 0%, transparent 42%, rgb(242 241 238 / 10%) 100%); pointer-events: none; }
+
+      .search { position: absolute; inset: 18px 16px auto; z-index: 2; display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 16px; border: 1px solid rgb(255 255 255 / 72%); border-radius: 999px; color: #8a8f96; background: rgb(255 255 255 / 86%); box-shadow: 0 6px 18px -12px rgb(17 19 21 / 46%); backdrop-filter: blur(18px) saturate(1.4); }
+      .search svg { flex: 0 0 auto; width: 18px; height: 18px; }
+      .search span { overflow: hidden; flex: 1; text-align: left; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; }
+      .search .clear { width: 15px; height: 15px; color: #c6cad0; }
+
+      .floor-rail { position: absolute; top: 50%; right: 12px; z-index: 2; display: flex; flex-direction: column; gap: 3px; padding: 6px; border: 1px solid rgb(255 255 255 / 72%); border-radius: 999px; background: rgb(255 255 255 / 84%); box-shadow: 0 8px 22px -16px rgb(17 19 21 / 55%); transform: translateY(-50%); backdrop-filter: blur(18px); }
+      .floor-rail button { width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%; color: #8a8f96; background: transparent; font-size: 11px; font-weight: 800; }
+      .floor-rail button[aria-pressed="true"] { color: #fff; background: #111315; box-shadow: 0 2px 5px rgb(17 19 21 / 25%); }
+
+      .bottom-nav { position: absolute; inset: auto 16px 16px; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 7px; border: 1px solid rgb(255 255 255 / 74%); border-radius: 24px; background: rgb(255 255 255 / 91%); box-shadow: 0 12px 26px -18px rgb(17 19 21 / 58%); backdrop-filter: blur(18px) saturate(1.4); }
+      .bottom-nav button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 56px; padding: 5px; border: 0; border-radius: 17px; color: #8a8f96; background: transparent; font-size: 11px; font-weight: 700; }
+      .bottom-nav button[aria-current="page"] { color: #111315; background: #f6f5f2; }
+      .bottom-nav svg { width: 21px; height: 21px; }
+      .dots { display: grid; grid-template-columns: repeat(3, 4px); gap: 3px; width: 21px; height: 21px; place-content: center; }
+      .dots i { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+
+      .legacy .home-card { border-radius: 22px; background: #ececec; }
+      .legacy .search { top: 16px; min-height: 44px; border-color: #e0ddd8; color: #c8c4be; background: rgb(255 255 255 / 95%); box-shadow: 0 2px 12px rgb(0 0 0 / 5%); }
+      .legacy .floor-rail { right: 9px; gap: 7px; padding: 6px 5px; border-color: #e0ddd8; background: rgb(255 255 255 / 95%); box-shadow: 0 2px 10px rgb(0 0 0 / 5%); }
+      .legacy .floor-rail button { width: 31px; height: 31px; color: #c8c4be; }
+      .legacy .floor-rail button[aria-pressed="true"] { color: #7a6e62; background: #e8e0d5; box-shadow: none; }
+      .legacy .bottom-nav { inset: auto 16px 16px; padding: 14px 18px; border: 0; border-radius: 25px; background: rgb(255 255 255 / 95%); box-shadow: 0 8px 18px rgb(0 0 0 / 10%); }
+      .legacy .bottom-nav button { min-height: 64px; color: #4b5563; background: transparent; font-size: 13px; }
+      .legacy .bottom-nav button[aria-current="page"] { background: transparent; }
+      .v2 .home-card { border-radius: 28px; background: #f0eeea; }
+      .v2 .search { top: 16px; min-height: 48px; border-color: rgb(255 255 255 / 82%); color: #5c6470; background: rgb(255 255 255 / 82%); }
+      .v2 .floor-rail { right: 12px; padding: 6px; }
+      .v2 .floor-rail button[aria-pressed="true"] { color: #fff; background: #111827; }
+      .v2 .bottom-nav { border-radius: 25px; }
+      /* frontend-v3 uses frontend's warm floor-selection colour. */
+      .home-card.v3 .floor-rail button[aria-pressed="true"] { color: #7a6e62; background: #e8e0d5; box-shadow: none; }
+
+      @media (max-width: 900px) {
+        main { padding-top: 28px; }
+        .comparison { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .version-card:last-child { grid-column: 1 / -1; max-width: 360px; margin: 0 auto; }
+      }
+      @media (max-width: 620px) {
+        .comparison { grid-template-columns: 1fr; gap: 34px; }
+        .version-card:last-child { grid-column: auto; max-width: none; }
+        .description { min-height: auto; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .floor-picker button { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Wayfindar / UI review</p>
+      <h1>หน้าแรกของแต่ละ Frontend</h1>
+      <p class="lead">ภาพเทียบหน้า Map เริ่มต้นของทั้ง 3 รุ่น โดยใช้แผนผังชั้นจริงจากโปรเจกต์เดียวกัน เลือกชั้นด้านล่างเพื่อดูว่าหน้าหลักแต่ละเวอร์ชันจัดวาง search, floor rail และ bottom navigation อย่างไร</p>
+
+      <div class="toolbar" aria-label="เลือกชั้นของแผนที่">
+        <span class="toolbar-label">แสดงแผนผัง:</span>
+        <div class="floor-picker" id="floor-picker"></div>
+      </div>
+
+      <section class="comparison" aria-label="เปรียบเทียบหน้าแรกของ frontend">
+        <article class="version-card legacy">
+          <div class="version-head"><h2>frontend</h2><span class="version-tag">legacy</span></div>
+          <div class="home-card">
+            <div class="map-layer"><img class="map-image" src="/system_data/map/floor1.jpg" alt="แผนผังอาคารสำหรับ frontend รุ่นเก่า" /><div class="map-shade"></div></div>
+            <button class="search" type="button" aria-label="ค้นหาจุดหมายปลายทาง">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+              <span>Search destination...</span>
+              <svg class="clear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+            </button>
+            <div class="floor-rail" aria-label="เลือกชั้น"><button type="button">F6</button><button type="button">F5</button><button type="button">F4</button><button type="button">F3</button><button type="button">F2</button><button type="button" aria-pressed="true">F1</button></div>
+            <nav class="bottom-nav" aria-label="เมนูหลัก"><button type="button" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg><span>Map</span></button><button type="button"><span class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span>Places</span></button></nav>
+          </div>
+          <p class="description">โทนอุ่นแบบเดิม แผนที่เป็นพื้นที่หลัก มี search bar ด้านบนและ bottom bar ขนาดใหญ่ด้านล่าง</p>
+        </article>
+
+        <article class="version-card v2">
+          <div class="version-head"><h2>frontend-v2</h2><span class="version-tag">refined</span></div>
+          <div class="home-card">
+            <div class="map-layer"><img class="map-image" src="/system_data/map/floor1.jpg" alt="แผนผังอาคารสำหรับ frontend-v2" /><div class="map-shade"></div></div>
+            <button class="search" type="button" aria-label="ค้นหาจุดหมายปลายทาง">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+              <span>Search destination</span>
+            </button>
+            <div class="floor-rail" aria-label="เลือกชั้น"><button type="button">F6</button><button type="button">F5</button><button type="button">F4</button><button type="button">F3</button><button type="button">F2</button><button type="button" aria-pressed="true">F1</button></div>
+            <nav class="bottom-nav" aria-label="เมนูหลัก"><button type="button" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg><span>Map</span></button><button type="button"><span class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span>Places</span></button></nav>
+          </div>
+          <p class="description">เพิ่ม glass surface, active floor แบบ dark ink และ hit area ที่ชัดขึ้น พร้อม safe-area spacing</p>
+        </article>
+
+        <article class="version-card">
+          <div class="version-head"><h2>frontend-v3</h2><span class="version-tag">current</span></div>
+          <div class="home-card v3">
+            <div class="map-layer"><img class="map-image" src="/system_data/map/floor1.jpg" alt="แผนผังอาคารสำหรับ frontend-v3" /><div class="map-shade"></div></div>
+            <button class="search" type="button" aria-label="ค้นหาจุดหมายปลายทาง">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+              <span>Search destination</span>
+            </button>
+            <div class="floor-rail" aria-label="เลือกชั้น"><button type="button">F6</button><button type="button">F5</button><button type="button">F4</button><button type="button">F3</button><button type="button">F2</button><button type="button" aria-pressed="true">F1</button></div>
+            <nav class="bottom-nav" aria-label="เมนูหลัก"><button type="button" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg><span>Map</span></button><button type="button"><span class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span>Places</span></button></nav>
+          </div>
+          <p class="description">รุ่นปัจจุบัน: paper palette, chrome ที่เบาลง, rail และ bottom nav ใช้ shape language เดียวกัน</p>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      const floorPicker = document.querySelector('#floor-picker');
+      const images = [...document.querySelectorAll('.map-image')];
+      const floorRails = [...document.querySelectorAll('.floor-rail')];
+      const floorNames = ['Floor 1', 'Floor 2', 'Floor 3', 'Floor 4', 'Floor 5', 'Floor 6'];
+
+      floorNames.forEach((label, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = `F${index + 1}`;
+        button.setAttribute('aria-label', label);
+        button.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
+        button.addEventListener('click', () => {
+          images.forEach((image) => { image.src = `/system_data/map/floor${index + 1}.jpg`; });
+          [...floorPicker.children].forEach((item, itemIndex) => item.setAttribute('aria-pressed', itemIndex === index ? 'true' : 'false'));
+          floorRails.forEach((rail) => [...rail.children].forEach((item, itemIndex) => item.setAttribute('aria-pressed', itemIndex === 5 - index ? 'true' : 'false')));
+        });
+        floorPicker.append(button);
+      });
+    </script>
+  </body>
+</html>

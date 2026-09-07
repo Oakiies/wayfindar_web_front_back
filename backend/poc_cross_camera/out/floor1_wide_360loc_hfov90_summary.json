@@ -1,0 +1,26 @@
+{
+  "video": "D:\\wayfindar\\floor1_wide.MOV",
+  "map_data": "D:\\wayfindar\\WebNav_front_back\\backend\\app\\data\\map_data\\result_floor1_4",
+  "source_hfov_assumed_deg": 90.0,
+  "target_hfov_deg": 68.87797861760724,
+  "sampled_frames": 53,
+  "results": {
+    "V0": {
+      "attempts": 53,
+      "successes": 8
+    },
+    "V2": {
+      "attempts": 53,
+      "successes": 2
+    },
+    "V3": {
+      "attempts": 53,
+      "successes": 10
+    }
+  },
+  "outputs": {
+    "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_360loc_hfov90.csv",
+    "plot": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_360loc_hfov90_trajectory.png"
+  },
+  "note": "V3 uses estimated pinhole source FoV; real K/D calibration is still required for final claims."
+}

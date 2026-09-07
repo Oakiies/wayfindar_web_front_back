@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Frontend map versions</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; background: #eef0f4; color: #10141a; }
+    main { max-width: 1060px; margin: 0 auto; padding: 28px 20px 42px; }
+    h1 { margin: 0 0 6px; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.03em; }
+    .intro { margin: 0 0 24px; color: #565e6b; }
+    .comparison { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: start; }
+    .version { min-width: 0; }
+    .version h2 { margin: 0 0 10px; font-size: 18px; }
+    .version p { margin: 10px 0 0; color: #565e6b; font-size: 13px; line-height: 1.5; }
+    .popup { width: 100%; max-width: 300px; margin: 0 auto; overflow: hidden; background: rgba(250,250,250,.96); border: 2px solid #64748b; border-radius: 16px; box-shadow: 0 14px 30px rgba(16,20,26,.18); }
+    .popup-bar { height: 42px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid #dfe2e8; color: #1e293b; font-size: 13px; }
+    .map-rect { height: 234px; display: block; width: 100%; background: #f2f1ee; }
+    .map-square { height: auto; aspect-ratio: 1; display: block; width: 100%; background: #f2f1ee; }
+    .v3 .popup { border-color: #4b5d78; }
+    svg { display: block; width: 100%; height: 100%; }
+    .route-casing { fill: none; stroke: white; stroke-linecap: round; stroke-linejoin: round; }
+    .route { fill: none; stroke: #0d6efd; stroke-linecap: round; stroke-linejoin: round; }
+    .pose-dot { fill: #0d6efd; }
+    .note { margin-top: 28px; color: #565e6b; font-size: 13px; }
+    @media (max-width: 760px) { .comparison { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>แผนที่มุมบนของแต่ละ frontend</h1>
+    <p class="intro">ใช้ Floor 5 และพิกัดผู้ใช้เดียวกัน เพื่อเทียบเฉพาะหน้าตาและสัญลักษณ์ของแต่ละเวอร์ชัน</p>
+
+    <section class="comparison" aria-label="Frontend map comparison">
+      <article class="version">
+        <h2>frontend</h2>
+        <div class="popup">
+          <div class="popup-bar"><span>Map</span><span>Floor 5</span></div>
+          <div class="map-rect">
+            <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="frontend floor map">
+              <defs><linearGradient id="oldFan" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#0d6efd" stop-opacity=".12"/><stop offset="1" stop-color="#0d6efd" stop-opacity=".7"/></linearGradient></defs>
+              <image href="/system_data/map/floor5.jpg" x="0" y="0" width="500" height="500" preserveAspectRatio="none"/>
+              <polyline class="route-casing" points="292.3,286.2 295,293 295,274 295,254 295,228 233,228 206,228 206,217 206,155 206,111 206,40.3" stroke-width="9" stroke-dasharray="16 10"/>
+              <polyline class="route" points="292.3,286.2 295,293 295,274 295,254 295,228 233,228 206,228 206,217 206,155 206,111 206,40.3" stroke-width="5" stroke-dasharray="16 10"/>
+              <path d="M292.3 286.2 L260 250 A48 48 0 0 1 324 250 Z" fill="url(#oldFan)"/>
+              <circle cx="292.3" cy="286.2" r="18" fill="#fff" stroke="#93c5fd" stroke-width="2"/>
+              <circle class="pose-dot" cx="292.3" cy="286.2" r="6"/>
+              <circle cx="206" cy="40.3" r="9" fill="#fff"/><circle cx="206" cy="40.3" r="6" fill="#ea488d"/>
+            </svg>
+          </div>
+        </div>
+        <p>มี header และแผนที่ถูก letterbox เป็นแนวนอน พร้อม fan/halo แบบเก่า</p>
+      </article>
+
+      <article class="version">
+        <h2>frontend-v2</h2>
+        <div class="popup">
+          <div class="popup-bar"><span>Map</span><span>Floor 5</span></div>
+          <div class="map-rect">
+            <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="frontend version 2 floor map">
+              <image href="/system_data/map/floor5.jpg" x="0" y="0" width="500" height="500" preserveAspectRatio="none"/>
+              <polyline class="route-casing" points="292.3,286.2 295,293 295,274 295,254 295,228 233,228 206,228 206,217 206,155 206,111 206,40.3" stroke-width="10"/>
+              <polyline class="route" points="292.3,286.2 295,293 295,274 295,254 295,228 233,228 206,228 206,217 206,155 206,111 206,40.3" stroke-width="6"/>
+              <polyline points="292.3,286.2 295,293 295,274 295,254 295,228 233,228 206,228 206,217 206,155 206,111 206,40.3" fill="none" stroke="white" stroke-width="2.5" stroke-dasharray="10 15" opacity=".9"/>
+              <path d="M292.3 286.2 L260 250 A48 48 0 0 1 324 250 Z" fill="#60a5fa" fill-opacity=".62"/>
+              <circle cx="292.3" cy="286.2" r="18" fill="#fff" stroke="#93c5fd" stroke-width="2"/><circle class="pose-dot" cx="292.3" cy="286.2" r="6"/>
+              <circle cx="206" cy="40.3" r="9" fill="#fff"/><circle cx="206" cy="40.3" r="6" fill="#ea488d"/>
+            </svg>
+          </div>
+        </div>
+        <p>ยังมี header แต่ route เป็นเส้นทึบและมีเส้น flow เคลื่อนตามทิศทาง</p>
+      </article>
+
+      <article class="version v3">
+        <h2>frontend-v3</h2>
+        <div class="popup">
+          <div class="map-square">
+            <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="frontend version 3 floor map">
+              <image href="/system_data/map/floor5.jpg" x="0" y="0" width="500" height="500" preserveAspectRatio="none"/>
+              <polyline class="route-casing" points="292.3,286.2 295,293 295,274 295,254 295,228 233,228 206,228 206,217 206,155 206,111 206,40.3" stroke-width="12.4" stroke-dasharray="0 17"/>
+              <polyline class="route" points="292.3,286.2 295,293 295,274 295,254 295,228 233,228 206,228 206,217 206,155 206,111 206,40.3" stroke-width="8" stroke-dasharray="0 17"/>
+              <path d="M292.3 286.2 L260 250 A48 48 0 0 1 324 250 Z" fill="#0d6efd" fill-opacity=".32" stroke="#0d6efd" stroke-width="2"/>
+              <circle cx="292.3" cy="286.2" r="10.4" fill="#fff"/>
+              <circle class="pose-dot" cx="292.3" cy="286.2" r="8"/>
+              <circle cx="206" cy="40.3" r="9" fill="#fff"/><circle cx="206" cy="40.3" r="6" fill="#ea488d"/>
+            </svg>
+          </div>
+        </div>
+        <p>แผนที่จัตุรัสเต็มกรอบแบบภาพอ้างอิง ใช้ live pose เป็นจุด + fan แบน</p>
+      </article>
+    </section>
+
+    <p class="note">ตัวอย่างนี้ใช้ตำแหน่งเดียวกัน `(x=292.3, y=286.2)` และปลายทาง Fire Exit 1 เพื่อให้เทียบรูปแบบได้ตรงกัน</p>
+  </main>
+</body>
+</html>

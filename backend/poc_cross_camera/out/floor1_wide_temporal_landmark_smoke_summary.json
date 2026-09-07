@@ -1,0 +1,105 @@
+{
+  "experiment": "temporal landmark propagation into target-frame PnP",
+  "pipeline_locked": {
+    "retrieval": "MegaLoc",
+    "local_features": "SuperPoint",
+    "matcher": "LightGlue via existing accelerated matcher",
+    "pose": "existing PnP-RANSAC implementation and gates",
+    "map_rebuilt": false,
+    "map_data": "D:\\wayfindar\\WebNav_front_back\\backend\\app\\data\\map_data\\result_floor1_4"
+  },
+  "sampling": {
+    "video": "D:\\wayfindar\\floor1_wide.MOV",
+    "fps": 38.542229297552375,
+    "frame_count": 20337,
+    "step_seconds": 10.0,
+    "sampled_frames": 3,
+    "offset_seconds": [
+      -0.25,
+      -0.125,
+      0.125,
+      0.25
+    ],
+    "fb_error_px": 1.5
+  },
+  "results": {
+    "per_config": {
+      "direct": {
+        "attempts": 3,
+        "successes": 2,
+        "success_rate": 0.6666666666666666,
+        "median_matches": 21.0,
+        "median_inliers": 10.0,
+        "median_occupied_cells": 2.0
+      },
+      "propagated": {
+        "attempts": 3,
+        "successes": 2,
+        "success_rate": 0.6666666666666666,
+        "median_matches": 31.0,
+        "median_inliers": 11.0,
+        "median_occupied_cells": 3.0
+      },
+      "direct_plus_propagated": {
+        "attempts": 3,
+        "successes": 2,
+        "success_rate": 0.6666666666666666,
+        "median_matches": 48.0,
+        "median_inliers": 15.0,
+        "median_occupied_cells": 3.0
+      },
+      "past_only": {
+        "attempts": 3,
+        "successes": 1,
+        "success_rate": 0.3333333333333333,
+        "median_matches": 4.0,
+        "median_inliers": 4.0,
+        "median_occupied_cells": 2.0
+      },
+      "direct_plus_past": {
+        "attempts": 3,
+        "successes": 2,
+        "success_rate": 0.6666666666666666,
+        "median_matches": 21.0,
+        "median_inliers": 10.0,
+        "median_occupied_cells": 2.0
+      }
+    },
+    "paired_vs_baseline": {
+      "propagated": {
+        "gains": 0,
+        "losses": 0,
+        "net": 0
+      },
+      "direct_plus_propagated": {
+        "gains": 0,
+        "losses": 0,
+        "net": 0
+      },
+      "past_only": {
+        "gains": 0,
+        "losses": 1,
+        "net": -1
+      },
+      "direct_plus_past": {
+        "gains": 0,
+        "losses": 0,
+        "net": 0
+      }
+    }
+  },
+  "papers_and_official_code": {
+    "hierarchical_localization": "https://openaccess.thecvf.com/content_CVPR_2019/html/Sarlin_From_Coarse_to_Fine_Robust_Hierarchical_Localization_at_Large_Scale_CVPR_2019_paper.html",
+    "cotracker": "https://arxiv.org/abs/2307.07635",
+    "generalized_pose": "https://openaccess.thecvf.com/content_cvpr_2014/html/Ventura_A_Minimal_Solution_2014_CVPR_paper.html"
+  },
+  "limitations": [
+    "Success means unchanged PnP gate-pass, not ground-truth accuracy.",
+    "Past+future is an offline upper bound; past-only is the online-compatible condition.",
+    "KLT propagation is an ablation before CoTracker and is not a claim to reproduce CoTracker.",
+    "No 2D points from source frames are passed directly to target-frame PnP."
+  ],
+  "outputs": {
+    "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_temporal_landmark_smoke.csv"
+  }
+}

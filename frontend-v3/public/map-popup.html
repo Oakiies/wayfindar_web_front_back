@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#eef0f4">
+<title>Popup แผนที่ในโหมดกล้อง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+  :root {
+    --bg: #eef0f4;
+    --panel: #ffffff;
+    --panel-2: #f5f6f9;
+    --ink: #10141a;
+    --ink-2: #565e6b;
+    --ink-3: #8b93a0;
+    --line: #dfe2e8;
+    --line-2: #ecedf1;
+    --accent: #0d6efd;
+    --accent-soft: #e7efff;
+    --dest: #e5484d;
+    --warn: #b26a00;
+    --shadow: 0 1px 2px rgb(16 20 26 / .05), 0 14px 34px -18px rgb(16 20 26 / .35);
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b0e13;
+      --panel: #151a21;
+      --panel-2: #1b212a;
+      --ink: #e8ecf3;
+      --ink-2: #a2abb9;
+      --ink-3: #737d8c;
+      --line: #262d38;
+      --line-2: #1f252e;
+      --accent: #4c94ff;
+      --accent-soft: #16233a;
+      --dest: #ff6b6f;
+      --warn: #e0a136;
+      --shadow: 0 1px 2px rgb(0 0 0 / .5), 0 14px 34px -18px rgb(0 0 0 / .8);
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0b0e13;
+    --panel: #151a21;
+    --panel-2: #1b212a;
+    --ink: #e8ecf3;
+    --ink-2: #a2abb9;
+    --ink-3: #737d8c;
+    --line: #262d38;
+    --line-2: #1f252e;
+    --accent: #4c94ff;
+    --accent-soft: #16233a;
+    --dest: #ff6b6f;
+    --warn: #e0a136;
+    --shadow: 0 1px 2px rgb(0 0 0 / .5), 0 14px 34px -18px rgb(0 0 0 / .8);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans Thai', 'Archivo', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  h1 {
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(30px, 4.4vw, 42px);
+    font-weight: 700;
+    letter-spacing: -.025em;
+    line-height: 1.12;
+    text-wrap: balance;
+    margin: 12px 0 0;
+  }
+
+  h2 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    margin: 0;
+  }
+
+  p { margin: 0; max-width: 68ch; color: var(--ink-2); }
+  p.lead { color: var(--ink-2); font-size: 16.5px; margin-top: 14px; }
+  strong { color: var(--ink); font-weight: 600; }
+
+  code, .mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: .875em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  code {
+    background: var(--panel-2);
+    border: 1px solid var(--line-2);
+    border-radius: 5px;
+    padding: .08em .38em;
+    color: var(--ink);
+  }
+
+  section { display: flex; flex-direction: column; gap: 20px; }
+  .section-head { display: flex; flex-direction: column; gap: 8px; }
+
+  /* ---------- device ---------- */
+  .stage {
+    background:
+      radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%),
+      var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 34px 24px;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    box-shadow: var(--shadow);
+  }
+
+  .device {
+    position: relative;
+    width: 844px;
+    height: 390px;
+    flex: none;
+    border-radius: 42px;
+    background: #05070a;
+    padding: 9px;
+    box-shadow: 0 0 0 2px #23272e, 0 30px 60px -30px rgb(0 0 0 / .7);
+  }
+
+  .screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 34px;
+    overflow: hidden;
+    background: #0a0c10;
+  }
+
+  /* stand-in for the live camera feed */
+  .feed {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, #2b3138 0%, #191d23 46%, #101317 100%);
+  }
+  .feed::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent 0 22%, rgb(255 255 255 / .045) 22% 23%, transparent 23% 63%, rgb(255 255 255 / .045) 63% 64%, transparent 64%),
+      linear-gradient(0deg, rgb(0 0 0 / .45) 0 26%, transparent 26%);
+  }
+  .feed-note {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / .28);
+  }
+
+  /* AR route ribbon painted by ARFloorThreeOverlay (WebGL) — indicative only */
+  .ar-ribbon { position: absolute; inset: 0; }
+
+  .chrome {
+    position: absolute;
+    inset: 0 0 auto 0;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .icon-btn {
+    width: 44px; height: 44px;
+    flex: none;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: rgb(17 19 21 / .58);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid rgb(255 255 255 / .16);
+    color: #fff;
+  }
+
+  .cue {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 44px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: rgb(17 19 21 / .58);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid rgb(255 255 255 / .16);
+    color: #fff;
+    font-family: 'Archivo', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+  }
+
+  /* ---------- the popup itself ---------- */
+  .popup {
+    background: rgb(255 255 255 / .86);
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    border: 1px solid rgb(255 255 255 / .7);
+    box-shadow: 0 1px 2px rgb(17 19 21 / .04), 0 8px 24px -12px rgb(17 19 21 / .4);
+    border-radius: 14px;
+    overflow: hidden;
+    color: #111315;
+  }
+
+  .popup--float {
+    position: absolute;
+    right: 12px;
+    top: 70px;
+    z-index: 30;
+  }
+
+  .popup-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #efedea;
+    cursor: grab;
+  }
+
+  .popup-bar .label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: #8a8f96;
+  }
+
+  .floor-chip {
+    border-radius: 999px;
+    background: #e9e8e4;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #55595f;
+    font-family: 'Archivo', sans-serif;
+  }
+
+  .popup-bar .ctl { color: #8a8f96; padding: 4px; display: grid; place-items: center; }
+
+  .popup-map { display: block; width: 100%; background: #f2f1ee; }
+
+  /* ---------- state pair ---------- */
+  .states {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    align-items: flex-start;
+  }
+
+  .state {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .state-cap {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .state-cap .n { font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 14px; }
+  .state-cap .d { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+  .checker {
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background:
+      repeating-conic-gradient(color-mix(in srgb, var(--ink) 6%, transparent) 0% 25%, transparent 0% 50%) 0 0 / 18px 18px,
+      var(--panel);
+    display: inline-flex;
+  }
+
+  /* ---------- symbol specimens ---------- */
+  .specimens {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(228px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .spec {
+    background: var(--panel);
+    padding: 22px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .spec-art {
+    height: 108px;
+    border-radius: 10px;
+    background: var(--panel-2);
+    display: grid;
+    place-items: center;
+  }
+
+  .spec dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 3px 14px;
+    font-size: 12px;
+  }
+  .spec dt { color: var(--ink-3); font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; }
+  .spec dd { margin: 0; color: var(--ink-2); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-variant-numeric: tabular-nums; text-align: right; }
+
+  .spec h3 .th { display: block; font-size: 13px; font-weight: 500; color: var(--ink-2); font-family: 'IBM Plex Sans Thai', sans-serif; }
+
+  /* ---------- behaviour list ---------- */
+  .rows { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--panel); }
+  .row { display: grid; grid-template-columns: 190px 1fr; gap: 20px; padding: 16px 20px; border-top: 1px solid var(--line-2); }
+  .row:first-child { border-top: 0; }
+  .row .k { font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 13.5px; }
+  .row .k .sub { display: block; font-family: 'JetBrains Mono', monospace; font-weight: 400; font-size: 10.5px; color: var(--ink-3); letter-spacing: .04em; margin-top: 2px; }
+  .row .v { color: var(--ink-2); font-size: 14px; }
+
+  /* ---------- gaps ---------- */
+  .gaps { display: flex; flex-direction: column; gap: 14px; }
+  .gap {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--warn);
+  }
+  .gap .mark { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--warn); font-weight: 700; padding-top: 2px; }
+  .gap .body { display: flex; flex-direction: column; gap: 4px; }
+  .gap .body b { font-family: 'Archivo', sans-serif; font-size: 14px; font-weight: 600; }
+  .gap .body span { color: var(--ink-2); font-size: 14px; }
+
+  .src { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--ink-3); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 40px 16px 72px; gap: 48px; }
+    .row { grid-template-columns: 1fr; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">frontend-v3 · NavigationView · arViewMode = "ar"</div>
+    <h1>Popup แผนที่ตอนเปิดกล้อง</h1>
+    <p class="lead">
+      หน้าตาปัจจุบันของ mini-map ที่ลอยอยู่บนภาพกล้อง พร้อมสัญลักษณ์
+      <strong>ตำแหน่งของฉัน</strong> และ <strong>ปลายทาง</strong> — วาดด้วยเรขาคณิตชุดเดียวกับ
+      <span class="src">MapCanvas.tsx</span> ทุกค่า และใช้เส้นทางจริงจาก
+      <span class="src">floor1.json</span> (Auditorium → M21_B)
+    </p>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <h2>บนจอ: โหมด AR แนวนอน</h2>
+      <p>Popup โผล่เฉพาะตอน <code>arViewMode === 'ar'</code> และเครื่องอยู่แนวนอน ตำแหน่งเริ่มต้นคือมุมขวาบน ห่างขอบ 12px ถ้าถือแนวตั้งจะเจอการ์ด “Rotate phone to landscape” แทนทั้งจอ</p>
+    </div>
+    <div class="stage">
+      <div class="device">
+        <div class="screen">
+          <div class="feed"></div>
+          <svg class="ar-ribbon" viewBox="0 0 826 372" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M 372 372 L 400 232 L 424 232 L 454 372 Z" fill="#0d6efd" opacity=".55"/>
+            <path d="M 400 232 L 409 196 L 418 196 L 424 232 Z" fill="#0d6efd" opacity=".33"/>
+          </svg>
+
+          <div class="chrome">
+            <div class="icon-btn" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </div>
+            <div class="cue">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              <span>เดินตรงไป 24 ม.</span>
+            </div>
+            <div style="display:flex; gap:8px; flex:none;">
+              <div class="icon-btn" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+              </div>
+              <div class="icon-btn" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 4-6 2v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="popup popup--float" style="width:230px" id="floating-popup">
+            <div class="popup-bar">
+              <span class="label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9 2 12l3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
+                Map
+              </span>
+              <span style="display:flex; align-items:center; gap:4px;">
+                <span class="floor-chip">Floor 1</span>
+                <span class="ctl" aria-hidden="true">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                </span>
+              </span>
+            </div>
+            <div class="popup-map" data-map="230x180"></div>
+          </div>
+
+          <div class="feed-note">live camera feed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>ก่อน / หลัง — แยก “ฉัน” ออกจาก “เส้นทาง”</h2>
+      <p>ของเดิมจุดตำแหน่งกับจุดเส้นทางเป็นสัญลักษณ์เดียวกัน คือวงกลม <code>#0d6efd</code> ในขอบขาว ต่างกันแค่รัศมี 7 กับ 4 หน่วย พอย่อลงกรอบ 180px ทั้งคู่เหลือ 2–3 px จุดตำแหน่งจึงกลายเป็นแค่จุดหนึ่งในแถวจุดไข่ปลา</p>
+    </div>
+    <div class="states">
+      <div class="state">
+        <div class="state-cap"><span class="n">ก่อน</span><span class="d">จุดตำแหน่ง ⌀ 2.5 px</span></div>
+        <div class="checker">
+          <div class="popup" style="width:230px">
+            <div class="popup-bar">
+              <span class="label">Map</span>
+              <span class="floor-chip">Floor 1</span>
+            </div>
+            <div class="popup-map" data-map="230x180" data-variant="v1"></div>
+          </div>
+        </div>
+      </div>
+      <div class="state">
+        <div class="state-cap"><span class="n">หลัง</span><span class="d">จุดตำแหน่ง ⌀ 16 px + ฮาโล 40 px</span></div>
+        <div class="checker">
+          <div class="popup" style="width:230px">
+            <div class="popup-bar">
+              <span class="label">Map</span>
+              <span class="floor-chip">Floor 1</span>
+            </div>
+            <div class="popup-map" data-map="230x180"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rows">
+      <div class="row">
+        <div class="k">ขนาดเป็นพิกเซลจริง<span class="sub">ResizeObserver</span></div>
+        <div class="v">เดิมคำนวณจาก <code>view.size / 500</code> ซึ่งถูกเฉพาะตอนแคนวาสกว้าง 500px พอดี ตอนนี้วัดด้านสั้นของกรอบจริง ค่า 8 หน่วยจึงเป็น 8 พิกเซลบนจอเสมอ ไม่ว่ากรอบเล็กแค่ไหน</div>
+      </div>
+      <div class="row">
+        <div class="k">ฮาโล<span class="sub">r 20 · opacity .14</span></div>
+        <div class="v">วงนุ่ม ๆ วงเดียวบนแผนที่ที่แบนทั้งใบ บอกว่านี่คือค่าที่กำลังอัปเดตอยู่ และกว้างกว่าจุดเส้นทาง 5 เท่า จึงแยกออกทันทีแม้สีเดียวกัน</div>
+      </div>
+      <div class="row">
+        <div class="k">เงา<span class="sub">dy 1 · blur 2</span></div>
+        <div class="v">ยกสัญลักษณ์ลอยเหนือผัง — ไม่มีอย่างอื่นบนแผนที่ที่มีเงา หมุดปลายทางกับจุดเส้นทางยังแบนสนิทเหมือนเดิม</div>
+      </div>
+      <div class="row">
+        <div class="k">จุดเส้นทางถอยลง<span class="sub">4 → 3.4 px</span></div>
+        <div class="v">ลดรัศมีและขอบขาว พร้อมถี่ขึ้นจาก 17 เป็น 15 อ่านเป็น “เส้น” มากกว่า “ลูกโซ่ของจุด” และไม่แย่งน้ำหนักกับตำแหน่งของเรา</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>สองสถานะของ popup</h2>
+      <p>แตะที่แผนที่เพื่อสลับขนาด — ไม่มีสถานะอื่นนอกจากนี้ ทั้งสองขนาดวาดผังชั้นเต็ม 500×500 หน่วย ลงในกรอบเตี้ย ๆ จึงเหลือแถบว่างซ้ายขวา และสัญลักษณ์ย่อลงตามสเกลของกรอบ</p>
+    </div>
+    <div class="states">
+      <div class="state">
+        <div class="state-cap"><span class="n">ย่อ (ค่าเริ่มต้น)</span><span class="d">230 × 180 px</span></div>
+        <div class="checker">
+          <div class="popup" style="width:230px">
+            <div class="popup-bar">
+              <span class="label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9 2 12l3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
+                Map
+              </span>
+              <span style="display:flex; align-items:center; gap:4px;">
+                <span class="floor-chip">Floor 1</span>
+                <span class="ctl" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </span>
+            </div>
+            <div class="popup-map" data-map="230x180"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="state">
+        <div class="state-cap"><span class="n">ขยาย</span><span class="d">340 × 260 px</span></div>
+        <div class="checker">
+          <div class="popup" style="width:340px">
+            <div class="popup-bar">
+              <span class="label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9 2 12l3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
+                Map
+              </span>
+              <span style="display:flex; align-items:center; gap:4px;">
+                <span class="floor-chip">Floor 1</span>
+                <span class="ctl" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H2v6M16 21h6v-6M2 3l7 7M22 21l-7-7"/></svg></span>
+              </span>
+            </div>
+            <div class="popup-map" data-map="340x260"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>สัญลักษณ์ทั้งสี่ ตามขนาดจริงบนแผนที่</h2>
+      <p>ขยาย 4 เท่าเพื่อให้เห็นรายละเอียด ค่าที่ระบุคือหน่วยแผนที่ (map units) ที่ <span class="src">MapCanvas</span> ใช้จริงเมื่อ popup ไม่ได้ zoom</p>
+    </div>
+    <div class="specimens">
+
+      <div class="spec">
+        <div class="spec-art"><svg width="150" height="96" viewBox="-19 -13 38 26" data-sym="pose"></svg></div>
+        <h3>Current position<span class="th">ตำแหน่งของฉัน</span></h3>
+        <dl>
+          <dt>สี</dt><dd>#0d6efd</dd>
+          <dt>จุด r</dt><dd>8 px</dd>
+          <dt>ลิ่มทิศ</dt><dd>18 × ±6.2</dd>
+          <dt>ขอบขาว</dt><dd>3</dd>
+          <dt>ฮาโล r</dt><dd>20 @ .14</dd>
+          <dt>เงา</dt><dd>y1 blur2</dd>
+        </dl>
+      </div>
+
+      <div class="spec">
+        <div class="spec-art"><svg width="96" height="96" viewBox="-12 -20 24 24" data-sym="dest"></svg></div>
+        <h3>Destination<span class="th">ปลายทาง</span></h3>
+        <dl>
+          <dt>สี</dt><dd>#e5484d</dd>
+          <dt>หัวหมุด r</dt><dd>12</dd>
+          <dt>ความสูง</dt><dd>28.8</dd>
+          <dt>ขอบขาว</dt><dd>1.92</dd>
+          <dt>รูตรงกลาง</dt><dd>3.6</dd>
+        </dl>
+      </div>
+
+      <div class="spec">
+        <div class="spec-art"><svg width="96" height="96" viewBox="-13 -13 26 26" data-sym="origin"></svg></div>
+        <h3>Start point<span class="th">จุดเริ่มต้น</span></h3>
+        <dl>
+          <dt>สี</dt><dd>#111315</dd>
+          <dt>วง r</dt><dd>8</dd>
+          <dt>ความหนา</dt><dd>2.72</dd>
+          <dt>ขอบขาว</dt><dd>2.08</dd>
+          <dt>เงื่อนไข</dt><dd>hideStatic</dd>
+        </dl>
+      </div>
+
+      <div class="spec">
+        <div class="spec-art"><svg width="180" height="60" viewBox="-4 -8 68 16" data-sym="route"></svg></div>
+        <h3>Route<span class="th">เส้นทาง</span></h3>
+        <dl>
+          <dt>สี</dt><dd>#0d6efd</dd>
+          <dt>จุด r</dt><dd>3.4 px</dd>
+          <dt>ขอบขาว</dt><dd>5.4</dd>
+          <dt>ระยะห่าง</dt><dd>15</dd>
+          <dt>รูปแบบ</dt><dd>จุดไข่ปลา</dd>
+        </dl>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>พฤติกรรมที่ทำได้ตอนนี้</h2>
+    </div>
+    <div class="rows">
+      <div class="row">
+        <div class="k">ลากย้ายตำแหน่ง<span class="sub">startPopupDrag</span></div>
+        <div class="v">ลากได้เฉพาะแถบหัว จับขอบจอไว้เสมอ — ห่างขอบอย่างน้อย 12px และไม่ขึ้นไปเหนือ y = 64 จึงไม่ทับปุ่มด้านบน</div>
+      </div>
+      <div class="row">
+        <div class="k">ย่อ / ขยาย<span class="sub">togglePopupSize</span></div>
+        <div class="v">แตะปุ่มมุมขวาบน หรือแตะที่ตัวแผนที่ก็ได้ ระบบแยกแตะออกจากลากด้วยระยะ 3px</div>
+      </div>
+      <div class="row">
+        <div class="k">ป้ายชั้น<span class="sub">activeFloorLabel</span></div>
+        <div class="v">ชิปเล็กบนแถบหัว บอกชั้นที่กำลังแสดง — เป็นข้อความเดียวใน popup ทั้งหมด</div>
+      </div>
+      <div class="row">
+        <div class="k">จุดเปลี่ยนชั้น<span class="sub">liveTransitionTarget</span></div>
+        <div class="v">วงกลมตัวอักษร <code>L</code> เขียวสำหรับลิฟต์ / <code>S</code> ส้มสำหรับบันได โผล่เมื่อเส้นทางต้องข้ามชั้น</div>
+      </div>
+      <div class="row">
+        <div class="k">ไม่มี zoom / pan<span class="sub">interactive = false</span></div>
+        <div class="v">ใน popup ปิดการซูมและเลื่อนไว้ ต่างจากแผนที่เต็มจอที่เปิดทั้งล้อเมาส์ ลากนิ้ว และ pinch</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>สิ่งที่ยังขาด ถ้าเป้าหมายคือ “รู้ว่าฉันอยู่ไหน ปลายทางอยู่ไหน”</h2>
+      <p>ทั้งสี่ข้อนี้อ่านจากโค้ดปัจจุบัน ไม่ใช่การเดา</p>
+    </div>
+    <div class="gaps">
+      <div class="gap">
+        <span class="mark">01</span>
+        <span class="body">
+          <b>ไม่มีคำอธิบายว่าอันไหนคืออะไร</b>
+          <span>ไม่มี legend ไม่มีป้ายชื่อร้านปลายทาง ผู้ใช้ต้องเดาเองว่าวงน้ำเงินคือตัวเอง หมุดแดงคือปลายทาง</span>
+        </span>
+      </div>
+      <div class="gap">
+        <span class="mark">02</span>
+        <span class="body">
+          <b>ไม่มีระยะทางหรือเวลาที่เหลือ</b>
+          <span>ค่า <code>routeMeta</code> และ ETA แสดงอยู่บนการ์ดปลายทางในโหมดแผนที่ แต่ popup ไม่ได้รับค่าเหล่านี้เลย</span>
+        </span>
+      </div>
+      <div class="gap">
+        <span class="mark">03</span>
+        <span class="body">
+          <b>แผนที่ไม่หมุนตามตัวเรา</b>
+          <span>ผังชั้นตรึงทิศเสมอ มีเพียงลิ่มสีน้ำเงินที่หมุน และไม่มีเข็มทิศ/ตัวอักษร N บอกทิศเหนือไว้อ้างอิง</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const MAP_SIZE = 500;
+  const NS = 'http://www.w3.org/2000/svg';
+
+  const ROUTE_COLOR = '#0d6efd';
+  const POSE_COLOR = '#0d6efd';
+  const ORIGIN_COLOR = '#111315';
+  const DEST_COLOR = '#e5484d';
+
+  // v1 = what shipped before, v2 = the symbol after the pass
+  const V1 = { R: 7, CASING: 2.6, TIP: 16, HALF: 5.6, HALO: 0,
+               DOT: 4, DOT_CASING: 6.2, SPACING: 17, lift: false };
+  const V2 = { R: 8, CASING: 3, TIP: 18, HALF: 6.2, HALO: 20,
+               DOT: 3.4, DOT_CASING: 5.4, SPACING: 15, lift: true };
+
+  const FLOOR_PLAN = '/system_data/map/floor1.jpg';
+
+  // Auditorium -> M21_B, straight out of public/system_data/json_map/floor1.json
+  const ROUTE = [
+    [140, 146], [207, 146], [241, 146], [250, 146], [250, 180], [250, 215],
+    [250, 312], [250, 333], [250, 380.26], [250, 390], [250, 408], [250, 432],
+    [250, 446], [338, 446], [338, 466]
+  ].map(([x, y]) => ({ x, y }));
+
+  const ORIGIN = ROUTE[0];
+  const DEST = ROUTE[ROUTE.length - 1];
+  const POSE = { x: 250, y: 300, headingDeg: 90 };
+
+  function el(name, attrs) {
+    const node = document.createElementNS(NS, name);
+    for (const key in attrs) node.setAttribute(key, attrs[key]);
+    return node;
+  }
+
+  function sampleAlongPath(points, spacing) {
+    if (points.length < 2 || spacing <= 0) return [];
+    const samples = [points[0]];
+    let carried = 0;
+    for (let i = 1; i < points.length; i += 1) {
+      const from = points[i - 1], to = points[i];
+      const dx = to.x - from.x, dy = to.y - from.y;
+      const length = Math.hypot(dx, dy);
+      if (length === 0) continue;
+      let travelled = spacing - carried;
+      while (travelled <= length) {
+        const t = travelled / length;
+        samples.push({ x: from.x + dx * t, y: from.y + dy * t });
+        travelled += spacing;
+      }
+      carried = (carried + length) % spacing;
+    }
+    return samples;
+  }
+
+  const wedge = (tip, half) => `M ${tip} 0 L 0 ${half} L 0 ${-half} Z`;
+
+  function pinPath(radius, distance) {
+    const cosPhi = radius / distance;
+    const sinPhi = Math.sqrt(Math.max(0, 1 - cosPhi * cosPhi));
+    const tx = radius * sinPhi;
+    const ty = -distance + radius * cosPhi;
+    return `M 0 0 L ${tx} ${ty} A ${radius} ${radius} 0 1 0 ${-tx} ${ty} Z`;
+  }
+
+  let liftSeq = 0;
+
+  function dropShadowFilter(svg, s) {
+    const id = 'pose-lift-' + (liftSeq += 1);
+    const defs = el('defs', {});
+    const f = el('filter', { id, x: '-60%', y: '-60%', width: '220%', height: '220%' });
+    f.appendChild(el('feDropShadow', {
+      dx: 0, dy: s(1), stdDeviation: s(2),
+      'flood-color': '#0b1220', 'flood-opacity': 0.34
+    }));
+    defs.appendChild(f);
+    svg.appendChild(defs);
+    return id;
+  }
+
+  function poseGroup(s, v, svgForFilter) {
+    const g = el('g', {});
+
+    if (v.HALO) {
+      g.appendChild(el('circle', { r: s(v.HALO), fill: POSE_COLOR, opacity: 0.14 }));
+      g.appendChild(el('circle', {
+        r: s(v.HALO), fill: 'none', stroke: POSE_COLOR,
+        'stroke-width': s(1), opacity: 0.3
+      }));
+    }
+
+    const core = el('g', {});
+    if (v.lift && svgForFilter) {
+      core.setAttribute('filter', 'url(#' + dropShadowFilter(svgForFilter, s) + ')');
+    }
+    const rot = el('g', { transform: `rotate(${POSE.headingDeg})` });
+    rot.appendChild(el('path', { d: wedge(s(v.TIP + v.CASING), s(v.HALF + v.CASING)), fill: '#ffffff' }));
+    core.appendChild(rot);
+    core.appendChild(el('circle', { r: s(v.R + v.CASING), fill: '#ffffff' }));
+    const rot2 = el('g', { transform: `rotate(${POSE.headingDeg})` });
+    rot2.appendChild(el('path', { d: wedge(s(v.TIP), s(v.HALF)), fill: POSE_COLOR }));
+    core.appendChild(rot2);
+    core.appendChild(el('circle', { r: s(v.R), fill: POSE_COLOR }));
+
+    g.appendChild(core);
+    return g;
+  }
+
+  function destGroup(radius) {
+    const g = el('g', {});
+    g.appendChild(el('path', {
+      d: pinPath(radius, radius * 2.4),
+      fill: DEST_COLOR,
+      stroke: '#ffffff',
+      'stroke-width': radius * 0.16,
+      'stroke-linejoin': 'round'
+    }));
+    g.appendChild(el('circle', { cx: 0, cy: -radius * 2.4, r: radius * 0.3, fill: '#ffffff' }));
+    return g;
+  }
+
+  function originGroup(radius) {
+    const g = el('g', {});
+    g.appendChild(el('circle', { r: radius + 3 * 0.8, fill: '#ffffff' }));
+    g.appendChild(el('circle', { r: radius, fill: 'none', stroke: ORIGIN_COLOR, 'stroke-width': radius * 0.34 }));
+    return g;
+  }
+
+  // ---- popup maps -------------------------------------------------------
+  // `data-map="230x180"` renders the current symbol set; add `data-variant="v1"`
+  // for the previous one. Scale matches MapCanvas: unitsPerPixel = size / drawn,
+  // where drawn is the shorter side, so 8 map-units really is 8 screen pixels.
+  document.querySelectorAll('[data-map]').forEach((host) => {
+    const [w, h] = host.dataset.map.split('x').map(Number);
+    const v = host.dataset.variant === 'v1' ? V1 : V2;
+
+    const svg = el('svg', {
+      viewBox: `0 0 ${MAP_SIZE} ${MAP_SIZE}`,
+      width: w,
+      height: h,
+      preserveAspectRatio: 'xMidYMid meet',
+      role: 'img',
+      'aria-label': 'แผนที่ชั้น 1 แสดงตำแหน่งปัจจุบันและปลายทาง'
+    });
+    svg.style.display = 'block';
+    svg.style.background = '#f2f1ee';
+
+    svg.appendChild(el('image', { href: FLOOR_PLAN, x: 0, y: 0, width: MAP_SIZE, height: MAP_SIZE, preserveAspectRatio: 'none' }));
+
+    const drawn = Math.min(w, h);
+    const unitsPerPixel = host.dataset.variant === 'v1' ? 1 : MAP_SIZE / drawn;
+    const s = (value) => value * unitsPerPixel;
+
+    const dots = sampleAlongPath(ROUTE, s(v.SPACING));
+    const trail = el('g', {});
+    dots.forEach((d) => trail.appendChild(el('circle', { cx: d.x, cy: d.y, r: s(v.DOT_CASING), fill: '#ffffff' })));
+    dots.forEach((d) => trail.appendChild(el('circle', { cx: d.x, cy: d.y, r: s(v.DOT), fill: ROUTE_COLOR })));
+    svg.appendChild(trail);
+
+    const o = originGroup(s(8));
+    o.setAttribute('transform', `translate(${ORIGIN.x} ${ORIGIN.y})`);
+    svg.appendChild(o);
+
+    const d = destGroup(s(12));
+    d.setAttribute('transform', `translate(${DEST.x} ${DEST.y})`);
+    svg.appendChild(d);
+
+    const p = poseGroup(s, v, svg);
+    p.setAttribute('transform', `translate(${POSE.x} ${POSE.y})`);
+    svg.appendChild(p);
+
+    host.appendChild(svg);
+    host.style.height = h + 'px';
+  });
+
+  // ---- specimens --------------------------------------------------------
+  document.querySelectorAll('[data-sym]').forEach((svg) => {
+    const kind = svg.dataset.sym;
+    if (kind === 'pose') {
+      svg.appendChild(poseGroup((n) => n * 0.62, V2, svg));
+    } else if (kind === 'dest') {
+      svg.appendChild(destGroup(7.4));
+    } else if (kind === 'origin') {
+      svg.appendChild(originGroup(8));
+    } else if (kind === 'route') {
+      const g = el('g', {});
+      for (let i = 0; i <= 3; i += 1) {
+        g.appendChild(el('circle', { cx: i * V2.SPACING, cy: 0, r: V2.DOT_CASING, fill: '#ffffff' }));
+      }
+      for (let i = 0; i <= 3; i += 1) {
+        g.appendChild(el('circle', { cx: i * V2.SPACING, cy: 0, r: V2.DOT, fill: ROUTE_COLOR }));
+      }
+      svg.appendChild(g);
+    }
+  });
+})();
+</script>
+</body>
+</html>

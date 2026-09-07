@@ -1,0 +1,66 @@
+{
+  "source_csv": "poc_cross_camera\\out\\floor1_wide_pare_temporal_landmark_full_run1.csv",
+  "method": "MAD-based outlier flag (|modified z| > 3.5) on consecutive position-jump and heading-jump magnitudes, each divided by the elapsed time between the two accepted poses (px/s, deg/s) since failed timestamps leave gaps of 10/20/30s+ that would otherwise dominate the statistic. No absolute meters-per-pixel scale is available for this map, so this is a relative/self-normalizing check, not an absolute speed gate.",
+  "per_config": [
+    {
+      "config": "direct",
+      "total_timestamps": 34,
+      "gate_pass_successes": 26,
+      "gate_pass_rate": 0.7647058823529411,
+      "trajectory_consistent_successes": 10,
+      "trajectory_consistent_rate": 0.29411764705882354,
+      "flagged_as_position_or_heading_outlier": 16,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 6.308718367427149,
+      "median_heading_speed_deg_per_s": 1.021855816800872
+    },
+    {
+      "config": "propagated",
+      "total_timestamps": 34,
+      "gate_pass_successes": 32,
+      "gate_pass_rate": 0.9411764705882353,
+      "trajectory_consistent_successes": 18,
+      "trajectory_consistent_rate": 0.5294117647058824,
+      "flagged_as_position_or_heading_outlier": 14,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 6.440566611344476,
+      "median_heading_speed_deg_per_s": 1.6181076950820408
+    },
+    {
+      "config": "direct_plus_propagated",
+      "total_timestamps": 34,
+      "gate_pass_successes": 32,
+      "gate_pass_rate": 0.9411764705882353,
+      "trajectory_consistent_successes": 21,
+      "trajectory_consistent_rate": 0.6176470588235294,
+      "flagged_as_position_or_heading_outlier": 11,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 6.301850044524807,
+      "median_heading_speed_deg_per_s": 1.816923451461591
+    },
+    {
+      "config": "past_only",
+      "total_timestamps": 34,
+      "gate_pass_successes": 30,
+      "gate_pass_rate": 0.8823529411764706,
+      "trajectory_consistent_successes": 18,
+      "trajectory_consistent_rate": 0.5294117647058824,
+      "flagged_as_position_or_heading_outlier": 12,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 6.748240678000069,
+      "median_heading_speed_deg_per_s": 1.6270612860731504
+    },
+    {
+      "config": "direct_plus_past",
+      "total_timestamps": 34,
+      "gate_pass_successes": 31,
+      "gate_pass_rate": 0.9117647058823529,
+      "trajectory_consistent_successes": 25,
+      "trajectory_consistent_rate": 0.7352941176470589,
+      "flagged_as_position_or_heading_outlier": 6,
+      "has_heading_logged": true,
+      "median_position_speed_px_per_s": 6.028182820354189,
+      "median_heading_speed_deg_per_s": 2.2189144907970726
+    }
+  ]
+}

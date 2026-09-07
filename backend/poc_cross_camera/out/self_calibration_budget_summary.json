@@ -1,0 +1,42 @@
+{
+  "experiment": "fast-start image-only self-calibration budget",
+  "video": "D:\\wayfindar\\floor1_wide_pare.MOV",
+  "frame_index": 300,
+  "no_external_calibration_dependency": true,
+  "fast_path_estimates": [
+    "fx",
+    "fy"
+  ],
+  "fast_path_keeps_from_map": [
+    "cx",
+    "cy"
+  ],
+  "fast_path_distortion": "not_estimated",
+  "model_ready_seconds": 4.015384099911898,
+  "capture_correspondences_seconds": 0.7092819998506457,
+  "p4pf_solver_seconds": 0.021670999936759472,
+  "calibration_stage_seconds": 0.7309544999152422,
+  "process_model_init_included_seconds": 5.646533099934459,
+  "provisional_map_k_path": {
+    "available_before_calibration_finishes": true,
+    "blocking_budget_seconds": 0.0,
+    "description": "localize immediately with map K; calibration is background work"
+  },
+  "production": {
+    "success": true,
+    "matches": 79,
+    "inliers": 39
+  },
+  "p4pf": {
+    "candidate_matches": 31,
+    "success": true,
+    "inliers": 21,
+    "focal_ratio_to_map": 0.6636700806628024,
+    "median_reproj_error_px": 4.046732930843832
+  },
+  "decision": {
+    "three_second_cold_process_target": "not met if model initialization is counted",
+    "three_second_non_blocking_calibration_target": "met by design; first request does not wait for P4Pf",
+    "commit_gate": "require >=10 P4Pf inliers and multi-frame focal consistency before replacing map K"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "experiment": "query-side preprocessing sweep (CLAHE / unsharp) targeting blur+low-texture bottleneck",
+  "top_k": 4,
+  "configs": [
+    "raw",
+    "clahe",
+    "unsharp",
+    "clahe_unsharp"
+  ],
+  "per_config": {
+    "raw": {
+      "attempts": 53,
+      "successes": 22,
+      "success_rate": 0.41509433962264153
+    },
+    "clahe": {
+      "attempts": 53,
+      "successes": 19,
+      "success_rate": 0.3584905660377358
+    },
+    "unsharp": {
+      "attempts": 53,
+      "successes": 19,
+      "success_rate": 0.3584905660377358
+    },
+    "clahe_unsharp": {
+      "attempts": 53,
+      "successes": 18,
+      "success_rate": 0.33962264150943394
+    }
+  },
+  "papers": {
+    "CLAHE in visual SLAM front-ends": "ORB-SLAM2 / common visual-SLAM front-end practice for low-texture scenes"
+  },
+  "csv": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\floor1_wide_preprocessing_sweep_topk4.csv"
+}
