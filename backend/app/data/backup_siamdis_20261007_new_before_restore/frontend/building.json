@@ -1,0 +1,310 @@
+{
+  "building_id": "main_building",
+  "name": "Indoor Navigation Building",
+  "default_floor": "floor1",
+  "floors": [
+    {
+      "id": "floor1",
+      "label": "Floor 1",
+      "order": 1,
+      "enabled": true,
+      "map_image": "map/floor1.jpg",
+      "graph_json": "json_map/floor1.json",
+      "data_dir": "map_data/result_floor1_4"
+    },
+    {
+      "id": "floor2",
+      "label": "Floor 2",
+      "order": 2,
+      "enabled": true,
+      "map_image": "map/floor2.jpg",
+      "graph_json": "json_map/floor2.json",
+      "data_dir": "map_data/result_floor2_6"
+    },
+    {
+      "id": "floor3",
+      "label": "Floor 3",
+      "order": 3,
+      "enabled": true,
+      "map_image": "map/floor3.jpg",
+      "graph_json": "json_map/floor3.json",
+      "data_dir": "map_data/result_floor3_6"
+    },
+    {
+      "id": "floor4",
+      "label": "Floor 4",
+      "order": 4,
+      "enabled": true,
+      "map_image": "map/floor4.jpg",
+      "graph_json": "json_map/floor4.json",
+      "data_dir": "map_data/result_floor4_5"
+    },
+    {
+      "id": "floor5",
+      "label": "Floor 5",
+      "order": 5,
+      "enabled": true,
+      "map_image": "map/floor5.jpg",
+      "graph_json": "json_map/floor5.json",
+      "data_dir": "map_data/result_floor5_6"
+    },
+    {
+      "id": "floor6",
+      "label": "Floor 6",
+      "order": 6,
+      "enabled": true,
+      "map_image": "map/floor6.jpg",
+      "graph_json": "json_map/floor6.json",
+      "data_dir": "map_data/result_floor6_2"
+    },
+    {
+      "id": "floor_siamdis2",
+      "label": "Siam Discovery F2",
+      "order": 7,
+      "enabled": true,
+      "map_image": "map/siamdis_floor2.jpg",
+      "graph_json": "json_map/siamdis_floor2.json",
+      "data_dir": "map_data/result_siam_dis_floor2_4",
+      "venue": "siamdis",
+      "map_size": [
+        1221,
+        1035
+      ]
+    },
+    {
+      "id": "floor_siamdis3",
+      "label": "Siam Discovery F3",
+      "order": 8,
+      "enabled": true,
+      "map_image": "map/siamdis_floor3.png",
+      "graph_json": "json_map/siamdis_floor3.json",
+      "data_dir": "map_data/result_siam_dis_floor3_2",
+      "venue": "siamdis",
+      "map_size": [
+        1189,
+        1035
+      ]
+    }
+  ],
+  "pending_floors": [],
+  "connector_groups": [
+    {
+      "id": "elevator_main",
+      "type": "elevator",
+      "label": "Main Elevator",
+      "accessible": true,
+      "weight_per_floor": 15,
+      "stops": [
+        {
+          "floor_id": "floor1",
+          "node_label": "Elevator 1"
+        },
+        {
+          "floor_id": "floor2",
+          "node_label": "Elevator 2"
+        },
+        {
+          "floor_id": "floor3",
+          "node_label": "Elevator 3"
+        },
+        {
+          "floor_id": "floor4",
+          "node_label": "Elevator 4"
+        },
+        {
+          "floor_id": "floor5",
+          "node_label": "Elevator 5"
+        },
+        {
+          "floor_id": "floor6",
+          "node_label": "Elevator 6"
+        }
+      ]
+    },
+    {
+      "id": "stair_main",
+      "type": "stairs",
+      "label": "Main Stairs",
+      "accessible": false,
+      "weight_per_floor": 20,
+      "stops": [
+        {
+          "floor_id": "floor1",
+          "node_label": "Stairs 1"
+        },
+        {
+          "floor_id": "floor2",
+          "node_label": "Stairs 2"
+        },
+        {
+          "floor_id": "floor3",
+          "node_label": "Stairs 3"
+        },
+        {
+          "floor_id": "floor4",
+          "node_label": "Stairs 4"
+        },
+        {
+          "floor_id": "floor5",
+          "node_label": "Stairs 5"
+        },
+        {
+          "floor_id": "floor6",
+          "node_label": "Stairs 6"
+        }
+      ]
+    }
+  ],
+  "connector_links": [
+    {
+      "id": "elevator_1_2",
+      "group_id": "elevator_main",
+      "type": "elevator",
+      "accessible": true,
+      "weight": 15,
+      "from": {
+        "floor_id": "floor1",
+        "node_label": "Elevator 1"
+      },
+      "to": {
+        "floor_id": "floor2",
+        "node_label": "Elevator 2"
+      }
+    },
+    {
+      "id": "elevator_2_3",
+      "group_id": "elevator_main",
+      "type": "elevator",
+      "accessible": true,
+      "weight": 15,
+      "from": {
+        "floor_id": "floor2",
+        "node_label": "Elevator 2"
+      },
+      "to": {
+        "floor_id": "floor3",
+        "node_label": "Elevator 3"
+      }
+    },
+    {
+      "id": "elevator_3_4",
+      "group_id": "elevator_main",
+      "type": "elevator",
+      "accessible": true,
+      "weight": 15,
+      "from": {
+        "floor_id": "floor3",
+        "node_label": "Elevator 3"
+      },
+      "to": {
+        "floor_id": "floor4",
+        "node_label": "Elevator 4"
+      }
+    },
+    {
+      "id": "elevator_4_5",
+      "group_id": "elevator_main",
+      "type": "elevator",
+      "accessible": true,
+      "weight": 15,
+      "from": {
+        "floor_id": "floor4",
+        "node_label": "Elevator 4"
+      },
+      "to": {
+        "floor_id": "floor5",
+        "node_label": "Elevator 5"
+      }
+    },
+    {
+      "id": "elevator_5_6",
+      "group_id": "elevator_main",
+      "type": "elevator",
+      "accessible": true,
+      "weight": 15,
+      "from": {
+        "floor_id": "floor5",
+        "node_label": "Elevator 5"
+      },
+      "to": {
+        "floor_id": "floor6",
+        "node_label": "Elevator 6"
+      }
+    },
+    {
+      "id": "stairs_1_2",
+      "group_id": "stair_main",
+      "type": "stairs",
+      "accessible": false,
+      "weight": 20,
+      "from": {
+        "floor_id": "floor1",
+        "node_label": "Stairs 1"
+      },
+      "to": {
+        "floor_id": "floor2",
+        "node_label": "Stairs 2"
+      }
+    },
+    {
+      "id": "stairs_2_3",
+      "group_id": "stair_main",
+      "type": "stairs",
+      "accessible": false,
+      "weight": 20,
+      "from": {
+        "floor_id": "floor2",
+        "node_label": "Stairs 2"
+      },
+      "to": {
+        "floor_id": "floor3",
+        "node_label": "Stairs 3"
+      }
+    },
+    {
+      "id": "stairs_3_4",
+      "group_id": "stair_main",
+      "type": "stairs",
+      "accessible": false,
+      "weight": 20,
+      "from": {
+        "floor_id": "floor3",
+        "node_label": "Stairs 3"
+      },
+      "to": {
+        "floor_id": "floor4",
+        "node_label": "Stairs 4"
+      }
+    },
+    {
+      "id": "stairs_4_5",
+      "group_id": "stair_main",
+      "type": "stairs",
+      "accessible": false,
+      "weight": 20,
+      "from": {
+        "floor_id": "floor4",
+        "node_label": "Stairs 4"
+      },
+      "to": {
+        "floor_id": "floor5",
+        "node_label": "Stairs 5"
+      }
+    },
+    {
+      "id": "stairs_5_6",
+      "group_id": "stair_main",
+      "type": "stairs",
+      "accessible": false,
+      "weight": 20,
+      "from": {
+        "floor_id": "floor5",
+        "node_label": "Stairs 5"
+      },
+      "to": {
+        "floor_id": "floor6",
+        "node_label": "Stairs 6"
+      }
+    }
+  ]
+}

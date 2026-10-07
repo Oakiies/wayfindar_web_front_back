@@ -1,0 +1,22 @@
+{
+  "video": "D:\\video\\video_from_iphone_oak_wide\\IMG_6955.MOV",
+  "input_updates": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\non_imu_1p5s_localization_updates.json",
+  "start_seconds": 80.0,
+  "end_seconds": 180.0,
+  "duration_seconds": 100.0,
+  "source_fps": 29.963451281912445,
+  "frames_written": 3000,
+  "anchor_count": 120,
+  "flow_accepted": 2999,
+  "flow_attempts": 2999,
+  "flow_accept_rate": 1.0,
+  "route_state_changes": 10,
+  "caret_suppress_seconds": 0.75,
+  "caret_suppressed_frames": 282,
+  "comparison_output": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_00_baseline\\v2_klt_homography\\non_imu_stale_free_ar_stress_80_180_comparison.mp4",
+  "improved_output": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_00_baseline\\v2_klt_homography\\non_imu_stale_free_ar_stress_80_180.mp4",
+  "policy": "full-rate KLT propagation + fresh-anchor correction + route-state reset + short caret hand-off",
+  "verdict": "REJECTED_SCREEN_SPACE_WORLD_AR",
+  "known_failure": "KLT/homography warps already-projected polygons in image coordinates. A 1.0 flow acceptance rate does not prove floor/world registration, depth change, or that the user approaches the AR marking.",
+  "superseded_by": "../../round_03_world_approach/001_world_approach_graph_24_50_comparison.mp4"
+}

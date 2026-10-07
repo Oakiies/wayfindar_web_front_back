@@ -1,0 +1,35 @@
+{
+  "normal": [
+    -0.01230493071372432,
+    0.9983069051728036,
+    0.05684990557977454
+  ],
+  "offset": 0.0006900356647885075,
+  "points": 12,
+  "inliers": 12,
+  "units_per_metre": 0.08231211574781645,
+  "assumed_camera_height_m": 1.5,
+  "calibration_frames": [
+    24,
+    30,
+    40
+  ],
+  "heldout_frames": [
+    50,
+    59
+  ],
+  "note": "Offline floor fit. Camera K was frozen before tracking. Ground normal has a 15 degree prior; no per-time plane correction.",
+  "heldout_50_residual_m": [
+    0.06458931436626683,
+    0.14333126057206322,
+    0.042840397365319055,
+    0.03955883792706629
+  ],
+  "heldout_59_residual_m": [
+    0.10213587508283899,
+    0.043615078763161855,
+    0.01077512848283565,
+    0.016804310770495493,
+    0.0029533212735538355
+  ]
+}

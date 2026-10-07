@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>หลักฐาน 5 ข้อ — เลื่อนดู</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --ring: rgba(255,255,255,.12); --accent: #3987e5;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--page); color: var(--ink);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", "Leelawadee UI", "Noto Sans Thai", sans-serif;
+         display: flex; flex-direction: column; overflow: hidden; }
+
+  header { padding: 14px 20px 10px; flex: none; }
+  h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  .sub { margin: 4px 0 0; color: var(--ink-2); font-size: 13px; }
+
+  /* .stage clips at its own edge (no horizontal padding, so nothing but the
+     active slide is ever in the painted box); nav buttons float on top of it. */
+  .stage { flex: 1; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center;
+           padding: 8px 0; overflow: hidden; touch-action: pan-y; }
+  .track { display: flex; height: 100%; width: 100%; transition: transform .32s cubic-bezier(.2,.7,.3,1); will-change: transform; }
+  .slide { flex: 0 0 100%; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+           padding: 4px 72px; overflow: hidden; }
+  .slide img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px;
+               box-shadow: 0 12px 40px rgba(0,0,0,.5); background: var(--surface); cursor: zoom-in; }
+
+  .nav { position: absolute; top: 50%; translate: 0 -50%; width: 46px; height: 46px; border-radius: 50%;
+         border: 1px solid var(--ring); background: rgba(26,26,25,.75); color: var(--ink); font-size: 20px;
+         cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 3; }
+  .nav:hover { background: rgba(26,26,25,.95); }
+  .nav:disabled { opacity: .25; cursor: default; }
+  .nav.prev { left: 10px; } .nav.next { right: 10px; }
+  .nav:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .caption { flex: none; padding: 2px 20px 6px; text-align: center; color: var(--ink-2); font-size: 13px; min-height: 20px; }
+  .counter { flex: none; text-align: center; color: var(--muted); font-size: 12px; padding-bottom: 6px;
+             font-variant-numeric: tabular-nums; }
+
+  .filmstrip { flex: none; display: flex; gap: 8px; padding: 10px 16px 16px; overflow-x: auto; scrollbar-width: thin; }
+  .thumb { flex: none; width: 110px; border-radius: 8px; overflow: hidden; border: 2px solid transparent;
+           background: var(--surface); cursor: pointer; padding: 0; }
+  .thumb img { width: 100%; height: 62px; object-fit: cover; display: block; opacity: .55; }
+  .thumb .n { display: block; font-size: 11px; color: var(--ink-2); padding: 3px 6px; text-align: left; opacity: .8; }
+  .thumb.on { border-color: var(--accent); }
+  .thumb.on img { opacity: 1; }
+  .thumb:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: none; align-items: center;
+              justify-content: center; z-index: 10; padding: 24px; cursor: zoom-out; }
+  .lightbox.on { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+  @media (max-width: 640px) {
+    header { padding: 10px 14px 8px; }
+    .sub { font-size: 12px; }
+    .slide { padding: 4px 42px; }
+    .nav { width: 34px; height: 34px; font-size: 16px; }
+    .nav.prev { left: 4px; } .nav.next { right: 4px; }
+    .thumb { width: 76px; }
+    .thumb img { height: 44px; }
+    .thumb .n { font-size: 10px; padding: 2px 5px; }
+    .filmstrip { padding: 6px 10px 12px; gap: 6px; }
+    .caption { font-size: 12px; padding: 2px 14px 4px; }
+    h1 { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>หลักฐาน 5 ข้อ: ครอป / ซูม / resolution / กล้องคนละตัว</h1>
+  <p class="sub">เลื่อนซ้าย–ขวา หรือใช้ลูกศร ← → บนคีย์บอร์ด · คลิกภาพเพื่อซูมเต็มจอ</p>
+</header>
+
+<div class="stage" id="stage">
+  <button class="nav prev" id="prev" aria-label="ภาพก่อนหน้า">‹</button>
+  <div class="track" id="track"></div>
+  <button class="nav next" id="next" aria-label="ภาพถัดไป">›</button>
+</div>
+<p class="caption" id="caption"></p>
+<p class="counter" id="counter"></p>
+<div class="filmstrip" id="filmstrip"></div>
+
+<div class="lightbox" id="lightbox"><img id="lightboxImg" alt="" /></div>
+
+<script>
+const SLIDES = [
+  { file: "01_pixels_vs_fov.png", title: "1 · จำนวนพิกเซลไม่มีผล — มุมมอง (FoV) มีผลทั้งหมด" },
+  { file: "02_error_direction.png", title: "2 · focal ผิด → ตำแหน่งเลื่อนไปข้างหน้า/ข้างหลังตามทิศเดิน" },
+  { file: "03_correct_k_fixes.png", title: "3 · บอก K ถูก → ตำแหน่งกลับมาตรง" },
+  { file: "04_selfcal_weaknesses.png", title: "4 · self-calibration แก้ได้ แต่มี 3 จุดอ่อน" },
+  { file: "05_different_camera.png", title: "5 · กล้องคนละตัว (iPhone มุมกว้าง)" },
+  { file: "poster.png", title: "ภาพรวมทั้ง 5 ข้อ (โปสเตอร์)" },
+];
+
+const $ = (id) => document.getElementById(id);
+const track = $("track"), filmstrip = $("filmstrip"), caption = $("caption"), counter = $("counter");
+let i = 0;
+
+SLIDES.forEach((s) => {
+  const slide = document.createElement("div");
+  slide.className = "slide";
+  slide.innerHTML = `<img src="${s.file}" alt="${s.title}" loading="lazy" />`;
+  slide.querySelector("img").onclick = () => openLightbox(s.file, s.title);
+  track.appendChild(slide);
+
+  const b = document.createElement("button");
+  b.className = "thumb"; b.type = "button";
+  b.innerHTML = `<img src="${s.file}" alt="" loading="lazy" /><span class="n">${s.title.split(" · ")[0]}</span>`;
+  b.onclick = () => goto(SLIDES.indexOf(s));
+  filmstrip.appendChild(b);
+});
+const thumbs = [...filmstrip.children];
+
+function render() {
+  track.style.transform = `translateX(-${i * 100}%)`;
+  caption.textContent = SLIDES[i].title;
+  counter.textContent = `${i + 1} / ${SLIDES.length}`;
+  thumbs.forEach((t, k) => t.classList.toggle("on", k === i));
+  thumbs[i].scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  $("prev").disabled = i === 0;
+  $("next").disabled = i === SLIDES.length - 1;
+}
+function goto(k) { i = Math.max(0, Math.min(SLIDES.length - 1, k)); render(); }
+
+$("prev").onclick = () => goto(i - 1);
+$("next").onclick = () => goto(i + 1);
+document.addEventListener("keydown", (e) => {
+  if ($("lightbox").classList.contains("on")) {
+    if (e.key === "Escape") closeLightbox();
+    return;
+  }
+  if (e.key === "ArrowLeft") goto(i - 1);
+  if (e.key === "ArrowRight") goto(i + 1);
+});
+
+// swipe
+let startX = null;
+const stage = $("stage");
+stage.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+stage.addEventListener("touchend", (e) => {
+  if (startX == null) return;
+  const dx = e.changedTouches[0].clientX - startX;
+  if (Math.abs(dx) > 40) goto(i + (dx < 0 ? 1 : -1));
+  startX = null;
+}, { passive: true });
+
+function openLightbox(file, title) {
+  $("lightboxImg").src = file; $("lightboxImg").alt = title;
+  $("lightbox").classList.add("on");
+}
+function closeLightbox() { $("lightbox").classList.remove("on"); }
+$("lightbox").onclick = closeLightbox;
+
+render();
+</script>
+</body>
+</html>

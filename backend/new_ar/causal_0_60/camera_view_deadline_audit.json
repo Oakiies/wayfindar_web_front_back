@@ -1,0 +1,19 @@
+{
+  "source_video": "D:\\video\\video_from_iphone_pare\\IMG_1895.MOV",
+  "output": "D:\\wayfindar\\WebNav_front_back\\backend\\new_ar\\causal_0_60\\camera_view_deadline.mp4",
+  "frames": 1800,
+  "fps": 29.989436148211336,
+  "max_pose_age_s": 0.15,
+  "visible_ar_frames": 1636,
+  "states": {
+    "awaiting_result": 2,
+    "pose_rejected": 131,
+    "pose_stale": 31,
+    "geometry_out_of_view": 0,
+    "world_ar_visible": 1636
+  },
+  "max_selected_pose_age_s": 0.1333803003241414,
+  "no_future_pose_at_display": true,
+  "age_gate_pass": true,
+  "note": "Camera frame t displays the latest completed pose by t; fixed map anchors and route are prepared before camera time zero."
+}

@@ -1,0 +1,253 @@
+{
+  "video": "D:\\video\\video_from_iphone_oak_wide\\IMG_6955.MOV",
+  "duration_requested": 60.0,
+  "interval": 1.5,
+  "updates": [
+    {
+      "timestamp": 7.505000000000001,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 9.005,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 10.506666666666668,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 12.006666666666668,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 13.508333333333335,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 15.010000000000002,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 16.51,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 18.011666666666667,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 19.511666666666667,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 21.013333333333335,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 22.513333333333335,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 24.015,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 25.51666666666667,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 27.01666666666667,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 28.51666666666667,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 30.018333333333334,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 31.518333333333334,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 33.02,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 34.52,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 36.02,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 37.52166666666667,
+      "method": "HOLD_LAST_FIX",
+      "ar": false,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 39.02166666666667,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "overshoot"
+    },
+    {
+      "timestamp": 40.52166666666667,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 42.02333333333333,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "overshoot"
+    },
+    {
+      "timestamp": 43.52333333333333,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 45.025000000000006,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 46.525000000000006,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 48.025000000000006,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 49.52666666666667,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 51.02666666666667,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 52.52666666666667,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 54.028333333333336,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "navigating"
+    },
+    {
+      "timestamp": 55.528333333333336,
+      "method": "PnP",
+      "ar": true,
+      "baseline_ar": true,
+      "ar_state": "arrived"
+    },
+    {
+      "timestamp": 57.03,
+      "method": "HOLD_LAST_FIX",
+      "ar": false,
+      "baseline_ar": true,
+      "ar_state": "arrived"
+    },
+    {
+      "timestamp": 58.53,
+      "method": "HOLD_LAST_FIX",
+      "ar": false,
+      "baseline_ar": false,
+      "ar_state": "arrived"
+    }
+  ],
+  "note": "Fresh production fixes. Baseline shares fixes/routes; browser easing excluded. Preview contains only update frames; gaps are omitted, so it is not real-time playback."
+}

@@ -1,0 +1,144 @@
+{
+  "schema": "luna_live_camera_navigation_rework_v1",
+  "backend_url": "http://127.0.0.1:5011",
+  "session_id": 1789065396597,
+  "video_filename": "floor4_2.mov",
+  "source_video": {
+    "source_path": "D:\\video\\floor4_2.mov",
+    "bytes": 830376700,
+    "fps": 60.007579498604684,
+    "frame_count": 21772,
+    "duration_s": 362.8208333333333,
+    "width": 1920,
+    "height": 1080,
+    "transform": "none; decoded with OpenCV, server downsamples 60 FPS to 30 FPS"
+  },
+  "destination": "fire exit 1",
+  "start_floor": "floor4",
+  "destination_floor": "floor4",
+  "sample_target_video_s": 60.0,
+  "captured_event_count": 1848,
+  "captured_update_count": 1759,
+  "first_update_timestamp_s": 0.5666666666666667,
+  "last_update_timestamp_s": 60.02583333333334,
+  "tracking_status_counts": {
+    "tracked": 1625,
+    "pose_rejected": 72,
+    "tracking_lost": 62
+  },
+  "ar_world_status_counts": {
+    "hidden:no_anchors": 780,
+    "hidden:tracking_lost": 134,
+    "payload_ready": 118,
+    "hidden:route_behind_camera": 198,
+    "hidden:no_ribbon:centre_frames=29:depth_frames=1:anchors=6": 22,
+    "hidden:no_ribbon:centre_frames=29:depth_frames=0:anchors=6": 152,
+    "hidden:no_ribbon:centre_frames=41:depth_frames=1:anchors=9": 19,
+    "hidden:no_ribbon:centre_frames=45:depth_frames=1:anchors=10": 25,
+    "hidden:no_ribbon:centre_frames=45:depth_frames=0:anchors=10": 164,
+    "hidden:no_ribbon:centre_frames=57:depth_frames=1:anchors=13": 29,
+    "hidden:no_ribbon:centre_frames=57:depth_frames=0:anchors=13": 115,
+    "hidden:high_reproj_error": 3
+  },
+  "payload_ready_update_count": 118,
+  "projected_geometry_update_count": 118,
+  "first_projected_geometry_s": 31.429166666666667,
+  "last_projected_geometry_s": 54.260000000000005,
+  "visible_intervals": [
+    {
+      "start_s": 31.429166666666667,
+      "end_s": 32.59583333333334,
+      "duration_s": 1.1666666666666714,
+      "reason": "payload_ready"
+    },
+    {
+      "start_s": 40.56166666666667,
+      "end_s": 40.86166666666667,
+      "duration_s": 0.30000000000000426,
+      "reason": "payload_ready"
+    },
+    {
+      "start_s": 50.66000000000001,
+      "end_s": 51.42666666666667,
+      "duration_s": 0.7666666666666586,
+      "reason": "payload_ready"
+    },
+    {
+      "start_s": 51.52666666666667,
+      "end_s": 51.56,
+      "duration_s": 0.03333333333333144,
+      "reason": "payload_ready"
+    },
+    {
+      "start_s": 52.760000000000005,
+      "end_s": 54.260000000000005,
+      "duration_s": 1.5,
+      "reason": "payload_ready"
+    }
+  ],
+  "hidden_intervals": [
+    {
+      "start_s": 0.5666666666666667,
+      "end_s": 31.395833333333336,
+      "duration_s": 30.82916666666667,
+      "reason": "hidden:no_anchors"
+    },
+    {
+      "start_s": 32.62916666666667,
+      "end_s": 40.528333333333336,
+      "duration_s": 7.899166666666666,
+      "reason": "hidden:route_behind_camera"
+    },
+    {
+      "start_s": 40.895,
+      "end_s": 50.62666666666667,
+      "duration_s": 9.73166666666667,
+      "reason": "hidden:route_behind_camera"
+    },
+    {
+      "start_s": 51.46,
+      "end_s": 51.49333333333335,
+      "duration_s": 0.03333333333334565,
+      "reason": "hidden:route_behind_camera"
+    },
+    {
+      "start_s": 51.593333333333334,
+      "end_s": 52.72666666666667,
+      "duration_s": 1.1333333333333329,
+      "reason": "hidden:route_behind_camera"
+    },
+    {
+      "start_s": 54.29333333333334,
+      "end_s": 60.02583333333334,
+      "duration_s": 5.732500000000002,
+      "reason": "hidden:route_behind_camera"
+    }
+  ],
+  "delivery_lag_s": {
+    "p50": -0.04677403450012463,
+    "p95": -0.017995732625323058,
+    "max": 0.027875563303631168
+  },
+  "server_to_client_wall_latency_s": {
+    "p50": 0.0005104541778564453,
+    "p95": 0.0010020732879638672,
+    "max": 0.009001016616821289
+  },
+  "simulated_frontend_pose_age_s": {
+    "p50": 0.019654811223347224,
+    "p95": 0.027395493189494857,
+    "max": 0.8967026297251373,
+    "gate_s": 0.15
+  },
+  "source_to_current_video_s": {
+    "p50": 1.0,
+    "p95": 1.6999999999999993,
+    "max": 3.166666666666666
+  },
+  "tracking_diagnostics_last_event": null,
+  "floor_transition_events": [],
+  "clock": "receive_wall_time_s and emit_wall_time_s are epoch time.time() seconds on the same host; simulated presentation uses relative receive elapsed time, not browser video.currentTime",
+  "browser_qa": "not performed; this is offline receive-clock simulation plus OpenCV render_v2 projection QA",
+  "offline_renderer": "backend/poc_ar_arrow/ar_arrow_v2.py::render_v2; output is not evidence of WebGL pixels",
+  "timeline_path": "new_ar\\out\\live_camera_navigation_rework\\floor4_fire_exit_fixed3\\floor4_2_timeline.jsonl"
+}

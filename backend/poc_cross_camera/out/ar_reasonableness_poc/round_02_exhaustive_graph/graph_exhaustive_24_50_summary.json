@@ -1,0 +1,33 @@
+{
+  "experiment": "exhaustive every-frame AR review with graph/map panel",
+  "video": "D:\\video\\video_from_iphone_oak_wide\\IMG_6955.MOV",
+  "input_updates": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\non_imu_1p5s_localization_updates.json",
+  "graph_json": "app\\data\\json_map\\floor1.json",
+  "map_image": "app\\data\\map\\floor1.jpg",
+  "start_seconds": 24.0,
+  "end_seconds": 50.0,
+  "fps": 29.963451281912445,
+  "frames_reviewed": 782,
+  "all_frames_in_interval": true,
+  "anchor_count_available": 120,
+  "gentle_corridor_frames": 782,
+  "baseline_frames_with_carets": 782,
+  "candidate_frames_with_carets": 0,
+  "route_node_sequence_by_map_nearest": [
+    "Intersection 7",
+    "Intersection 3",
+    "Intersection 1",
+    "M23_B",
+    "M22_A",
+    "M19",
+    "M18",
+    "Intersection 8",
+    "M21_A"
+  ],
+  "graph_nodes": 39,
+  "graph_edges": 44,
+  "comparison_output": "poc_cross_camera\\out\\ar_reasonableness_poc\\round_02_exhaustive_graph\\003_graph_exhaustive_24_50_comparison.mp4",
+  "candidate_output": "poc_cross_camera\\out\\ar_reasonableness_poc\\round_02_exhaustive_graph\\004_graph_exhaustive_24_50.mp4",
+  "records_output": "poc_cross_camera\\out\\ar_reasonableness_poc\\round_02_exhaustive_graph\\graph_exhaustive_24_50_per_frame.json",
+  "interpretation": "The selected M21 path follows the direct graph edge Intersection 1 -> M23_B; Intersection 1 has alternate forward branches via M23_A and Intersection 2. The visible shallow direction change is route geometry, not a discrete 90-degree turn."
+}

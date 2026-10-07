@@ -1,0 +1,19 @@
+{
+  "experiment": "continuous corridor rendering for shallow route deflection",
+  "video": "D:\\video\\video_from_iphone_oak_wide\\IMG_6955.MOV",
+  "input_updates": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\non_imu_1p5s_localization_updates.json",
+  "start_seconds": 28.0,
+  "end_seconds": 48.0,
+  "frames_written": 602,
+  "fps": 29.963451281912445,
+  "gentle_corridor_frames": 602,
+  "gentle_corridor_seconds": 20.091143518016555,
+  "gentle_angle_threshold_deg": 40.0,
+  "comparison_output": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_01_continuous_corridor\\003_continuous_corridor_28_48_comparison.mp4",
+  "candidate_output": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_01_continuous_corridor\\004_continuous_corridor_28_48.mp4",
+  "policy": "keep continuous floor ribbon; suppress repeated directional carets for shallow bends",
+  "limitations": [
+    "This fixes the semantic rendering of a shallow bend, not the underlying pose lag.",
+    "The route is still projected from the existing cached pose stream."
+  ]
+}

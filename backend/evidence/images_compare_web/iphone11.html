@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>iPhone 11 — floor1</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .marker.naive { background: var(--naive); }
+  .marker.selfcal { background: var(--corrected); }
+</style>
+</head>
+<body>
+  <nav class="modes">
+    <a href="index.html">เทียบเลนส์ (normal vs wide)</a>
+    <a href="crop.html">ครอป</a>
+    <a href="resize.html">resize</a>
+    <a href="zoom.html">ซูมอิน</a>
+    <a href="iphone11.html" class="active">iPhone 11</a>
+  </nav>
+
+  <h1>iPhone 11 — K แผนที่ตรง ๆ vs self-calibration — <span id="floorLabel">floor1</span></h1>
+  <div class="sub" id="summary"></div>
+
+  <div class="points" style="margin-bottom:16px;">
+    <button class="pt-btn" id="prevBtn">&larr; เฟรมก่อนหน้า</button>
+    <button class="pt-btn" id="nextBtn">เฟรมถัดไป &rarr;</button>
+    <span id="frameCounter" style="align-self:center; color:var(--muted); font-size:13px;"></span>
+  </div>
+
+  <div class="layout" style="grid-template-columns: 1fr 1fr;">
+    <div class="panel">
+      <h2>เฟรมที่เลือก</h2>
+      <div class="photo-wrap"><img id="frameImg"><div class="tag" id="frameTag"></div></div>
+      <div class="meta" id="naiveMeta"></div>
+      <div class="meta" id="selfcalMeta"></div>
+    </div>
+    <div class="panel">
+      <h2>แผนที่</h2>
+      <div class="map-wrap">
+        <img id="mapImg">
+        <div class="marker naive" id="mNaive"></div>
+        <div class="marker selfcal" id="mSelfcal"></div>
+      </div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--naive)"></i> K แผนที่ตรง ๆ (ไม่ปรับ)</span>
+        <span><i class="dot" style="background:var(--corrected)"></i> self-calibration (production จริง)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">กล้อง iPhone 11 ในคลิปนี้ไม่ใช่กล้องที่ใช้ทำแผนที่ ถ้าใช้ K แผนที่ตรง ๆ (แดง) ตำแหน่งจะเพี้ยนหรือหาไม่เจอบ่อยกว่า ส่วน self-calibration (เขียว) ปรับ focal ลงมาอยู่แถว 900-940px (จาก 1400px) ทำให้แม่นขึ้นและหาตำแหน่งได้มากกว่า — เลื่อนดูทีละเฟรมด้วยปุ่มด้านบน</div>
+
+  <script src="iphone11_data.js"></script>
+  <script src="iphone11.js"></script>
+  <script>
+    document.getElementById("prevBtn").onclick = () => { curFrame = (curFrame - 1 + IDATA.frames.length) % IDATA.frames.length; renderAll(); };
+    document.getElementById("nextBtn").onclick = () => { curFrame = (curFrame + 1) % IDATA.frames.length; renderAll(); };
+  </script>
+</body>
+</html>

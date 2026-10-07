@@ -1,0 +1,25 @@
+{
+  "video": "D:\\wayfindar\\WebNav_front_back\\backend\\new_ar\\causal_floor5_fire_exit1\\floor5_2_30fps.mp4",
+  "frames": 1800,
+  "fps": 30.0,
+  "duration_s": 60.0,
+  "prepare_s": 4.704424799885601,
+  "ready_before_camera": true,
+  "first_pose_source_s": 0.4666666666666667,
+  "first_pose_available_s": 0.618301700334996,
+  "first_calibration_available_s": 2.2811772003769875,
+  "accepted": 1711,
+  "calibration_versions": 42,
+  "latency_p50_p95_max_s": [
+    0.015720200119538674,
+    0.13086306687134072,
+    0.17884160010144257
+  ],
+  "compute_p50_p95_max_s": [
+    0.011211700271815062,
+    0.018682819767855106,
+    0.17582250013947487
+  ],
+  "pending_work_at_end": true,
+  "provenance": "Reference-only scene preparation; strictly sequential query frames and asynchronous past-frame measurements. No cached video calibration, future-frame fitting or retroactive K updates."
+}

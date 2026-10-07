@@ -1,0 +1,64 @@
+{
+  "floor5": {
+    "updates": 599,
+    "ar_payloads": 497,
+    "first_update": 0.06673333333333334,
+    "last_update": 20.02,
+    "elapsed_wall_seconds": 23.871676025390624,
+    "elapsed_video_seconds": 19.953266666666668,
+    "accumulated_lag_seconds": 3.918409358723956,
+    "calibration": {
+      "status": "calibrated",
+      "committed": true,
+      "calibration_version": 13,
+      "calibrated": true,
+      "estimated_parameters": [
+        "fx",
+        "fy"
+      ],
+      "fixed_parameters": [
+        "cx",
+        "cy"
+      ],
+      "distortion_model": "not_estimated_in_fast_path",
+      "estimates": 14,
+      "pending": false,
+      "focal_px": 1414.0594420173454,
+      "focal_ratio_to_initial": 1.0100424585838181,
+      "focal_mad_px": 18.53862918424454,
+      "last_error": null,
+      "blocking_budget_ms": 0.0
+    }
+  },
+  "floor1": {
+    "updates": 575,
+    "ar_payloads": 575,
+    "first_update": 0.8666666666666666,
+    "last_update": 20.0,
+    "elapsed_wall_seconds": 19.035505859375,
+    "elapsed_video_seconds": 19.133333333333333,
+    "accumulated_lag_seconds": -0.09782747395833269,
+    "calibration": {
+      "status": "calibrated",
+      "committed": true,
+      "calibration_version": 10,
+      "calibrated": true,
+      "estimated_parameters": [
+        "fx",
+        "fy"
+      ],
+      "fixed_parameters": [
+        "cx",
+        "cy"
+      ],
+      "distortion_model": "not_estimated_in_fast_path",
+      "estimates": 13,
+      "pending": false,
+      "focal_px": 1448.5542762651653,
+      "focal_ratio_to_initial": 1.0346816259036895,
+      "focal_mad_px": 24.149521802527033,
+      "last_error": null,
+      "blocking_budget_ms": 0.0
+    }
+  }
+}

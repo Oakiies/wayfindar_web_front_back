@@ -1,0 +1,17 @@
+﻿{
+    "video":  "floor4_2.mov",
+    "session_id":  1789062385455,
+    "sample_target_video_s":  60,
+    "active_at_capture":  true,
+    "frame_count":  3607,
+    "history_length":  1761,
+    "video_timestamp_s":  60.0925,
+    "current_floor":  "floor4",
+    "tracking_mode":  "causal_klt_pnp",
+    "method":  "HOLD_LAST_FIX",
+    "tracking_status":  "pose_rejected",
+    "ar_world_status":  "hidden:tracking_lost",
+    "causal_source_frame":  3512,
+    "current_tracking_frame":  3606,
+    "async_localize_time_s":  0.217703300062567
+}

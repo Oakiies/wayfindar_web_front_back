@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f2f1ee" />
+    <title>Wayfindar — Apple-theme token pass</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: -apple-system, BlinkMacSystemFont, Inter, ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+        --ink: #111315;
+        --ink-2: #55595f;
+        --ink-4: #b6bac0;
+        --line: #e4e2dd;
+        --paper: #f2f1ee;
+        --surface: #ffffff;
+        --surface-2: #f6f5f2;
+        --old-accent: #0d6efd;
+        --new-accent: #0066cc;
+      }
+
+      * { box-sizing: border-box; }
+      html { background: var(--paper); }
+      body { margin: 0; min-width: 320px; color: var(--ink); background: var(--paper); -webkit-font-smoothing: antialiased; }
+      button { font: inherit; cursor: pointer; }
+
+      main { width: min(1080px, 100%); margin: 0 auto; padding: 36px 22px 56px; }
+      .eyebrow { margin: 0 0 8px; color: var(--new-accent); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+      h1 { max-width: 760px; margin: 0; font-size: clamp(26px, 4vw, 40px); line-height: 1.08; letter-spacing: -.03em; }
+      .lead { max-width: 700px; margin: 14px 0 8px; color: var(--ink-2); font-size: 15px; line-height: 1.6; }
+      .source { max-width: 700px; margin: 0 0 32px; color: var(--ink-4); font-size: 12px; }
+      .source a { color: inherit; }
+
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 40px; }
+      .col h2 { margin: 0 0 14px; font-size: 15px; letter-spacing: -.01em; }
+      .tag { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; vertical-align: 1px; }
+      .tag.before { color: #7a6e62; background: #e8e0d5; }
+      .tag.after { color: #fff; background: var(--new-accent); }
+
+      .swatch-group { display: flex; gap: 10px; margin-bottom: 20px; }
+      .swatch { flex: 1; border-radius: 14px; padding: 14px; color: #fff; font-size: 12px; font-weight: 600; }
+
+      .demo-card { padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: 0 1px 2px rgb(17 19 21 / 0.04), 0 8px 24px -12px rgb(17 19 21 / 0.16); }
+      .demo-card.after { box-shadow: 0 1px 2px rgb(17 19 21 / 0.03), 0 6px 16px -12px rgb(17 19 21 / 0.12); }
+
+      .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; height: 52px; padding: 0 22px; font-size: 15px; font-weight: 600; letter-spacing: -.01em; color: #fff; border: 0; width: 100%; margin-bottom: 12px; }
+      .before .btn-primary { border-radius: 14px; background: var(--ink); }
+      .after .btn-primary { border-radius: 999px; background: var(--new-accent); }
+
+      .btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; height: 52px; padding: 0 22px; font-size: 15px; font-weight: 600; width: 100%; margin-bottom: 20px; }
+      .before .btn-secondary { border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-2); }
+      .after .btn-secondary { border-radius: 999px; background: transparent; border: 1px solid var(--line); color: var(--ink-2); }
+
+      .field { display: flex; align-items: center; width: 100%; height: 44px; padding: 0 14px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); font-size: 14px; font-weight: 500; color: var(--ink); }
+
+      .map-frame { position: relative; overflow: hidden; border-radius: 24px; aspect-ratio: 16/10; border: 1px solid var(--line); }
+      .map-frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      .route-line { position: absolute; inset: 0; pointer-events: none; }
+
+      .notes { max-width: 780px; }
+      .notes h2 { font-size: 16px; margin: 0 0 10px; }
+      .notes ul { margin: 0 0 24px; padding-left: 20px; color: var(--ink-2); font-size: 14px; line-height: 1.7; }
+      .notes code { background: var(--surface-2); border-radius: 5px; padding: 1px 6px; font-size: 13px; }
+
+      @media (max-width: 720px) {
+        .row { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Wayfindar / UI review</p>
+      <h1>โทเค็นสี frontend-v3 ปรับตาม Apple DESIGN.md</h1>
+      <p class="lead">
+        เทียบก่อน-หลังของ <code>src/index.css</code> หลังหยิบแนวทางจาก
+        <a href="https://getdesign.md/apple/design-md">Apple DESIGN.md</a> (จาก
+        <a href="https://github.com/VoltAgent/awesome-design-md">awesome-design-md</a>)
+        มาปรับ 3 จุด: accent color, ทรงปุ่มหลัก/รอง (pill), และน้ำหนักเงา
+      </p>
+      <p class="source">อ้างอิง: "One accent colour drives all interactivity — Action Blue (#0066cc)." · "Exactly one drop-shadow exists." · "Pill-shaped primary CTAs; secondary ghost variants."</p>
+
+      <section class="row" aria-label="เทียบสี accent">
+        <div class="col">
+          <h2>Accent <span class="tag before">ก่อน</span></h2>
+          <div class="swatch-group">
+            <div class="swatch" style="background:#0d6efd">#0d6efd</div>
+          </div>
+        </div>
+        <div class="col">
+          <h2>Accent <span class="tag after">หลัง</span></h2>
+          <div class="swatch-group">
+            <div class="swatch" style="background:#0066cc">#0066cc (Action Blue)</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="row" aria-label="เทียบปุ่ม">
+        <div class="col before">
+          <h2>ปุ่ม <span class="tag before">ก่อน</span></h2>
+          <div class="demo-card">
+            <button class="btn-primary" type="button">เริ่มนำทาง</button>
+            <button class="btn-secondary" type="button">ยกเลิก</button>
+            <div class="field">จาก: ล็อบบี้ ชั้น 1</div>
+          </div>
+        </div>
+        <div class="col after">
+          <h2>ปุ่ม <span class="tag after">หลัง</span></h2>
+          <div class="demo-card after">
+            <button class="btn-primary" type="button">เริ่มนำทาง</button>
+            <button class="btn-secondary" type="button">ยกเลิก</button>
+            <div class="field">จาก: ล็อบบี้ ชั้น 1</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="row" aria-label="เทียบเส้นทางบนแผนที่จริง">
+        <div class="col">
+          <h2>เส้นทาง/ตำแหน่งผู้ใช้ <span class="tag before">ก่อน</span></h2>
+          <div class="map-frame">
+            <img src="/system_data/map/floor1.jpg" alt="แผนผังชั้น 1" />
+          </div>
+        </div>
+        <div class="col">
+          <h2>เส้นทาง/ตำแหน่งผู้ใช้ <span class="tag after">หลัง</span></h2>
+          <div class="map-frame">
+            <img src="/system_data/map/floor1.jpg" alt="แผนผังชั้น 1" />
+          </div>
+        </div>
+      </section>
+
+      <section class="notes">
+        <h2>สิ่งที่แก้จริงใน src/index.css และ MapCanvas.tsx</h2>
+        <ul>
+          <li><code>--color-accent</code>: <code>#0d6efd</code> → <code>#0066cc</code> (และ <code>--color-accent-soft</code> ตามไปด้วย)</li>
+          <li><code>.btn-primary</code> / <code>.btn-secondary</code>: <code>border-radius</code> เปลี่ยนจาก <code>var(--radius-md)</code> เป็น <code>999px</code> (pill), secondary เปลี่ยนจากพื้นทึบเป็น ghost (โปร่งใส + เส้นขอบ)</li>
+          <li><code>--shadow-card</code> / <code>--shadow-float</code>: ลดความเข้มลง ให้สอดคล้องกับ "hierarchy จาก surface transition ไม่ใช่ shadow depth" ของ Apple</li>
+          <li><code>--font-sans</code>: ขึ้นต้นด้วย <code>-apple-system, BlinkMacSystemFont</code> ก่อน Inter — เครื่อง Apple จะได้ SF Pro จริง ที่อื่นยังตกไป Inter เหมือนเดิม</li>
+          <li><code>ROUTE_COLOR</code> / <code>POSE_COLOR</code> ใน <code>MapCanvas.tsx</code> (hardcoded hex เพราะ canvas 2D อ่าน CSS var ไม่ได้) แก้ให้ตรงกับ accent ใหม่ด้วย</li>
+        </ul>
+        <p class="source">ไม่ได้แตะ: รัศมีการ์ด/ชีต (<code>--radius-sm|lg|xl</code>), glass/glass-dark, การ์ดวางสินค้า 18px ของ Apple ยังไม่มีจุดที่ใช้ในแอปนี้</p>
+      </section>
+    </main>
+  </body>
+</html>

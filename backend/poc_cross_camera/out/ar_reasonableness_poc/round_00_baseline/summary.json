@@ -1,0 +1,23 @@
+{
+  "round": "round_00_baseline",
+  "status": "READY_FOR_CODEX_REVIEW",
+  "scope": {
+    "primary": "0-60s route-to-M21 review",
+    "stress_only": "80-180s tracking/turn stress; not route correctness after arrival"
+  },
+  "variants": {
+    "V0_CURRENT_HOLD": "render_fullrate_non_imu_ar: raw/EMA/jump/KLT comparison",
+    "V1_BUFFERED_REPLAY": "represented by EMA interpolation panel; offline-only and uses future anchor",
+    "V2_KLT_HOMOGRAPHY": "render_stale_free_ar: full-rate KLT propagation + route-state reset"
+  },
+  "important_caveat": "This round measures continuity/evidence availability only. It does not prove that AR is on the real walkable floor.",
+  "required_human_review": "Fill human_label in review_manifest.json or annotate RESULT.md after inspecting contact sheets.",
+  "outputs": {
+    "v0_current_hold_dir": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_00_baseline\\v0_current_hold",
+    "v2_klt_homography_dir": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_00_baseline\\v2_klt_homography",
+    "primary_critical_contact_sheet": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_00_baseline\\primary_critical_contact_sheet.png",
+    "turn_transition_contact_sheet": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_00_baseline\\turn_transition_contact_sheet.png",
+    "stress_contact_sheet": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_00_baseline\\stress_contact_sheet.png",
+    "review_manifest": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_00_baseline\\review_manifest.json"
+  }
+}

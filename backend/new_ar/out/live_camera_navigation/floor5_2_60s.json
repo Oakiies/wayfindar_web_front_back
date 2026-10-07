@@ -1,0 +1,17 @@
+﻿{
+    "video":  "floor5_2.mp4",
+    "session_id":  1789062222162,
+    "sample_target_video_s":  60,
+    "active_at_capture":  true,
+    "frame_count":  3605,
+    "history_length":  1786,
+    "video_timestamp_s":  60.126733333333334,
+    "current_floor":  "floor5",
+    "tracking_mode":  "causal_klt_pnp",
+    "method":  "KLT-PnP",
+    "tracking_status":  "tracked",
+    "ar_world_status":  "visible",
+    "causal_source_frame":  3508,
+    "current_tracking_frame":  3604,
+    "async_localize_time_s":  0.3087352002039552
+}

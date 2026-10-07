@@ -1,0 +1,11 @@
+{
+  "video": "D:\\wayfindar\\navigate_indoor\\uploads\\floor5_2.mp4",
+  "total_frames": 19881,
+  "fps": 59.94005994005994,
+  "sample_interval_s": 1.5,
+  "true_focal_px": 1400.0,
+  "decoded_frames": 19881,
+  "sampled_frames": 222,
+  "valid": 222,
+  "elapsed_s": 135.6576988697052
+}

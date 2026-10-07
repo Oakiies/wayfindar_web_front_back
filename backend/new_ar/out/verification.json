@@ -1,0 +1,41 @@
+{
+  "source": "D:\\video\\video_from_iphone_pare\\IMG_1895.MOV",
+  "source_bytes": 505502663,
+  "source_mtime_ns": 1788687162000000000,
+  "frames": 1200,
+  "first_source_frame": 600,
+  "last_source_frame": 1799,
+  "first_source_timestamp": 20.007045048620757,
+  "last_source_timestamp": 59.98779007078124,
+  "accepted_pose_frames": 1190,
+  "accepted_ar_frames": 1185,
+  "visible_ar_frames": 1160,
+  "pose_reprojection_px": {
+    "median": 3.386414142642315,
+    "p95": 4.81094760865084
+  },
+  "files": [
+    {
+      "name": "IMG_1895_AR_20_60.mp4",
+      "frames": 1200,
+      "width": 1280,
+      "height": 720,
+      "fps": 29.99,
+      "duration_s": 40.01333777925976,
+      "bytes": 36644204,
+      "sha256": "2e8fa57c1389775f8562b6d316d44c0d4d21f547f914936d706af7444109530f"
+    },
+    {
+      "name": "IMG_1895_comparison_20_60.mp4",
+      "frames": 1200,
+      "width": 1920,
+      "height": 540,
+      "fps": 29.99,
+      "duration_s": 40.01333777925976,
+      "bytes": 37086260,
+      "sha256": "baf053f7e38a859fffa730c5dbbc8c44e3d73ef02383d4d48ef2578bda1443bf"
+    }
+  ],
+  "geometry_unit_tests": 4,
+  "note": "Acceptance and reprojection are self-consistency metrics, not ground-truth accuracy. Comparison uses identical calibrated per-frame poses for both renderers."
+}

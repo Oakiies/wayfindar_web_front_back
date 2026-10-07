@@ -1,0 +1,2394 @@
+[
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\1\\normal\\image_001.jpg",
+    "num_features": 101,
+    "p4pf_inliers": 84,
+    "p4pf_focal_px": 1415.8242501823916,
+    "p4pf_reproj_px": 3.252148716324453
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\1\\normal\\image_002.jpg",
+    "num_features": 90,
+    "p4pf_inliers": 74,
+    "p4pf_focal_px": 1367.3470517744904,
+    "p4pf_reproj_px": 3.64092646852231
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\2\\normal\\image_004.jpg",
+    "num_features": 86,
+    "p4pf_inliers": 54,
+    "p4pf_focal_px": 1362.3403800498158,
+    "p4pf_reproj_px": 4.695432483735897
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\2\\normal\\image_005.jpg",
+    "num_features": 45,
+    "p4pf_inliers": 32,
+    "p4pf_focal_px": 1391.6588570078343,
+    "p4pf_reproj_px": 3.9070877194469236
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\4\\normal\\image_003.jpg",
+    "num_features": 73,
+    "p4pf_inliers": 61,
+    "p4pf_focal_px": 1395.377902039325,
+    "p4pf_reproj_px": 3.1934496574989066
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\4\\normal\\image_004.jpg",
+    "num_features": 86,
+    "p4pf_inliers": 56,
+    "p4pf_focal_px": 1413.3249492969496,
+    "p4pf_reproj_px": 4.349645669157901
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\5\\normal\\image_009.jpg",
+    "num_features": 102,
+    "p4pf_inliers": 71,
+    "p4pf_focal_px": 1369.8657039706825,
+    "p4pf_reproj_px": 2.806896780618465
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\5\\normal\\image_010.jpg",
+    "num_features": 82,
+    "p4pf_inliers": 63,
+    "p4pf_focal_px": 1402.630157090538,
+    "p4pf_reproj_px": 3.622399090520182
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\1\\wide\\image_001_wide.jpg",
+    "num_features": 84,
+    "p4pf_inliers": 23,
+    "p4pf_focal_px": 621.9513563292405,
+    "p4pf_reproj_px": 4.816641129511419
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\1\\wide\\image_002_wide.jpg",
+    "num_features": 97,
+    "p4pf_inliers": 17,
+    "p4pf_focal_px": 684.1081813848532,
+    "p4pf_reproj_px": 5.318912665518445
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\2\\wide\\image_4_wide.jpg",
+    "num_features": 74,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 650.965013445609,
+    "p4pf_reproj_px": 5.8368210342101765
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\2\\wide\\image_5_wide.jpg",
+    "num_features": 48,
+    "p4pf_inliers": 12,
+    "p4pf_focal_px": 807.3690127086998,
+    "p4pf_reproj_px": 5.506191279570434
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\4\\wide\\image_003_wide.jpg",
+    "num_features": 62,
+    "p4pf_inliers": 7,
+    "p4pf_focal_px": 735.6365608010797,
+    "p4pf_reproj_px": 0.9442704168679652
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\5\\wide\\imag_010_wide.jpg",
+    "num_features": 93,
+    "p4pf_inliers": 20,
+    "p4pf_focal_px": 630.6862354823224,
+    "p4pf_reproj_px": 4.1697759434332315
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare\\5\\wide\\image_009_wide.jpg",
+    "num_features": 95,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 891.0779460897679,
+    "p4pf_reproj_px": 5.53933458235068
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_normal_30.jpg",
+    "num_features": 69,
+    "p4pf_inliers": 24,
+    "p4pf_focal_px": 4669.560532202047,
+    "p4pf_reproj_px": 4.065734226713127
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_normal_40.jpg",
+    "num_features": 99,
+    "p4pf_inliers": 46,
+    "p4pf_focal_px": 3513.7652337357704,
+    "p4pf_reproj_px": 4.599218190740567
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_normal_50.jpg",
+    "num_features": 100,
+    "p4pf_inliers": 68,
+    "p4pf_focal_px": 2956.970822082334,
+    "p4pf_reproj_px": 4.730199219602168
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_normal_60.jpg",
+    "num_features": 60,
+    "p4pf_inliers": 38,
+    "p4pf_focal_px": 2402.549822934196,
+    "p4pf_reproj_px": 4.274840414578284
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_normal_75.jpg",
+    "num_features": 70,
+    "p4pf_inliers": 54,
+    "p4pf_focal_px": 1895.6181320242713,
+    "p4pf_reproj_px": 3.599520487746811
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_normal_90.jpg",
+    "num_features": 81,
+    "p4pf_inliers": 68,
+    "p4pf_focal_px": 1576.674100277855,
+    "p4pf_reproj_px": 3.6283874366624005
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_wide_30.jpg",
+    "num_features": 79,
+    "p4pf_inliers": 12,
+    "p4pf_focal_px": 2259.78944051996,
+    "p4pf_reproj_px": 6.182516982987366
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_wide_40.jpg",
+    "num_features": 93,
+    "p4pf_inliers": 5,
+    "p4pf_focal_px": 1146.3426561610454,
+    "p4pf_reproj_px": 5.512898470720167
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_wide_50.jpg",
+    "num_features": 99,
+    "p4pf_inliers": 16,
+    "p4pf_focal_px": 955.5324462197957,
+    "p4pf_reproj_px": 5.849415228953532
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_wide_60.jpg",
+    "num_features": 104,
+    "p4pf_inliers": 10,
+    "p4pf_focal_px": 1336.7026423596492,
+    "p4pf_reproj_px": 2.461154393960209
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_wide_75.jpg",
+    "num_features": 98,
+    "p4pf_inliers": 24,
+    "p4pf_focal_px": 768.0462994915843,
+    "p4pf_reproj_px": 4.154499850758372
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_0_wide_90.jpg",
+    "num_features": 84,
+    "p4pf_inliers": 32,
+    "p4pf_focal_px": 652.7168773681672,
+    "p4pf_reproj_px": 2.8569332687734343
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_normal_30.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 24,
+    "p4pf_focal_px": 4541.496716813255,
+    "p4pf_reproj_px": 4.587107712149214
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_normal_40.jpg",
+    "num_features": 62,
+    "p4pf_inliers": 35,
+    "p4pf_focal_px": 3634.5374144154057,
+    "p4pf_reproj_px": 3.109002911804155
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_normal_50.jpg",
+    "num_features": 70,
+    "p4pf_inliers": 37,
+    "p4pf_focal_px": 2682.6642803050063,
+    "p4pf_reproj_px": 5.506793301997904
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_normal_60.jpg",
+    "num_features": 73,
+    "p4pf_inliers": 30,
+    "p4pf_focal_px": 2325.97194269565,
+    "p4pf_reproj_px": 4.93521774930607
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_normal_75.jpg",
+    "num_features": 80,
+    "p4pf_inliers": 61,
+    "p4pf_focal_px": 1867.2127056572515,
+    "p4pf_reproj_px": 3.6519452938014965
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_normal_90.jpg",
+    "num_features": 100,
+    "p4pf_inliers": 54,
+    "p4pf_focal_px": 1556.7008319198471,
+    "p4pf_reproj_px": 2.713143939079723
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_wide_30.jpg",
+    "num_features": 81,
+    "p4pf_inliers": 25,
+    "p4pf_focal_px": 2075.9538291873723,
+    "p4pf_reproj_px": 4.542917480034317
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_wide_40.jpg",
+    "num_features": 105,
+    "p4pf_inliers": 31,
+    "p4pf_focal_px": 1476.392849062905,
+    "p4pf_reproj_px": 4.864453774853572
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_wide_50.jpg",
+    "num_features": 104,
+    "p4pf_inliers": 28,
+    "p4pf_focal_px": 1162.9647242575775,
+    "p4pf_reproj_px": 5.000108049911018
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_wide_60.jpg",
+    "num_features": 103,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 1640.335499465912,
+    "p4pf_reproj_px": 5.9187010298358596
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_wide_75.jpg",
+    "num_features": 92,
+    "p4pf_inliers": 40,
+    "p4pf_focal_px": 692.748433783419,
+    "p4pf_reproj_px": 4.794756227343171
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\1_1_wide_90.jpg",
+    "num_features": 89,
+    "p4pf_inliers": 33,
+    "p4pf_focal_px": 659.8717819612956,
+    "p4pf_reproj_px": 4.768186954013642
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_normal_30.jpg",
+    "num_features": 57,
+    "p4pf_inliers": 17,
+    "p4pf_focal_px": 4346.159996779774,
+    "p4pf_reproj_px": 3.1611815481325354
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_normal_40.jpg",
+    "num_features": 79,
+    "p4pf_inliers": 27,
+    "p4pf_focal_px": 3622.657714386539,
+    "p4pf_reproj_px": 3.809736285483169
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_normal_50.jpg",
+    "num_features": 81,
+    "p4pf_inliers": 51,
+    "p4pf_focal_px": 2847.772994102923,
+    "p4pf_reproj_px": 3.9072290462998938
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_normal_60.jpg",
+    "num_features": 49,
+    "p4pf_inliers": 25,
+    "p4pf_focal_px": 2305.2311434982894,
+    "p4pf_reproj_px": 4.86305045262398
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_normal_75.jpg",
+    "num_features": 57,
+    "p4pf_inliers": 41,
+    "p4pf_focal_px": 1914.1157918347872,
+    "p4pf_reproj_px": 2.413889149143991
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_normal_90.jpg",
+    "num_features": 78,
+    "p4pf_inliers": 52,
+    "p4pf_focal_px": 1565.302108709007,
+    "p4pf_reproj_px": 3.584597560400353
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_wide_30.jpg",
+    "num_features": 91,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 6795.104483278437,
+    "p4pf_reproj_px": 3.599502860883252
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_wide_40.jpg",
+    "num_features": 111,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 1986.8630133155664,
+    "p4pf_reproj_px": 3.769165238505872
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_wide_50.jpg",
+    "num_features": 104,
+    "p4pf_inliers": 27,
+    "p4pf_focal_px": 1245.8921281292562,
+    "p4pf_reproj_px": 5.043317893918954
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_wide_60.jpg",
+    "num_features": 98,
+    "p4pf_inliers": 17,
+    "p4pf_focal_px": 437.53048836576625,
+    "p4pf_reproj_px": 5.1343149960744885
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_wide_75.jpg",
+    "num_features": 87,
+    "p4pf_inliers": 25,
+    "p4pf_focal_px": 837.6662738485016,
+    "p4pf_reproj_px": 5.198976326351
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_0_wide_90.jpg",
+    "num_features": 76,
+    "p4pf_inliers": 11,
+    "p4pf_focal_px": 702.6435260940374,
+    "p4pf_reproj_px": 5.794835243012471
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_normal_30.jpg",
+    "num_features": 20,
+    "p4pf_inliers": 3,
+    "p4pf_focal_px": 2892.6392345895356,
+    "p4pf_reproj_px": 3.7068203970925575
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_normal_40.jpg",
+    "num_features": 55,
+    "p4pf_inliers": 9,
+    "p4pf_focal_px": 2167.7310645895877,
+    "p4pf_reproj_px": 2.6997211523546354
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_normal_50.jpg",
+    "num_features": 40,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 2795.1367004227855,
+    "p4pf_reproj_px": 4.915943937283452
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_normal_60.jpg",
+    "num_features": 18,
+    "p4pf_inliers": 7,
+    "p4pf_focal_px": 2045.8852958993823,
+    "p4pf_reproj_px": 2.737006823892769
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_normal_75.jpg",
+    "num_features": 29,
+    "p4pf_inliers": 18,
+    "p4pf_focal_px": 1869.574582694037,
+    "p4pf_reproj_px": 3.9228835696595237
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_normal_90.jpg",
+    "num_features": 42,
+    "p4pf_inliers": 29,
+    "p4pf_focal_px": 1551.030725764782,
+    "p4pf_reproj_px": 3.36026645433656
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_wide_30.jpg",
+    "num_features": 43,
+    "p4pf_inliers": 5,
+    "p4pf_focal_px": 2464.49727223664,
+    "p4pf_reproj_px": 5.499857435710807
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_wide_40.jpg",
+    "num_features": 36,
+    "p4pf_inliers": 10,
+    "p4pf_focal_px": 1527.415106703772,
+    "p4pf_reproj_px": 4.277826281013976
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_wide_50.jpg",
+    "num_features": 41,
+    "p4pf_inliers": 7,
+    "p4pf_focal_px": 1504.5987464993827,
+    "p4pf_reproj_px": 4.3310412973648775
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_wide_60.jpg",
+    "num_features": 43,
+    "p4pf_inliers": 6,
+    "p4pf_focal_px": 998.393013093143,
+    "p4pf_reproj_px": 5.099397435757995
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_wide_75.jpg",
+    "num_features": 45,
+    "p4pf_inliers": 6,
+    "p4pf_focal_px": 958.3724166041527,
+    "p4pf_reproj_px": 5.512218372192572
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\2_1_wide_90.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 731.2218812523233,
+    "p4pf_reproj_px": 3.420059533120983
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_normal_30.jpg",
+    "num_features": 52,
+    "p4pf_inliers": 20,
+    "p4pf_focal_px": 4662.191930163313,
+    "p4pf_reproj_px": 5.01479245089771
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_normal_40.jpg",
+    "num_features": 56,
+    "p4pf_inliers": 26,
+    "p4pf_focal_px": 3760.6902817777463,
+    "p4pf_reproj_px": 4.9191419054554695
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_normal_50.jpg",
+    "num_features": 71,
+    "p4pf_inliers": 49,
+    "p4pf_focal_px": 2802.1257293983244,
+    "p4pf_reproj_px": 3.832340561684838
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_normal_60.jpg",
+    "num_features": 40,
+    "p4pf_inliers": 16,
+    "p4pf_focal_px": 2334.5004058530803,
+    "p4pf_reproj_px": 2.8847381612069207
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_normal_75.jpg",
+    "num_features": 57,
+    "p4pf_inliers": 39,
+    "p4pf_focal_px": 1858.745060438153,
+    "p4pf_reproj_px": 3.479991902330857
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_normal_90.jpg",
+    "num_features": 70,
+    "p4pf_inliers": 61,
+    "p4pf_focal_px": 1571.3276699497433,
+    "p4pf_reproj_px": 3.088923878083245
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_wide_30.jpg",
+    "num_features": 81,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 3488.509225955129,
+    "p4pf_reproj_px": 5.302747559132845
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_wide_40.jpg",
+    "num_features": 74,
+    "p4pf_inliers": 13,
+    "p4pf_focal_px": 1548.2342469375874,
+    "p4pf_reproj_px": 4.196931223871992
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_wide_50.jpg",
+    "num_features": 79,
+    "p4pf_inliers": 9,
+    "p4pf_focal_px": 1158.5475195443832,
+    "p4pf_reproj_px": 3.8637715519391658
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_wide_60.jpg",
+    "num_features": 68,
+    "p4pf_inliers": 16,
+    "p4pf_focal_px": 1048.770001401293,
+    "p4pf_reproj_px": 3.4067396305303577
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_wide_75.jpg",
+    "num_features": 69,
+    "p4pf_inliers": 10,
+    "p4pf_focal_px": 974.6341030657578,
+    "p4pf_reproj_px": 3.570479723404336
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\4_0_wide_90.jpg",
+    "num_features": 77,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 598.1497656405055,
+    "p4pf_reproj_px": 4.955860606301538
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_normal_30.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 4922.301010654142,
+    "p4pf_reproj_px": 3.7064982862484595
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_normal_40.jpg",
+    "num_features": 57,
+    "p4pf_inliers": 20,
+    "p4pf_focal_px": 3223.587908479897,
+    "p4pf_reproj_px": 4.739225143929235
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_normal_50.jpg",
+    "num_features": 54,
+    "p4pf_inliers": 27,
+    "p4pf_focal_px": 2668.623375322374,
+    "p4pf_reproj_px": 5.607300109590855
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_normal_60.jpg",
+    "num_features": 43,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 2242.4149088062286,
+    "p4pf_reproj_px": 3.887051184369387
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_normal_75.jpg",
+    "num_features": 81,
+    "p4pf_inliers": 55,
+    "p4pf_focal_px": 1826.9072611743727,
+    "p4pf_reproj_px": 4.145132445332988
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_normal_90.jpg",
+    "num_features": 101,
+    "p4pf_inliers": 85,
+    "p4pf_focal_px": 1544.4849544878189,
+    "p4pf_reproj_px": 4.12016312862896
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_wide_30.jpg",
+    "num_features": 67,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 1631.2636312855211,
+    "p4pf_reproj_px": 1.8163738501123938
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_wide_40.jpg",
+    "num_features": 112,
+    "p4pf_inliers": 4,
+    "p4pf_focal_px": 1745.3342829064438,
+    "p4pf_reproj_px": 5.312826558559445
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_wide_50.jpg",
+    "num_features": 113,
+    "p4pf_inliers": 11,
+    "p4pf_focal_px": 1579.1181872257523,
+    "p4pf_reproj_px": 4.044694009617127
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_wide_60.jpg",
+    "num_features": 110,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 580.5830671922706,
+    "p4pf_reproj_px": 5.278873553371174
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_wide_75.jpg",
+    "num_features": 101,
+    "p4pf_inliers": 6,
+    "p4pf_focal_px": 1140.9403541905708,
+    "p4pf_reproj_px": 5.082796227161587
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_0_wide_90.jpg",
+    "num_features": 103,
+    "p4pf_inliers": 19,
+    "p4pf_focal_px": 828.5457573780842,
+    "p4pf_reproj_px": 3.7411549965343256
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_normal_30.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 4344.111931836245,
+    "p4pf_reproj_px": 5.188421189206733
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_normal_40.jpg",
+    "num_features": 83,
+    "p4pf_inliers": 44,
+    "p4pf_focal_px": 3437.134494206989,
+    "p4pf_reproj_px": 4.692632132670379
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_normal_50.jpg",
+    "num_features": 86,
+    "p4pf_inliers": 51,
+    "p4pf_focal_px": 2853.8189840540635,
+    "p4pf_reproj_px": 4.536873775781967
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_normal_60.jpg",
+    "num_features": 49,
+    "p4pf_inliers": 31,
+    "p4pf_focal_px": 2343.3558333959445,
+    "p4pf_reproj_px": 3.2428689620408524
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_normal_75.jpg",
+    "num_features": 61,
+    "p4pf_inliers": 40,
+    "p4pf_focal_px": 1887.5659467619153,
+    "p4pf_reproj_px": 4.726924215974984
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_normal_90.jpg",
+    "num_features": 85,
+    "p4pf_inliers": 46,
+    "p4pf_focal_px": 1559.1332923182617,
+    "p4pf_reproj_px": 4.636446514129235
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_wide_30.jpg",
+    "num_features": 69,
+    "p4pf_inliers": 11,
+    "p4pf_focal_px": 2642.888951213298,
+    "p4pf_reproj_px": 4.39751549242821
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_wide_40.jpg",
+    "num_features": 88,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 2502.0248657086304,
+    "p4pf_reproj_px": 4.873738552492483
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_wide_50.jpg",
+    "num_features": 79,
+    "p4pf_inliers": 10,
+    "p4pf_focal_px": 1127.048328628417,
+    "p4pf_reproj_px": 2.2192224707155757
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_wide_60.jpg",
+    "num_features": 85,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 1413.1910956498873,
+    "p4pf_reproj_px": 2.9978057163522642
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_wide_75.jpg",
+    "num_features": 94,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 1347.657101478145,
+    "p4pf_reproj_px": 2.4382956111278347
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\crop\\5_1_wide_90.jpg",
+    "num_features": 98,
+    "p4pf_inliers": 11,
+    "p4pf_focal_px": 679.2141908711404,
+    "p4pf_reproj_px": 3.893991860428684
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_0_normal_15.jpg",
+    "num_features": 99,
+    "p4pf_inliers": 69,
+    "p4pf_focal_px": 1382.409554307333,
+    "p4pf_reproj_px": 3.9216796254780317
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_0_normal_25.jpg",
+    "num_features": 105,
+    "p4pf_inliers": 74,
+    "p4pf_focal_px": 1414.8513288228537,
+    "p4pf_reproj_px": 4.0347586923537415
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_0_normal_35.jpg",
+    "num_features": 107,
+    "p4pf_inliers": 81,
+    "p4pf_focal_px": 1387.1935043689389,
+    "p4pf_reproj_px": 3.915893214949828
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_0_normal_50.jpg",
+    "num_features": 108,
+    "p4pf_inliers": 91,
+    "p4pf_focal_px": 1412.9875570825673,
+    "p4pf_reproj_px": 3.6242852844546176
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_0_normal_75.jpg",
+    "num_features": 116,
+    "p4pf_inliers": 92,
+    "p4pf_focal_px": 1400.3615249449363,
+    "p4pf_reproj_px": 3.832229434893023
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_0_wide_15.jpg",
+    "num_features": 69,
+    "p4pf_inliers": 23,
+    "p4pf_focal_px": 622.7097316673775,
+    "p4pf_reproj_px": 4.422354273182726
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_0_wide_25.jpg",
+    "num_features": 68,
+    "p4pf_inliers": 32,
+    "p4pf_focal_px": 606.0473909472203,
+    "p4pf_reproj_px": 4.853079130347148
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_0_wide_35.jpg",
+    "num_features": 81,
+    "p4pf_inliers": 20,
+    "p4pf_focal_px": 623.769566315249,
+    "p4pf_reproj_px": 3.9190571104187963
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_0_wide_50.jpg",
+    "num_features": 80,
+    "p4pf_inliers": 37,
+    "p4pf_focal_px": 583.8514271655922,
+    "p4pf_reproj_px": 2.950998703835236
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_0_wide_75.jpg",
+    "num_features": 83,
+    "p4pf_inliers": 26,
+    "p4pf_focal_px": 601.373446536998,
+    "p4pf_reproj_px": 4.922784757656837
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_1_normal_15.jpg",
+    "num_features": 99,
+    "p4pf_inliers": 68,
+    "p4pf_focal_px": 1352.3532870764286,
+    "p4pf_reproj_px": 4.6014721612696325
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_1_normal_25.jpg",
+    "num_features": 92,
+    "p4pf_inliers": 70,
+    "p4pf_focal_px": 1400.5920807449816,
+    "p4pf_reproj_px": 4.432226864306626
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_1_normal_35.jpg",
+    "num_features": 94,
+    "p4pf_inliers": 73,
+    "p4pf_focal_px": 1385.4455730636523,
+    "p4pf_reproj_px": 3.5483650772164204
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_1_normal_50.jpg",
+    "num_features": 100,
+    "p4pf_inliers": 84,
+    "p4pf_focal_px": 1391.5731785934008,
+    "p4pf_reproj_px": 4.213224524851727
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_1_normal_75.jpg",
+    "num_features": 95,
+    "p4pf_inliers": 72,
+    "p4pf_focal_px": 1427.2272002701768,
+    "p4pf_reproj_px": 3.833734694357295
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_1_wide_15.jpg",
+    "num_features": 65,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 562.8602743701472,
+    "p4pf_reproj_px": 5.071102629886256
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_1_wide_25.jpg",
+    "num_features": 76,
+    "p4pf_inliers": 23,
+    "p4pf_focal_px": 721.1553500752258,
+    "p4pf_reproj_px": 4.533954683861415
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_1_wide_35.jpg",
+    "num_features": 85,
+    "p4pf_inliers": 36,
+    "p4pf_focal_px": 594.6249487540063,
+    "p4pf_reproj_px": 4.944590373426465
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_1_wide_50.jpg",
+    "num_features": 92,
+    "p4pf_inliers": 26,
+    "p4pf_focal_px": 568.7962167098547,
+    "p4pf_reproj_px": 4.956717780766605
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\1_1_wide_75.jpg",
+    "num_features": 90,
+    "p4pf_inliers": 16,
+    "p4pf_focal_px": 602.6914112646991,
+    "p4pf_reproj_px": 4.569493263307923
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_0_normal_15.jpg",
+    "num_features": 96,
+    "p4pf_inliers": 65,
+    "p4pf_focal_px": 1426.6299244556549,
+    "p4pf_reproj_px": 4.151294506221826
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_0_normal_25.jpg",
+    "num_features": 91,
+    "p4pf_inliers": 58,
+    "p4pf_focal_px": 1349.843799298088,
+    "p4pf_reproj_px": 4.916764732381137
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_0_normal_35.jpg",
+    "num_features": 87,
+    "p4pf_inliers": 56,
+    "p4pf_focal_px": 1403.7422915308716,
+    "p4pf_reproj_px": 4.571952649194861
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_0_normal_50.jpg",
+    "num_features": 94,
+    "p4pf_inliers": 80,
+    "p4pf_focal_px": 1419.1408221688423,
+    "p4pf_reproj_px": 4.010140272916099
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_0_normal_75.jpg",
+    "num_features": 90,
+    "p4pf_inliers": 75,
+    "p4pf_focal_px": 1419.6487443297865,
+    "p4pf_reproj_px": 3.5268840769150183
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_0_wide_15.jpg",
+    "num_features": 51,
+    "p4pf_inliers": 16,
+    "p4pf_focal_px": 559.3518662166839,
+    "p4pf_reproj_px": 4.651421434805091
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_0_wide_25.jpg",
+    "num_features": 51,
+    "p4pf_inliers": 16,
+    "p4pf_focal_px": 793.9216300620658,
+    "p4pf_reproj_px": 1.9172698554952485
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_0_wide_35.jpg",
+    "num_features": 60,
+    "p4pf_inliers": 17,
+    "p4pf_focal_px": 478.8375855463671,
+    "p4pf_reproj_px": 2.9262058930012826
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_0_wide_50.jpg",
+    "num_features": 68,
+    "p4pf_inliers": 25,
+    "p4pf_focal_px": 590.1200862874413,
+    "p4pf_reproj_px": 3.389422686746144
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_0_wide_75.jpg",
+    "num_features": 69,
+    "p4pf_inliers": 23,
+    "p4pf_focal_px": 728.5985033580776,
+    "p4pf_reproj_px": 3.355376624756204
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_1_normal_15.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 29,
+    "p4pf_focal_px": 1422.9446394062863,
+    "p4pf_reproj_px": 5.071970731789033
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_1_normal_25.jpg",
+    "num_features": 45,
+    "p4pf_inliers": 32,
+    "p4pf_focal_px": 1414.4594481494773,
+    "p4pf_reproj_px": 3.1090687061699604
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_1_normal_35.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 30,
+    "p4pf_focal_px": 1390.6895539670072,
+    "p4pf_reproj_px": 5.114689306250087
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_1_normal_50.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 34,
+    "p4pf_focal_px": 1419.3703020969172,
+    "p4pf_reproj_px": 3.890542218524474
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_1_normal_75.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 31,
+    "p4pf_focal_px": 1419.8403088838045,
+    "p4pf_reproj_px": 2.658514026046796
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_1_wide_15.jpg",
+    "num_features": 41,
+    "p4pf_inliers": 12,
+    "p4pf_focal_px": 717.3195967263076,
+    "p4pf_reproj_px": 3.866262116871792
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_1_wide_25.jpg",
+    "num_features": 41,
+    "p4pf_inliers": 13,
+    "p4pf_focal_px": 710.154564164468,
+    "p4pf_reproj_px": 3.6901702407863235
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_1_wide_35.jpg",
+    "num_features": 42,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 634.4954817199141,
+    "p4pf_reproj_px": 4.375484919386796
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_1_wide_50.jpg",
+    "num_features": 45,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 690.1250771401092,
+    "p4pf_reproj_px": 6.220614183490629
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\2_1_wide_75.jpg",
+    "num_features": 48,
+    "p4pf_inliers": 17,
+    "p4pf_focal_px": 555.571037088594,
+    "p4pf_reproj_px": 4.713259252774594
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\4_0_normal_15.jpg",
+    "num_features": 88,
+    "p4pf_inliers": 49,
+    "p4pf_focal_px": 1348.6591894389717,
+    "p4pf_reproj_px": 4.97093238139637
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\4_0_normal_25.jpg",
+    "num_features": 77,
+    "p4pf_inliers": 61,
+    "p4pf_focal_px": 1382.2226267152018,
+    "p4pf_reproj_px": 4.1423344608856505
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\4_0_normal_35.jpg",
+    "num_features": 77,
+    "p4pf_inliers": 64,
+    "p4pf_focal_px": 1421.0589963775515,
+    "p4pf_reproj_px": 3.8543809027275513
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\4_0_normal_50.jpg",
+    "num_features": 82,
+    "p4pf_inliers": 67,
+    "p4pf_focal_px": 1423.435421729741,
+    "p4pf_reproj_px": 3.5528147765116413
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\4_0_normal_75.jpg",
+    "num_features": 88,
+    "p4pf_inliers": 76,
+    "p4pf_focal_px": 1386.2401892550931,
+    "p4pf_reproj_px": 4.290074073362026
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\4_0_wide_15.jpg",
+    "num_features": 55,
+    "p4pf_inliers": 7,
+    "p4pf_focal_px": 595.0383844736168,
+    "p4pf_reproj_px": 4.085430306922804
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\4_0_wide_25.jpg",
+    "num_features": 54,
+    "p4pf_inliers": 7,
+    "p4pf_focal_px": 740.4603887796513,
+    "p4pf_reproj_px": 4.085891849051707
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\4_0_wide_35.jpg",
+    "num_features": 57,
+    "p4pf_inliers": 13,
+    "p4pf_focal_px": 794.0967359014994,
+    "p4pf_reproj_px": 5.968805583266094
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\4_0_wide_50.jpg",
+    "num_features": 60,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 577.0653186272616,
+    "p4pf_reproj_px": 5.681999393471307
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\4_0_wide_75.jpg",
+    "num_features": 60,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 662.1039589695324,
+    "p4pf_reproj_px": 4.777928339778816
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_0_normal_15.jpg",
+    "num_features": 105,
+    "p4pf_inliers": 58,
+    "p4pf_focal_px": 1395.911479060318,
+    "p4pf_reproj_px": 5.241767016196114
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_0_normal_25.jpg",
+    "num_features": 127,
+    "p4pf_inliers": 92,
+    "p4pf_focal_px": 1398.3039331856726,
+    "p4pf_reproj_px": 3.748090737791862
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_0_normal_35.jpg",
+    "num_features": 112,
+    "p4pf_inliers": 81,
+    "p4pf_focal_px": 1373.787618397107,
+    "p4pf_reproj_px": 3.343352492818571
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_0_normal_50.jpg",
+    "num_features": 116,
+    "p4pf_inliers": 85,
+    "p4pf_focal_px": 1401.4422155399836,
+    "p4pf_reproj_px": 4.765963576475051
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_0_normal_75.jpg",
+    "num_features": 111,
+    "p4pf_inliers": 81,
+    "p4pf_focal_px": 1392.8967054486998,
+    "p4pf_reproj_px": 3.2454576993764475
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_0_wide_15.jpg",
+    "num_features": 81,
+    "p4pf_inliers": 9,
+    "p4pf_focal_px": 787.235006115576,
+    "p4pf_reproj_px": 3.8106286725701146
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_0_wide_25.jpg",
+    "num_features": 86,
+    "p4pf_inliers": 11,
+    "p4pf_focal_px": 920.2017045049417,
+    "p4pf_reproj_px": 6.099478876508004
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_0_wide_35.jpg",
+    "num_features": 91,
+    "p4pf_inliers": 17,
+    "p4pf_focal_px": 687.9733291927637,
+    "p4pf_reproj_px": 3.653386853496733
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_0_wide_50.jpg",
+    "num_features": 95,
+    "p4pf_inliers": 19,
+    "p4pf_focal_px": 743.9921054709939,
+    "p4pf_reproj_px": 5.460059475231856
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_0_wide_75.jpg",
+    "num_features": 94,
+    "p4pf_inliers": 18,
+    "p4pf_focal_px": 860.3473742330253,
+    "p4pf_reproj_px": 5.616289631010806
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_1_normal_15.jpg",
+    "num_features": 98,
+    "p4pf_inliers": 54,
+    "p4pf_focal_px": 1391.195954464126,
+    "p4pf_reproj_px": 5.515401288100017
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_1_normal_25.jpg",
+    "num_features": 99,
+    "p4pf_inliers": 60,
+    "p4pf_focal_px": 1357.0752694172236,
+    "p4pf_reproj_px": 4.999994264235543
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_1_normal_35.jpg",
+    "num_features": 87,
+    "p4pf_inliers": 63,
+    "p4pf_focal_px": 1398.0082672558635,
+    "p4pf_reproj_px": 3.8053393530617177
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_1_normal_50.jpg",
+    "num_features": 99,
+    "p4pf_inliers": 75,
+    "p4pf_focal_px": 1409.3500440243965,
+    "p4pf_reproj_px": 3.6164047708135207
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_1_normal_75.jpg",
+    "num_features": 93,
+    "p4pf_inliers": 74,
+    "p4pf_focal_px": 1389.6724482185368,
+    "p4pf_reproj_px": 3.752497547913015
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_1_wide_15.jpg",
+    "num_features": 77,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 585.9393305789059,
+    "p4pf_reproj_px": 2.8618466383529833
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_1_wide_25.jpg",
+    "num_features": 80,
+    "p4pf_inliers": 25,
+    "p4pf_focal_px": 613.4326131397739,
+    "p4pf_reproj_px": 4.436306458371043
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_1_wide_35.jpg",
+    "num_features": 88,
+    "p4pf_inliers": 13,
+    "p4pf_focal_px": 785.0366489286289,
+    "p4pf_reproj_px": 3.7368053657510294
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_1_wide_50.jpg",
+    "num_features": 87,
+    "p4pf_inliers": 13,
+    "p4pf_focal_px": 703.8043566671065,
+    "p4pf_reproj_px": 3.0610545648472773
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\resize\\5_1_wide_75.jpg",
+    "num_features": 90,
+    "p4pf_inliers": 11,
+    "p4pf_focal_px": 686.1829848356083,
+    "p4pf_reproj_px": 5.867784352183395
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_0_normal_125x.jpg",
+    "num_features": 91,
+    "p4pf_inliers": 78,
+    "p4pf_focal_px": 1761.0551122880656,
+    "p4pf_reproj_px": 3.6459574816386247
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_0_normal_15x.jpg",
+    "num_features": 71,
+    "p4pf_inliers": 44,
+    "p4pf_focal_px": 2106.380381915095,
+    "p4pf_reproj_px": 4.562649261941896
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_0_normal_20x.jpg",
+    "num_features": 97,
+    "p4pf_inliers": 57,
+    "p4pf_focal_px": 2800.1641914249603,
+    "p4pf_reproj_px": 4.400375379726047
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_0_normal_30x.jpg",
+    "num_features": 82,
+    "p4pf_inliers": 26,
+    "p4pf_focal_px": 4071.22426291615,
+    "p4pf_reproj_px": 4.51783081001266
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_0_normal_40x.jpg",
+    "num_features": 42,
+    "p4pf_inliers": 12,
+    "p4pf_focal_px": 5202.79698893458,
+    "p4pf_reproj_px": 3.7218854464447766
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_0_wide_125x.jpg",
+    "num_features": 92,
+    "p4pf_inliers": 26,
+    "p4pf_focal_px": 785.698269995795,
+    "p4pf_reproj_px": 4.942942208593219
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_0_wide_15x.jpg",
+    "num_features": 104,
+    "p4pf_inliers": 11,
+    "p4pf_focal_px": 883.4949613634153,
+    "p4pf_reproj_px": 4.423536139229174
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_0_wide_20x.jpg",
+    "num_features": 100,
+    "p4pf_inliers": 44,
+    "p4pf_focal_px": 1262.6789031878263,
+    "p4pf_reproj_px": 3.7786301157364166
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_0_wide_30x.jpg",
+    "num_features": 86,
+    "p4pf_inliers": 13,
+    "p4pf_focal_px": 1596.6938372921609,
+    "p4pf_reproj_px": 5.3402928170338715
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_0_wide_40x.jpg",
+    "num_features": 87,
+    "p4pf_inliers": 12,
+    "p4pf_focal_px": 3043.8243799234738,
+    "p4pf_reproj_px": 3.3889045285555683
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_1_normal_125x.jpg",
+    "num_features": 96,
+    "p4pf_inliers": 42,
+    "p4pf_focal_px": 1838.8178233793842,
+    "p4pf_reproj_px": 4.3850429877960755
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_1_normal_15x.jpg",
+    "num_features": 87,
+    "p4pf_inliers": 58,
+    "p4pf_focal_px": 2117.5231653178603,
+    "p4pf_reproj_px": 4.433535841661559
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_1_normal_20x.jpg",
+    "num_features": 77,
+    "p4pf_inliers": 60,
+    "p4pf_focal_px": 2829.214818992146,
+    "p4pf_reproj_px": 4.127014206373012
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_1_normal_30x.jpg",
+    "num_features": 48,
+    "p4pf_inliers": 29,
+    "p4pf_focal_px": 4333.1824590331635,
+    "p4pf_reproj_px": 4.193132609232996
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_1_normal_40x.jpg",
+    "num_features": 32,
+    "p4pf_inliers": 17,
+    "p4pf_focal_px": 6008.15196089275,
+    "p4pf_reproj_px": 4.52974460377916
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_1_wide_125x.jpg",
+    "num_features": 91,
+    "p4pf_inliers": 11,
+    "p4pf_focal_px": 942.1176312908149,
+    "p4pf_reproj_px": 3.6128323976177388
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_1_wide_15x.jpg",
+    "num_features": 96,
+    "p4pf_inliers": 29,
+    "p4pf_focal_px": 949.8118581282022,
+    "p4pf_reproj_px": 5.355192053476471
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_1_wide_20x.jpg",
+    "num_features": 102,
+    "p4pf_inliers": 41,
+    "p4pf_focal_px": 1231.7298495314826,
+    "p4pf_reproj_px": 3.8978372371589076
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_1_wide_30x.jpg",
+    "num_features": 92,
+    "p4pf_inliers": 7,
+    "p4pf_focal_px": 7565.641771517881,
+    "p4pf_reproj_px": 3.4895103971369132
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\1_1_wide_40x.jpg",
+    "num_features": 60,
+    "p4pf_inliers": 5,
+    "p4pf_focal_px": 1513.2922573421652,
+    "p4pf_reproj_px": 3.459993224091951
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_0_normal_125x.jpg",
+    "num_features": 88,
+    "p4pf_inliers": 62,
+    "p4pf_focal_px": 1807.8510811279975,
+    "p4pf_reproj_px": 3.5361451835070703
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_0_normal_15x.jpg",
+    "num_features": 61,
+    "p4pf_inliers": 42,
+    "p4pf_focal_px": 2086.616120721127,
+    "p4pf_reproj_px": 3.371360519323004
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_0_normal_20x.jpg",
+    "num_features": 72,
+    "p4pf_inliers": 33,
+    "p4pf_focal_px": 2780.476532416357,
+    "p4pf_reproj_px": 4.07888571153521
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_0_normal_30x.jpg",
+    "num_features": 60,
+    "p4pf_inliers": 24,
+    "p4pf_focal_px": 4774.712523230937,
+    "p4pf_reproj_px": 5.5446438484987794
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_0_normal_40x.jpg",
+    "num_features": 36,
+    "p4pf_inliers": 12,
+    "p4pf_focal_px": 6145.586953446689,
+    "p4pf_reproj_px": 3.528347342181342
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_0_wide_125x.jpg",
+    "num_features": 86,
+    "p4pf_inliers": 20,
+    "p4pf_focal_px": 957.8231931279951,
+    "p4pf_reproj_px": 3.1497986698305724
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_0_wide_15x.jpg",
+    "num_features": 90,
+    "p4pf_inliers": 16,
+    "p4pf_focal_px": 1091.0915382246649,
+    "p4pf_reproj_px": 5.217665051316922
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_0_wide_20x.jpg",
+    "num_features": 106,
+    "p4pf_inliers": 6,
+    "p4pf_focal_px": 1492.6521218447199,
+    "p4pf_reproj_px": 4.80265248867031
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_0_wide_30x.jpg",
+    "num_features": 96,
+    "p4pf_inliers": 19,
+    "p4pf_focal_px": 1519.4714539529061,
+    "p4pf_reproj_px": 4.960968735625742
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_0_wide_40x.jpg",
+    "num_features": 55,
+    "p4pf_inliers": 7,
+    "p4pf_focal_px": 1652.9352647130663,
+    "p4pf_reproj_px": 6.847717524491812
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_1_normal_125x.jpg",
+    "num_features": 35,
+    "p4pf_inliers": 23,
+    "p4pf_focal_px": 1871.5026378834086,
+    "p4pf_reproj_px": 4.884070202879049
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_1_normal_15x.jpg",
+    "num_features": 24,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 2042.5477748818378,
+    "p4pf_reproj_px": 5.049295848680641
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_1_normal_20x.jpg",
+    "num_features": 38,
+    "p4pf_inliers": 16,
+    "p4pf_focal_px": 2753.4931472687786,
+    "p4pf_reproj_px": 4.0309759976235275
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_1_normal_30x.jpg",
+    "num_features": 22,
+    "p4pf_inliers": 4,
+    "p4pf_focal_px": 1833.2491499752982,
+    "p4pf_reproj_px": 1.039619713234893
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_1_normal_40x.jpg",
+    "num_features": 22,
+    "p4pf_inliers": 4,
+    "p4pf_focal_px": 290.6184207337112,
+    "p4pf_reproj_px": 4.912076214853871
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_1_wide_125x.jpg",
+    "num_features": 45,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 979.2066743686478,
+    "p4pf_reproj_px": 4.289409361526646
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_1_wide_15x.jpg",
+    "num_features": 47,
+    "p4pf_inliers": 9,
+    "p4pf_focal_px": 843.7602877405063,
+    "p4pf_reproj_px": 6.13363541317303
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_1_wide_20x.jpg",
+    "num_features": 42,
+    "p4pf_inliers": 5,
+    "p4pf_focal_px": 2233.5794095020246,
+    "p4pf_reproj_px": 3.2423776787153744
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_1_wide_30x.jpg",
+    "num_features": 32,
+    "p4pf_inliers": 5,
+    "p4pf_focal_px": 1490.6768394371013,
+    "p4pf_reproj_px": 1.4602061679714577
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\2_1_wide_40x.jpg",
+    "num_features": 44,
+    "p4pf_inliers": 5,
+    "p4pf_focal_px": 4307.717730487626,
+    "p4pf_reproj_px": 0.7749058691514209
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\4_0_normal_125x.jpg",
+    "num_features": 76,
+    "p4pf_inliers": 60,
+    "p4pf_focal_px": 1765.256959470141,
+    "p4pf_reproj_px": 3.229937600035739
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\4_0_normal_15x.jpg",
+    "num_features": 52,
+    "p4pf_inliers": 33,
+    "p4pf_focal_px": 2107.394482060471,
+    "p4pf_reproj_px": 3.840342928803799
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\4_0_normal_20x.jpg",
+    "num_features": 61,
+    "p4pf_inliers": 41,
+    "p4pf_focal_px": 2856.087488309787,
+    "p4pf_reproj_px": 4.016041540810226
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\4_0_normal_30x.jpg",
+    "num_features": 56,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 4758.325723083247,
+    "p4pf_reproj_px": 5.574716540905304
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\4_0_normal_40x.jpg",
+    "num_features": 39,
+    "p4pf_inliers": 9,
+    "p4pf_focal_px": 5646.011997515072,
+    "p4pf_reproj_px": 3.1225430342442713
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\4_0_wide_125x.jpg",
+    "num_features": 72,
+    "p4pf_inliers": 20,
+    "p4pf_focal_px": 772.7097547896494,
+    "p4pf_reproj_px": 4.034599279844929
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\4_0_wide_15x.jpg",
+    "num_features": 72,
+    "p4pf_inliers": 33,
+    "p4pf_focal_px": 875.4869220923555,
+    "p4pf_reproj_px": 2.9144154328282017
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\4_0_wide_20x.jpg",
+    "num_features": 77,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 1049.170880859208,
+    "p4pf_reproj_px": 5.035784244598085
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\4_0_wide_30x.jpg",
+    "num_features": 80,
+    "p4pf_inliers": 6,
+    "p4pf_focal_px": 1921.1824536934828,
+    "p4pf_reproj_px": 1.2434399129062061
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\4_0_wide_40x.jpg",
+    "num_features": 73,
+    "p4pf_inliers": 7,
+    "p4pf_focal_px": 2393.680964706548,
+    "p4pf_reproj_px": 3.732144496526427
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_0_normal_125x.jpg",
+    "num_features": 93,
+    "p4pf_inliers": 54,
+    "p4pf_focal_px": 1787.673494363888,
+    "p4pf_reproj_px": 5.145532872685439
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_0_normal_15x.jpg",
+    "num_features": 66,
+    "p4pf_inliers": 35,
+    "p4pf_focal_px": 1987.4316370986307,
+    "p4pf_reproj_px": 4.965318787292733
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_0_normal_20x.jpg",
+    "num_features": 53,
+    "p4pf_inliers": 20,
+    "p4pf_focal_px": 2681.9818323673485,
+    "p4pf_reproj_px": 3.7062948773281432
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_0_normal_30x.jpg",
+    "num_features": 50,
+    "p4pf_inliers": 16,
+    "p4pf_focal_px": 4306.92714730093,
+    "p4pf_reproj_px": 6.269144283940174
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_0_normal_40x.jpg",
+    "num_features": 37,
+    "p4pf_inliers": 10,
+    "p4pf_focal_px": 5978.663700650943,
+    "p4pf_reproj_px": 3.5194196535079016
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_0_wide_125x.jpg",
+    "num_features": 101,
+    "p4pf_inliers": 13,
+    "p4pf_focal_px": 1141.965962785945,
+    "p4pf_reproj_px": 4.105424930668881
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_0_wide_15x.jpg",
+    "num_features": 106,
+    "p4pf_inliers": 11,
+    "p4pf_focal_px": 588.1316968925655,
+    "p4pf_reproj_px": 4.786015317838564
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_0_wide_20x.jpg",
+    "num_features": 113,
+    "p4pf_inliers": 12,
+    "p4pf_focal_px": 1525.1057700844963,
+    "p4pf_reproj_px": 3.506114231762143
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_0_wide_30x.jpg",
+    "num_features": 90,
+    "p4pf_inliers": 6,
+    "p4pf_focal_px": 1841.1552793526334,
+    "p4pf_reproj_px": 1.2255598037835553
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_0_wide_40x.jpg",
+    "num_features": 62,
+    "p4pf_inliers": 5,
+    "p4pf_focal_px": 2369.4255489760326,
+    "p4pf_reproj_px": 3.036631653527385
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_1_normal_125x.jpg",
+    "num_features": 78,
+    "p4pf_inliers": 47,
+    "p4pf_focal_px": 1735.7260624656415,
+    "p4pf_reproj_px": 4.865762740097164
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_1_normal_15x.jpg",
+    "num_features": 64,
+    "p4pf_inliers": 45,
+    "p4pf_focal_px": 2106.382054274586,
+    "p4pf_reproj_px": 3.8968867099080833
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_1_normal_20x.jpg",
+    "num_features": 82,
+    "p4pf_inliers": 50,
+    "p4pf_focal_px": 2851.35219323372,
+    "p4pf_reproj_px": 4.372934785682622
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_1_normal_30x.jpg",
+    "num_features": 61,
+    "p4pf_inliers": 23,
+    "p4pf_focal_px": 4048.644918411246,
+    "p4pf_reproj_px": 3.7159445667105495
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_1_normal_40x.jpg",
+    "num_features": 25,
+    "p4pf_inliers": 9,
+    "p4pf_focal_px": 4736.445690423434,
+    "p4pf_reproj_px": 5.037601271057794
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_1_wide_125x.jpg",
+    "num_features": 85,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 1534.093135980832,
+    "p4pf_reproj_px": 1.8522976179121935
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_1_wide_15x.jpg",
+    "num_features": 85,
+    "p4pf_inliers": 10,
+    "p4pf_focal_px": 991.5669026254736,
+    "p4pf_reproj_px": 5.64387442171639
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_1_wide_20x.jpg",
+    "num_features": 80,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 1207.2439542139232,
+    "p4pf_reproj_px": 4.415855715384051
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_1_wide_30x.jpg",
+    "num_features": 77,
+    "p4pf_inliers": 10,
+    "p4pf_focal_px": 1331.4577451264552,
+    "p4pf_reproj_px": 4.635823721432093
+  },
+  {
+    "floor": "floor5",
+    "image": "evidence\\images_compare_web\\transforms\\zoom\\5_1_wide_40x.jpg",
+    "num_features": 78,
+    "p4pf_inliers": 16,
+    "p4pf_focal_px": 2862.3466724512723,
+    "p4pf_reproj_px": 2.800280852969081
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f00106.jpg",
+    "num_features": 25,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 927.24830899115,
+    "p4pf_reproj_px": 5.0136540202915185
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f00409.jpg",
+    "num_features": 41,
+    "p4pf_inliers": 32,
+    "p4pf_focal_px": 945.1225926445654,
+    "p4pf_reproj_px": 3.560702362619131
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f00434.jpg",
+    "num_features": 39,
+    "p4pf_inliers": 31,
+    "p4pf_focal_px": 906.7556558843595,
+    "p4pf_reproj_px": 3.437458440581129
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f00488.jpg",
+    "num_features": 39,
+    "p4pf_inliers": 35,
+    "p4pf_focal_px": 918.7234084895556,
+    "p4pf_reproj_px": 2.396412414131256
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f00520.jpg",
+    "num_features": 47,
+    "p4pf_inliers": 32,
+    "p4pf_focal_px": 910.2795782888763,
+    "p4pf_reproj_px": 3.959223986404356
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f00711.jpg",
+    "num_features": 39,
+    "p4pf_inliers": 32,
+    "p4pf_focal_px": 871.2110673817747,
+    "p4pf_reproj_px": 3.939160726598172
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f00750.jpg",
+    "num_features": 42,
+    "p4pf_inliers": 34,
+    "p4pf_focal_px": 917.829666342472,
+    "p4pf_reproj_px": 3.1496760221733435
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f01139.jpg",
+    "num_features": 31,
+    "p4pf_inliers": 17,
+    "p4pf_focal_px": 879.1755677742583,
+    "p4pf_reproj_px": 5.00946888030627
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f01291.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 32,
+    "p4pf_focal_px": 938.2956107028672,
+    "p4pf_reproj_px": 3.409817859657651
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f01307.jpg",
+    "num_features": 64,
+    "p4pf_inliers": 59,
+    "p4pf_focal_px": 897.1281542860182,
+    "p4pf_reproj_px": 2.6054298613715687
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f01424.jpg",
+    "num_features": 50,
+    "p4pf_inliers": 39,
+    "p4pf_focal_px": 924.6032658851061,
+    "p4pf_reproj_px": 3.4616091718512143
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f01519.jpg",
+    "num_features": 59,
+    "p4pf_inliers": 26,
+    "p4pf_focal_px": 961.4159271077892,
+    "p4pf_reproj_px": 3.466652139963636
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f01535.jpg",
+    "num_features": 56,
+    "p4pf_inliers": 34,
+    "p4pf_focal_px": 915.1561412738298,
+    "p4pf_reproj_px": 4.366243673236166
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f01584.jpg",
+    "num_features": 52,
+    "p4pf_inliers": 41,
+    "p4pf_focal_px": 921.266241726957,
+    "p4pf_reproj_px": 3.680117116760074
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f01674.jpg",
+    "num_features": 39,
+    "p4pf_inliers": 30,
+    "p4pf_focal_px": 861.3268465980243,
+    "p4pf_reproj_px": 4.795492238447409
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f01679.jpg",
+    "num_features": 38,
+    "p4pf_inliers": 30,
+    "p4pf_focal_px": 918.7313437339224,
+    "p4pf_reproj_px": 4.001202383027794
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f01824.jpg",
+    "num_features": 26,
+    "p4pf_inliers": 11,
+    "p4pf_focal_px": 880.3130371568028,
+    "p4pf_reproj_px": 4.545375843325458
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f02045.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 31,
+    "p4pf_focal_px": 930.2553295691105,
+    "p4pf_reproj_px": 3.138399156990104
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f02286.jpg",
+    "num_features": 48,
+    "p4pf_inliers": 36,
+    "p4pf_focal_px": 920.4274846903851,
+    "p4pf_reproj_px": 3.0596605454490478
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f02547.jpg",
+    "num_features": 31,
+    "p4pf_inliers": 23,
+    "p4pf_focal_px": 918.3632262306737,
+    "p4pf_reproj_px": 3.131708914948151
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f02615.jpg",
+    "num_features": 43,
+    "p4pf_inliers": 35,
+    "p4pf_focal_px": 855.8794629105635,
+    "p4pf_reproj_px": 3.684154981345335
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f03150.jpg",
+    "num_features": 58,
+    "p4pf_inliers": 47,
+    "p4pf_focal_px": 923.188130994514,
+    "p4pf_reproj_px": 3.862038144340147
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f03257.jpg",
+    "num_features": 71,
+    "p4pf_inliers": 65,
+    "p4pf_focal_px": 902.6208925436599,
+    "p4pf_reproj_px": 3.8435657470146256
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f03527.jpg",
+    "num_features": 52,
+    "p4pf_inliers": 48,
+    "p4pf_focal_px": 904.616723129549,
+    "p4pf_reproj_px": 2.964808908278509
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f03582.jpg",
+    "num_features": 42,
+    "p4pf_inliers": 38,
+    "p4pf_focal_px": 875.5720941590914,
+    "p4pf_reproj_px": 3.9316853338523856
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f03611.jpg",
+    "num_features": 36,
+    "p4pf_inliers": 29,
+    "p4pf_focal_px": 912.6525335738046,
+    "p4pf_reproj_px": 3.187345629974519
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f03657.jpg",
+    "num_features": 32,
+    "p4pf_inliers": 24,
+    "p4pf_focal_px": 955.3597039446163,
+    "p4pf_reproj_px": 3.9682812646573233
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f03733.jpg",
+    "num_features": 51,
+    "p4pf_inliers": 44,
+    "p4pf_focal_px": 916.7011475990746,
+    "p4pf_reproj_px": 3.341526058452895
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f03811.jpg",
+    "num_features": 49,
+    "p4pf_inliers": 40,
+    "p4pf_focal_px": 914.4070595286462,
+    "p4pf_reproj_px": 2.4055907912316554
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f03814.jpg",
+    "num_features": 46,
+    "p4pf_inliers": 37,
+    "p4pf_focal_px": 911.5458425714733,
+    "p4pf_reproj_px": 3.581833165696506
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f04012.jpg",
+    "num_features": 50,
+    "p4pf_inliers": 40,
+    "p4pf_focal_px": 928.9124342583069,
+    "p4pf_reproj_px": 3.612809009112152
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f04333.jpg",
+    "num_features": 73,
+    "p4pf_inliers": 58,
+    "p4pf_focal_px": 921.1680591923166,
+    "p4pf_reproj_px": 3.44850080262058
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f04506.jpg",
+    "num_features": 29,
+    "p4pf_inliers": 24,
+    "p4pf_focal_px": 931.0443299928673,
+    "p4pf_reproj_px": 4.402562286875412
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f04552.jpg",
+    "num_features": 33,
+    "p4pf_inliers": 20,
+    "p4pf_focal_px": 939.6671310844879,
+    "p4pf_reproj_px": 3.6130048258983027
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f04557.jpg",
+    "num_features": 37,
+    "p4pf_inliers": 27,
+    "p4pf_focal_px": 893.624416624906,
+    "p4pf_reproj_px": 3.3063616612762066
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f04741.jpg",
+    "num_features": 21,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 820.0168884541099,
+    "p4pf_reproj_px": 3.6740120146713604
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f04803.jpg",
+    "num_features": 34,
+    "p4pf_inliers": 17,
+    "p4pf_focal_px": 936.308678794838,
+    "p4pf_reproj_px": 4.445325425255756
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f05514.jpg",
+    "num_features": 23,
+    "p4pf_inliers": 10,
+    "p4pf_focal_px": 891.1662501244496,
+    "p4pf_reproj_px": 3.4532148171013106
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f05574.jpg",
+    "num_features": 21,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 1121.1452744782816,
+    "p4pf_reproj_px": 3.9073281283682895
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f05635.jpg",
+    "num_features": 18,
+    "p4pf_inliers": 6,
+    "p4pf_focal_px": 802.2140049578302,
+    "p4pf_reproj_px": 2.944095112937734
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f05881.jpg",
+    "num_features": 29,
+    "p4pf_inliers": 26,
+    "p4pf_focal_px": 934.6661627970407,
+    "p4pf_reproj_px": 2.758449613998248
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f05925.jpg",
+    "num_features": 49,
+    "p4pf_inliers": 36,
+    "p4pf_focal_px": 902.3304676209358,
+    "p4pf_reproj_px": 4.045263533603425
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f06201.jpg",
+    "num_features": 58,
+    "p4pf_inliers": 39,
+    "p4pf_focal_px": 937.9969877823419,
+    "p4pf_reproj_px": 2.952569382653901
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f06224.jpg",
+    "num_features": 56,
+    "p4pf_inliers": 33,
+    "p4pf_focal_px": 871.2595896821174,
+    "p4pf_reproj_px": 4.243112660732616
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f06873.jpg",
+    "num_features": 30,
+    "p4pf_inliers": 29,
+    "p4pf_focal_px": 914.3716980331436,
+    "p4pf_reproj_px": 4.6354236047784845
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f06912.jpg",
+    "num_features": 28,
+    "p4pf_inliers": 17,
+    "p4pf_focal_px": 933.6123674572492,
+    "p4pf_reproj_px": 4.172273207166611
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f06924.jpg",
+    "num_features": 20,
+    "p4pf_inliers": 15,
+    "p4pf_focal_px": 935.1464137782634,
+    "p4pf_reproj_px": 4.990660016934635
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f07359.jpg",
+    "num_features": 39,
+    "p4pf_inliers": 36,
+    "p4pf_focal_px": 911.5201504113576,
+    "p4pf_reproj_px": 3.4871325936036635
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f07527.jpg",
+    "num_features": 9,
+    "p4pf_inliers": 4,
+    "p4pf_focal_px": 184.45314088803218,
+    "p4pf_reproj_px": 6.700270132207286
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f08279.jpg",
+    "num_features": 18,
+    "p4pf_inliers": 14,
+    "p4pf_focal_px": 917.3925044207753,
+    "p4pf_reproj_px": 3.423542023637389
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f08785.jpg",
+    "num_features": 35,
+    "p4pf_inliers": 5,
+    "p4pf_focal_px": 682.5260748003882,
+    "p4pf_reproj_px": 6.078532297298549
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f08928.jpg",
+    "num_features": 13,
+    "p4pf_inliers": 8,
+    "p4pf_focal_px": 908.0648100290819,
+    "p4pf_reproj_px": 3.0376668372846303
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f08935.jpg",
+    "num_features": 4,
+    "p4pf_inliers": 0,
+    "p4pf_focal_px": 22.915794783950087,
+    "p4pf_reproj_px": Infinity
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f09044.jpg",
+    "num_features": 48,
+    "p4pf_inliers": 33,
+    "p4pf_focal_px": 935.9777177218651,
+    "p4pf_reproj_px": 4.459747452811685
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f09195.jpg",
+    "num_features": 53,
+    "p4pf_inliers": 42,
+    "p4pf_focal_px": 915.0720505835627,
+    "p4pf_reproj_px": 2.941892283451836
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f09459.jpg",
+    "num_features": 31,
+    "p4pf_inliers": 25,
+    "p4pf_focal_px": 913.1155297244654,
+    "p4pf_reproj_px": 3.1830929031426916
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f09654.jpg",
+    "num_features": 47,
+    "p4pf_inliers": 33,
+    "p4pf_focal_px": 925.470739388895,
+    "p4pf_reproj_px": 4.151985210154777
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f09674.jpg",
+    "num_features": 41,
+    "p4pf_inliers": 33,
+    "p4pf_focal_px": 936.7756203706094,
+    "p4pf_reproj_px": 4.544206918660303
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f09863.jpg",
+    "num_features": 35,
+    "p4pf_inliers": 27,
+    "p4pf_focal_px": 886.5128177460758,
+    "p4pf_reproj_px": 4.614169963693696
+  },
+  {
+    "floor": "floor1",
+    "image": "evidence\\images_compare_web\\iphone11\\frames\\f09891.jpg",
+    "num_features": 40,
+    "p4pf_inliers": 28,
+    "p4pf_focal_px": 900.7565574987414,
+    "p4pf_reproj_px": 2.5679036600164444
+  }
+]

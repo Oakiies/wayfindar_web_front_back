@@ -1,0 +1,94 @@
+{
+  "checks": {
+    "backend_ready_before_camera": true,
+    "all_seed_results_arrive_after_source": true,
+    "all_seed_wall_times_after_source": true,
+    "all_calibration_evidence_is_past": true,
+    "all_rendered_frames_have_no_negative_latency": true
+  },
+  "all_pass": true,
+  "longest_pose_gaps": [
+    {
+      "start_s": 3.1666666666666665,
+      "end_s": 4.333333333333333,
+      "duration_s": 1.1666666666666665
+    },
+    {
+      "start_s": 7.266666666666667,
+      "end_s": 8.2,
+      "duration_s": 0.9333333333333327
+    },
+    {
+      "start_s": 0.0,
+      "end_s": 0.4666666666666667,
+      "duration_s": 0.4666666666666667
+    },
+    {
+      "start_s": 5.0,
+      "end_s": 5.166666666666667,
+      "duration_s": 0.16666666666666696
+    },
+    {
+      "start_s": 7.066666666666666,
+      "end_s": 7.166666666666667,
+      "duration_s": 0.10000000000000053
+    },
+    {
+      "start_s": 6.366666666666666,
+      "end_s": 6.4,
+      "duration_s": 0.0333333333333341
+    },
+    {
+      "start_s": 2.8666666666666667,
+      "end_s": 2.9,
+      "duration_s": 0.033333333333333215
+    },
+    {
+      "start_s": 6.066666666666666,
+      "end_s": 6.1,
+      "duration_s": 0.033333333333333215
+    }
+  ],
+  "longest_visible_ar_gaps": [
+    {
+      "start_s": 3.1333333333333333,
+      "end_s": 6.9,
+      "duration_s": 3.766666666666667
+    },
+    {
+      "start_s": 0.0,
+      "end_s": 2.2333333333333334,
+      "duration_s": 2.2333333333333334
+    },
+    {
+      "start_s": 7.266666666666667,
+      "end_s": 8.2,
+      "duration_s": 0.9333333333333327
+    },
+    {
+      "start_s": 2.2666666666666666,
+      "end_s": 2.4,
+      "duration_s": 0.1333333333333333
+    },
+    {
+      "start_s": 7.066666666666666,
+      "end_s": 7.166666666666667,
+      "duration_s": 0.10000000000000053
+    },
+    {
+      "start_s": 2.8333333333333335,
+      "end_s": 2.9,
+      "duration_s": 0.06666666666666643
+    },
+    {
+      "start_s": 2.933333333333333,
+      "end_s": 2.966666666666667,
+      "duration_s": 0.03333333333333366
+    },
+    {
+      "start_s": 2.7666666666666666,
+      "end_s": 2.8,
+      "duration_s": 0.033333333333333215
+    }
+  ]
+}

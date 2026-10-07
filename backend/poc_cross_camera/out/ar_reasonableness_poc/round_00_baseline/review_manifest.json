@@ -1,0 +1,232 @@
+[
+  {
+    "timestamp": 7.5,
+    "scope": "primary",
+    "route_state": "unknown",
+    "nav_text": null,
+    "method": null,
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 10.0,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 15.0,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 19.5,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 25.0,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 30.0,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 32.2,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 35.0,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 40.0,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 44.2,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 49.5,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 54.0,
+    "scope": "primary",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 55.5,
+    "scope": "primary",
+    "route_state": "arrived",
+    "nav_text": "YOU HAVE ARRIVED",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 58.5,
+    "scope": "primary",
+    "route_state": "arrived",
+    "nav_text": "YOU HAVE ARRIVED",
+    "method": "HOLD_LAST_FIX",
+    "hold_age": 1.5016666666666652,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 90.0,
+    "scope": "stress_only",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 96.0,
+    "scope": "stress_only",
+    "route_state": "turn:1:338.0:312.0",
+    "nav_text": "TURN RIGHT",
+    "method": "HOLD_LAST_FIX",
+    "hold_age": 1.5,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 108.0,
+    "scope": "stress_only",
+    "route_state": "turn:1:338.0:312.0",
+    "nav_text": "GO STRAIGHT",
+    "method": "HOLD_LAST_FIX",
+    "hold_age": 1.5,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 112.0,
+    "scope": "stress_only",
+    "route_state": "turn:-1:250.0:446.0",
+    "nav_text": "TURN LEFT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 116.0,
+    "scope": "stress_only",
+    "route_state": "turn:-1:250.0:446.0",
+    "nav_text": "TURN LEFT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 130.0,
+    "scope": "stress_only",
+    "route_state": "turn:-1:250.0:446.0",
+    "nav_text": "TURN LEFT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 147.0,
+    "scope": "stress_only",
+    "route_state": "turn:1:250.0:312.0",
+    "nav_text": "TURN RIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 155.0,
+    "scope": "stress_only",
+    "route_state": "turn:1:250.0:312.0",
+    "nav_text": "TURN RIGHT",
+    "method": "HOLD_LAST_FIX",
+    "hold_age": 3.0016666666666936,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  },
+  {
+    "timestamp": 169.9,
+    "scope": "stress_only",
+    "route_state": "straight",
+    "nav_text": "GO STRAIGHT",
+    "method": "PnP",
+    "hold_age": null,
+    "expected_review": "Check walkable direction, wall crossing, stale turn and registration",
+    "human_label": null
+  }
+]

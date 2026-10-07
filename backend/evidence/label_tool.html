@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Label: เลนส์ปกติ vs เลนส์กว้าง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&family=Noto+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  /*
+    Standalone labeling tool for the normal-lens-vs-wide-lens comparison.
+    Adapts the point_group idea already used by visualize/apps/align-tool's
+    Label tab (1 image = 1 row, point_group links rows taken at the same
+    physical spot) — here one point_group holds up to 4 images (normal/wide
+    x forward/backward) that all share ONE ground-truth x_px,y_px.
+    No server needed: open this file directly, pick the image folder,
+    label on the floor plan, export ground_truth-style CSV/JSON.
+  */
+  /* ============================================================
+     Same design tokens as visualize/apps/align-tool/client-v2 —
+     copied 1:1 from its src/index.css so this standalone tool reads
+     as the same product as the real Label tab, not a different app.
+     Light by default, dark override guarded the same two ways.
+     ============================================================ */
+  @layer tokens, base, alias, layout, components;
+  @layer tokens {
+    :root {
+      --color-bg: #f4f6f5; --color-bg-warm: #eff3f1; --color-surface: #ffffff; --color-surface-2: #edf1ef;
+      --color-border: #e2e7e5; --color-border-2: #cfd8d5;
+      --color-ink: #10201b; --color-ink-2: #4e5d57; --color-muted: #8b9a93;
+      --color-accent: #c08a22; --color-accent-hover: #a5741a; --color-accent-soft: #fbf1dc; --color-on-accent: #14100a;
+      --color-marker: #8b5cf6; --color-marker-soft: #f1ecfe;
+      --color-ok: #1f9d6c; --color-warn: #d9932a; --color-error: #e4544f;
+      --color-canvas-bg: #eaf0ee; --color-canvas-ink: #16112f;
+      --radius-card: 18px; --radius-ctrl: 10px; --radius-pill: 999px;
+      --shadow-xs: 0 1px 2px rgba(16,24,22,.05); --shadow-sm: 0 2px 10px -3px rgba(16,24,22,.1);
+      --shadow-md: 0 10px 28px -10px rgba(16,24,22,.16);
+      --ease-out: cubic-bezier(.22,.61,.36,1);
+      --font-sans: "Plus Jakarta Sans", "Noto Sans Thai", ui-sans-serif, system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    }
+    :root[data-theme="dark"] {
+      --color-bg: #0b0f0e; --color-bg-warm: #0e1512; --color-surface: #151b19; --color-surface-2: #1c2422;
+      --color-border: rgba(255,255,255,.08); --color-border-2: rgba(255,255,255,.14);
+      --color-ink: #eff5f2; --color-ink-2: #b7c2bd; --color-muted: #7e8b85;
+      --color-accent: #e3b24c; --color-accent-hover: #f0c066; --color-accent-soft: rgba(227,178,76,.14); --color-on-accent: #1a1406;
+      --color-marker: #a78bfa; --color-marker-soft: rgba(167,139,250,.16);
+      --color-ok: #34c98a; --color-warn: #f0b94e; --color-error: #ff6b67;
+      --color-canvas-bg: #0a0f0d; --color-canvas-ink: #ffffff;
+      --shadow-md: 0 10px 28px -10px rgba(0,0,0,.55);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --color-bg: #0b0f0e; --color-bg-warm: #0e1512; --color-surface: #151b19; --color-surface-2: #1c2422;
+        --color-border: rgba(255,255,255,.08); --color-border-2: rgba(255,255,255,.14);
+        --color-ink: #eff5f2; --color-ink-2: #b7c2bd; --color-muted: #7e8b85;
+        --color-accent: #e3b24c; --color-accent-hover: #f0c066; --color-accent-soft: rgba(227,178,76,.14); --color-on-accent: #1a1406;
+        --color-marker: #a78bfa; --color-marker-soft: rgba(167,139,250,.16);
+        --color-ok: #34c98a; --color-warn: #f0b94e; --color-error: #ff6b67;
+        --color-canvas-bg: #0a0f0d; --color-canvas-ink: #ffffff;
+        --shadow-md: 0 10px 28px -10px rgba(0,0,0,.55);
+      }
+    }
+  }
+  /* This tool's own names, aliased onto the tokens above — everything below
+     keeps using --page/--surface/--normal/etc. unchanged; only this block
+     would need to move if the source palette is restyled again. */
+  @layer alias {
+    :root {
+      color-scheme: light;
+      --page: var(--color-bg); --surface: var(--color-surface); --surface-2: var(--color-surface-2);
+      --ink: var(--color-ink); --ink-2: var(--color-ink-2); --muted: var(--color-muted);
+      --ring: var(--color-border); --grid: var(--color-border-2);
+      --normal: var(--color-accent); --normal-soft: var(--color-accent-soft); --on-normal: var(--color-on-accent);
+      --wide: var(--color-marker); --wide-soft: var(--color-marker-soft);
+      --good: var(--color-ok); --warn: var(--color-warn); --bad: var(--color-error);
+    }
+    :root[data-theme="dark"] { color-scheme: dark; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; } }
+  }
+
+  @layer base {
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; background: var(--page); color: var(--ink); overflow: hidden;
+           font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+    button, select, input { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--normal); outline-offset: 1px; }
+    code { font-family: var(--font-mono); }
+  }
+
+  @layer layout {
+    body { padding: 18px; }
+    .page { display: flex; flex-direction: column; gap: 12px; height: calc(100vh - 36px); }
+    .topbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .titleblock h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+    .titleblock .subtitle { margin: 4px 0 0; font-size: 12.5px; color: var(--ink-2); }
+    .controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .controls select { background: var(--surface); border: 1px solid var(--color-border-2); border-radius: var(--radius-ctrl);
+                        padding: 8px 11px; font-size: 13px; }
+    .controls select:focus-visible { border-color: var(--normal); outline: none; }
+
+    .grid3 { display: grid; grid-template-columns: 260px 1fr 340px; gap: 12px; flex: 1; min-height: 0; }
+    .card { background: var(--surface); border-radius: var(--radius-card); box-shadow: var(--shadow-sm); min-height: 0; }
+    :root[data-theme="dark"] .card { border: 1px solid var(--color-border); }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .card { border: 1px solid var(--color-border); } }
+
+    .pool { display: flex; flex-direction: column; }
+    .stage { position: relative; overflow: hidden; }
+    .points { display: flex; flex-direction: column; }
+
+    @media (max-width: 980px) { .grid3 { grid-template-columns: 1fr; } .stage { min-height: 360px; } }
+  }
+
+  @layer components {
+    .btn { background: transparent; border: 1px solid var(--color-border-2); border-radius: var(--radius-pill);
+           color: var(--ink); padding: 8px 14px; font-size: 13px; transition: background-color 150ms var(--ease-out); }
+    .btn:hover { background: var(--surface-2); }
+    .btn.primary { background: var(--normal); border-color: transparent; color: var(--on-normal); font-weight: 600;
+                   transition: transform 150ms var(--ease-out), background-color 150ms var(--ease-out); }
+    .btn.primary:hover { background: var(--color-accent-hover); transform: translateY(-1px); }
+    .btn:disabled { opacity: .4; cursor: default; transform: none; }
+    .count-pill { font-size: 12px; color: var(--ink-2); background: var(--surface-2); border-radius: var(--radius-pill); padding: 6px 12px; }
+
+    .pool h2, .points h2 { font-size: 11.5px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted);
+                            font-weight: 700; margin: 0; padding: 14px 16px 8px; }
+    .pool-hint { padding: 0 16px 8px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .pool-filter { display: flex; gap: 4px; padding: 0 16px 10px; }
+    .pool-filter button { flex: 1; background: var(--surface-2); border: 1px solid var(--color-border-2); color: var(--ink-2);
+                           border-radius: var(--radius-pill); padding: 6px 4px; font-size: 11px; }
+    .pool-filter button.on { background: var(--normal); color: var(--on-normal); border-color: transparent; font-weight: 600; }
+    .thumb .dset { position: absolute; bottom: 4px; right: 4px; font-size: 8px; font-weight: 700; color: var(--on-normal);
+                   border-radius: 4px; padding: 1px 5px; }
+    .thumb .dset.normal { background: var(--normal); color: var(--on-normal); }
+    .thumb .dset.wide { background: var(--wide); color: #fff; }
+    .pool-grid { flex: 1; overflow-y: auto; padding: 0 12px 8px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; align-content: start; }
+    .thumb { position: relative; border-radius: var(--radius-ctrl); overflow: hidden; background: var(--surface-2); cursor: pointer;
+             border: 2px solid transparent; }
+    .thumb img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+    .thumb .name { display: block; font-size: 10px; color: var(--ink-2); padding: 3px 6px; white-space: nowrap;
+                   overflow: hidden; text-overflow: ellipsis; }
+    .thumb.on { border-color: var(--normal); }
+    .thumb .check { position: absolute; top: 4px; left: 4px; width: 16px; height: 16px; border-radius: 5px;
+                    background: rgba(255,255,255,.85); border: 1px solid var(--color-border-2); }
+    .thumb.on .check { background: var(--normal); border-color: var(--normal); }
+    .pool-actions { padding: 10px 16px 16px; border-top: 1px solid var(--ring); }
+
+    svg.map { width: 100%; height: 100%; display: block; cursor: crosshair; background: var(--color-canvas-bg); }
+    svg.map.disarmed { cursor: default; }
+    .hint-bar { position: absolute; left: 12px; bottom: 12px; background: var(--surface); border: 1px solid var(--color-border-2);
+                border-radius: var(--radius-ctrl); box-shadow: var(--shadow-sm); padding: 9px 13px; font-size: 12.5px;
+                color: var(--ink-2); max-width: min(480px, 70%); }
+    .zoom-controls { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 6px; }
+    .zoom-controls button { width: 32px; height: 32px; border-radius: var(--radius-pill); background: var(--surface);
+                             box-shadow: var(--shadow-sm); }
+
+    /* Big preview of the selected point's current photo — the thing the
+       original align-tool Label tab always keeps on screen while you work. */
+    .viewer { flex: none; border-bottom: 1px solid var(--ring); padding: 14px 16px 14px; }
+    .viewer .frame { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: var(--radius-ctrl); overflow: hidden;
+                      background: var(--surface-2); display: flex; align-items: center; justify-content: center; }
+    .viewer .frame img { width: 100%; height: 100%; object-fit: cover; }
+    .viewer .frame .empty-note { color: var(--muted); font-size: 12.5px; padding: 0 16px; text-align: center; }
+    .viewer .imgnav { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between;
+                       padding: 0 6px; pointer-events: none; }
+    .viewer .imgnav button { pointer-events: auto; width: 26px; height: 26px; border-radius: var(--radius-pill); border: 0;
+                              background: rgba(16,32,27,.55); color: #fff; font-size: 14px; }
+    .viewer .imgnav button:disabled { opacity: .25; }
+    .viewer .cap { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: var(--ink-2); }
+    .viewer .cap .lens-pill { font-weight: 700; border-radius: 5px; padding: 2px 7px; font-size: 10px; }
+    .viewer .cap .lens-pill.normal { background: var(--normal-soft); color: var(--color-accent-hover); }
+    .viewer .cap .lens-pill.wide { background: var(--wide-soft); color: var(--wide); }
+    .viewer .cap .fname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pointnav { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+    .pointnav button { width: 26px; height: 26px; border-radius: var(--radius-pill); border: 1px solid var(--color-border-2);
+                        background: var(--surface); color: var(--ink); }
+    .pointnav button:hover:not(:disabled) { background: var(--surface-2); }
+    .pointnav button:disabled { opacity: .3; }
+    .pointnav .n { font-size: 12px; color: var(--ink-2); min-width: 84px; text-align: center; font-family: var(--font-mono); }
+    .heading-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    .heading-row .lbl { font-size: 11.5px; color: var(--muted); }
+    .heading-row .deg { font: 600 12.5px var(--font-mono); color: var(--ink); flex: 1; text-align: center; }
+    .heading-row button { width: 26px; height: 26px; border-radius: var(--radius-pill); border: 1px solid var(--color-border-2);
+                           background: var(--surface); color: var(--ink); font-size: 11px; }
+    .heading-row button:hover { background: var(--surface-2); }
+    .heading-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+    .points-list { flex: 1; overflow-y: auto; padding: 4px 12px 12px; }
+    .point-card { border: 1px solid var(--color-border-2); border-radius: var(--radius-ctrl); padding: 11px;
+                  margin-bottom: 8px; background: var(--surface); box-shadow: var(--shadow-xs); }
+    .point-card.armed { border-color: var(--normal); box-shadow: 0 0 0 2px var(--normal-soft); }
+    .point-card.selected { background: var(--surface-2); }
+    .point-card .row1 { display: flex; align-items: center; gap: 8px; }
+    .point-card .pid { font: 600 12.5px/1 var(--font-mono); color: var(--ink-2); }
+    .point-card .sp { flex: 1; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+    .status-dot.ok { background: var(--good); }
+    .status-dot.warn { background: var(--warn); }
+    .icon-btn { background: transparent; border: 0; color: var(--muted); font-size: 15px; padding: 3px 6px; border-radius: 7px; }
+    .icon-btn:hover { background: var(--surface-2); color: var(--ink); }
+    .point-card .imgs { display: flex; gap: 6px; margin: 9px 0; flex-wrap: wrap; }
+    .pimg { position: relative; width: 56px; }
+    .pimg img { width: 56px; height: 42px; object-fit: cover; border-radius: 7px; display: block; }
+    .pimg-empty { width: 56px; height: 42px; border-radius: 7px; background: var(--surface-2); color: var(--muted);
+                   display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: default; }
+    .pimg .tag { display: flex; gap: 2px; margin-top: 3px; }
+    .lens-chip, .dir-chip { flex: 1; border: 0; border-radius: 5px; font-size: 9px; padding: 2px 0; font-weight: 700; }
+    .lens-chip.normal { background: var(--normal-soft); color: var(--color-accent-hover); }
+    .lens-chip.wide { background: var(--wide-soft); color: var(--wide); }
+    .lens-chip.unset { background: var(--surface-2); color: var(--muted); }
+    .dir-chip { background: var(--surface-2); color: var(--ink-2); }
+    .pimg .rm { position: absolute; top: -4px; right: -4px; width: 15px; height: 15px; border-radius: 50%; background: var(--bad);
+                color: #fff; border: 0; font-size: 10px; line-height: 15px; padding: 0; }
+    .point-card input[type=text] { width: 100%; background: var(--page); border: 1px solid var(--color-border-2);
+                                    border-radius: var(--radius-ctrl); padding: 6px 9px; font-size: 12px; margin-top: 5px; }
+    .point-card input[type=text]:focus-visible { border-color: var(--normal); outline: none; }
+    .point-card .xy { font-size: 12px; color: var(--ink-2); margin-top: 7px; }
+    .point-card .xy b { color: var(--ink); font-family: var(--font-mono); }
+    .point-card .place-btn { width: 100%; margin-top: 7px; padding: 7px; border-radius: var(--radius-pill);
+                              border: 1px dashed var(--color-border-2); background: transparent; color: var(--ink-2); font-size: 12px; }
+    .point-card .place-btn.armed { border-color: var(--normal); color: var(--normal); border-style: solid; background: var(--normal-soft); }
+    .export-bar { padding: 12px 16px; border-top: 1px solid var(--ring); display: grid; gap: 6px; }
+    .empty { padding: 24px 14px; color: var(--muted); font-size: 13px; text-align: center; }
+    input[type=file] { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <div class="titleblock">
+      <h1>ติดป้ายตำแหน่ง — เลนส์ปกติ vs เลนส์กว้าง</h1>
+      <p class="subtitle" id="subtitle">คลิกบนผังชั้นเพื่อวางตำแหน่งจริงของจุด แล้วลากลูกศรเพื่อกำหนดทิศ</p>
+    </div>
+    <div class="controls">
+      <select id="floorSelect"></select>
+      <button class="btn" id="loadFolderBtn">📁 โหลดโฟลเดอร์ภาพ</button>
+      <input type="file" id="folderInput" webkitdirectory multiple />
+      <button class="btn" id="importBtn">⇪ นำเข้า session</button>
+      <input type="file" id="importInput" accept="application/json" />
+      <span class="count-pill" id="statusPill"></span>
+      <button class="btn primary" id="exportCsvBtn">↓ Export CSV</button>
+      <button class="btn" id="exportJsonBtn">↓ Export JSON</button>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card pool">
+      <h2>ภาพที่ยังไม่จัดกลุ่ม</h2>
+      <p class="pool-hint" id="poolHint">โฟลเดอร์เริ่มต้น: <code>backend/evidence/label_image/</code> — โหลดโฟลเดอร์ภาพเพื่อเริ่ม
+        ภาพที่จับกลุ่มอัตโนมัติไม่ได้จะมาอยู่ที่นี่ เลือก 2–4 ภาพที่เป็นจุดเดียวกันแล้วกด "สร้างจุดใหม่"</p>
+      <div class="pool-filter" id="poolFilter">
+        <button data-f="all" class="on">ทั้งหมด</button>
+        <button data-f="normal">ชุดเก่า (normal)</button>
+        <button data-f="wide">ชุดใหม่ (wide)</button>
+      </div>
+      <div class="pool-grid" id="poolGrid"></div>
+      <div class="pool-actions">
+        <button class="btn primary" id="makePointBtn" style="width:100%" disabled>สร้างจุดใหม่จากภาพที่เลือก (<span id="selCount">0</span>)</button>
+      </div>
+    </div>
+
+    <div class="card stage">
+      <svg class="map" id="map"></svg>
+      <div class="hint-bar" id="hintBar">เลือกชั้น แล้วโหลดโฟลเดอร์ภาพเพื่อเริ่ม label</div>
+      <div class="zoom-controls">
+        <button class="btn" id="zoomOut">−</button>
+        <button class="btn" id="zoomReset">⤢</button>
+        <button class="btn" id="zoomIn">+</button>
+      </div>
+    </div>
+
+    <div class="card points">
+      <div class="viewer" id="viewer"></div>
+      <h2>จุดที่ label แล้ว (<span id="pointCount">0</span>)</h2>
+      <div class="points-list" id="pointsList"></div>
+      <div class="export-bar">
+        <button class="btn" id="saveSessionBtn">💾 บันทึก session ลงไฟล์</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FLOORS = ["floor1", "floor2", "floor3", "floor4", "floor5", "floor6"];
+const $ = (id) => document.getElementById(id);
+const uid = () => Math.random().toString(36).slice(2, 9);
+
+// dataByFloor[floorId] = { points: [...], nextSeq: 1 }
+// point = { id, seq, x, y, heading, room, notes, images: [{ key, filename, relpath, lens, direction, url, file }] }
+let dataByFloor = {};
+FLOORS.forEach((f) => (dataByFloor[f] = { points: [], nextSeq: 1 }));
+let floor = "floor5";   // has real seeded ground truth (see build_label_preload.py) — sensible default
+let pool = [];              // images loaded but not yet assigned to any point (this session)
+let poolSelected = new Set();
+let poolFilter = "all";     // "all" | "normal" | "wide" — which dataset the pool grid shows
+let armedPointId = null;    // point currently waiting for a map click
+let selectedPointId = null; // point shown in the big preview / heading control
+let viewIndex = 0;          // which of the selected point's images is shown big
+let mapNatural = { w: 500, h: 500 };
+let viewBox = [0, 0, 500, 500];
+
+function cur() { return dataByFloor[floor]; }
+
+// ── filename heuristics ──────────────────────────────────────────────────────
+function baseName(name) { return name.replace(/\.[^.]+$/, ""); }
+function detectLens(name) {
+  if (/wide|ultra[-_ ]?wide|กว้าง/i.test(name)) return "wide";
+  if (/normal|ปกติ/i.test(name)) return "normal";
+  return "";
+}
+function detectDirection(name) {
+  if (/back(ward)?|bwd|return|กลับ/i.test(name)) return "backward";
+  if (/forward|fwd|ไป/i.test(name)) return "forward";
+  return "";
+}
+function stem(name) {
+  return baseName(name)
+    .replace(/[_\-\s]*(ultra[-_ ]?wide|wide|normal|ปกติ|กว้าง)[_\-\s]*/gi, "_")
+    .replace(/[_\-\s]*(backward|forward|bwd|fwd|back|return|ไป|กลับ)[_\-\s]*/gi, "_")
+    .replace(/^_+|_+$/g, "")
+    .toLowerCase();
+}
+
+// ── loading a folder ─────────────────────────────────────────────────────────
+function wrapFile(file) {
+  return {
+    key: file.webkitRelativePath || file.name, filename: file.name,
+    relpath: file.webkitRelativePath || file.name, file, url: URL.createObjectURL(file),
+    lens: detectLens(file.name), direction: detectDirection(file.name),
+  };
+}
+
+function handleFolder(fileList) {
+  const images = [...fileList].filter((f) => /\.(jpe?g|png|webp)$/i.test(f.name));
+  if (!images.length) { alert("ไม่พบไฟล์ภาพในโฟลเดอร์ที่เลือก"); return; }
+  const byBase = new Map(images.map((f) => [f.name.toLowerCase(), f]));
+
+  // 1. Re-link images already referenced by an imported/restored/preloaded point.
+  let linked = 0;
+  for (const p of cur().points) {
+    for (const img of p.images) {
+      if (img.url) continue;
+      const f = byBase.get((img.filename || "").toLowerCase());
+      if (f) { const w = wrapFile(f); Object.assign(img, { url: w.url, file: w.file, relpath: w.relpath }); byBase.delete(img.filename.toLowerCase()); linked++; }
+    }
+  }
+
+  // 2. Attach brand-new files to an EXISTING point of the same physical spot,
+  //    identified by filename stem (e.g. a fresh "p03_wide.jpg" joins the point
+  //    a previously-imported/preloaded "p03_normal_forward.jpg" already made) —
+  //    this is what lets new wide-lens shots land next to their old normal-lens
+  //    twin instead of becoming a disconnected new point.
+  let attached = 0;
+  const stemmedPoints = cur().points.filter((p) => p.stem);
+  for (const [base, f] of [...byBase]) {
+    const s = stem(f.name);
+    if (!s) continue;
+    const target = stemmedPoints.find((p) => s === p.stem || s.startsWith(p.stem + "_") || p.stem.startsWith(s + "_"));
+    if (!target) continue;
+    target.images.push(wrapFile(f));
+    byBase.delete(base);
+    attached++;
+  }
+
+  // 3. Whatever is still left: auto-group by stem into new points, or pool.
+  const rest = [...byBase.values()].map(wrapFile);
+  const groups = new Map();
+  for (const im of rest) {
+    const s = stem(im.filename) || uid();
+    if (!groups.has(s)) groups.set(s, []);
+    groups.get(s).push(im);
+  }
+  let autoCreated = 0;
+  for (const [s, items] of groups) {
+    if (items.length >= 2 && items.length <= 4) { createPoint(items, s); autoCreated++; }
+    else pool.push(...items);
+  }
+  poolSelected.clear();
+  save();
+  renderAll();
+  $("hintBar").textContent = `โหลด ${images.length} ภาพ · จับกลุ่มอัตโนมัติ ${autoCreated} จุดใหม่` +
+    (attached ? ` · ต่อภาพใหม่เข้าจุดเดิม ${attached} ไฟล์` : "") +
+    (linked ? ` · เชื่อมภาพเดิมคืน ${linked} ไฟล์` : "") +
+    (pool.length ? ` · เหลือ ${pool.length} ภาพให้จัดกลุ่มเอง` : "");
+}
+
+function createPoint(images, stemHint) {
+  const seq = cur().nextSeq++;
+  const point = {
+    id: uid(), seq, x: null, y: null, heading: "", room: "", notes: "",
+    stem: stemHint || null,   // lets a later folder-load auto-attach new same-point photos (see handleFolder)
+    images: images.map((im) => ({ ...im })),
+  };
+  cur().points.push(point);
+  save();
+  return point;
+}
+
+// ── point/image navigation (drives the big preview) ────────────────────────────
+function sortedPoints() { return [...cur().points].sort((a, b) => a.seq - b.seq); }
+function selectPoint(id, opts = {}) {
+  selectedPointId = id; viewIndex = 0;
+  if (opts.arm) armedPointId = id;
+  renderAll();
+}
+function gotoPoint(delta) {
+  const list = sortedPoints();
+  const i = list.findIndex((p) => p.id === selectedPointId);
+  const next = list[(i < 0 ? 0 : i) + delta];
+  if (next) selectPoint(next.id);
+}
+function gotoImage(delta) {
+  const p = cur().points.find((x) => x.id === selectedPointId);
+  if (!p || !p.images.length) return;
+  viewIndex = (viewIndex + delta + p.images.length) % p.images.length;
+  renderViewer();
+}
+document.addEventListener("keydown", (e) => {
+  if (["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName)) return;
+  if (e.key === "ArrowLeft") { e.preventDefault(); gotoImage(-1); }
+  if (e.key === "ArrowRight") { e.preventDefault(); gotoImage(1); }
+  if (e.key === "[") { e.preventDefault(); gotoPoint(-1); }
+  if (e.key === "]") { e.preventDefault(); gotoPoint(1); }
+});
+
+function renderViewer() {
+  const el = $("viewer");
+  const p = cur().points.find((x) => x.id === selectedPointId);
+  if (!p) { el.innerHTML = `<div class="frame"><div class="empty-note">เลือกจุดจากรายการด้านล่าง หรือสร้างจุดใหม่ เพื่อดูภาพขนาดใหญ่และตั้งทิศทางที่นี่</div></div>`; return; }
+  const list = sortedPoints();
+  const pi = list.findIndex((x) => x.id === p.id);
+  const im = p.images[viewIndex] || p.images[0];
+  const pid = `${floor}-p${String(p.seq).padStart(3, "0")}`;
+  el.innerHTML = `
+    <div class="frame">
+      ${im && im.url ? `<img src="${im.url}" alt="${im.filename}" />` : `<div class="empty-note">${im ? "ไฟล์ภาพนี้ยังไม่ถูกโหลด — กด \"โหลดโฟลเดอร์ภาพ\" เพื่อเชื่อมใหม่" : "จุดนี้ยังไม่มีภาพ"}</div>`}
+      ${p.images.length > 1 ? `<div class="imgnav">
+        <button data-act="pimg-prev" ${viewIndex === 0 ? "disabled" : ""}>‹</button>
+        <button data-act="pimg-next" ${viewIndex >= p.images.length - 1 ? "disabled" : ""}>›</button>
+      </div>` : ""}
+    </div>
+    ${im ? `<div class="cap">
+      <span class="lens-pill ${im.lens || "unset"}" style="${im.lens ? "" : "background:#444"}">${im.lens ? (im.lens === "normal" ? "ปกติ" : "กว้าง") : "?"}</span>
+      <span class="fname">${im.filename}${im.direction ? " · " + (im.direction === "forward" ? "ไป" : "กลับ") : ""}</span>
+      <span>${p.images.length > 1 ? `${viewIndex + 1}/${p.images.length}` : ""}</span>
+    </div>` : ""}
+    <div class="pointnav">
+      <button data-act="ppt-prev" ${pi <= 0 ? "disabled" : ""}>‹</button>
+      <span class="n">จุด ${pi + 1}/${list.length} · ${pid}</span>
+      <button data-act="ppt-next" ${pi < 0 || pi >= list.length - 1 ? "disabled" : ""}>›</button>
+    </div>
+    <div class="heading-row">
+      <span class="lbl">ทิศ (heading)</span>
+      <button data-act="head-minus">−15°</button>
+      <span class="deg">${p.heading === "" || p.heading == null ? "ไม่ระบุ" : Math.round(p.heading) + "°"}</span>
+      <button data-act="head-plus">+15°</button>
+    </div>
+    <div class="heading-hint">${p.x != null ? "ลากลูกศรสีบนแผนที่เพื่อตั้งทิศ" : "ตั้งตำแหน่งบนแผนที่ก่อนถึงจะตั้งทิศได้"}</div>
+  `;
+  el.querySelector('[data-act="pimg-prev"]')?.addEventListener("click", () => gotoImage(-1));
+  el.querySelector('[data-act="pimg-next"]')?.addEventListener("click", () => gotoImage(1));
+  el.querySelector('[data-act="ppt-prev"]').onclick = () => gotoPoint(-1);
+  el.querySelector('[data-act="ppt-next"]').onclick = () => gotoPoint(1);
+  el.querySelector('[data-act="head-minus"]').onclick = () => setHeading(p, ((p.heading || 0) - 15 + 360) % 360);
+  el.querySelector('[data-act="head-plus"]').onclick = () => setHeading(p, ((p.heading || 0) + 15) % 360);
+}
+function setHeading(p, deg) { p.heading = ((deg % 360) + 360) % 360; save(); renderViewer(); drawMap(); }
+
+// ── pool UI ───────────────────────────────────────────────────────────────────
+function renderPool() {
+  const grid = $("poolGrid");
+  grid.innerHTML = "";
+  const shown = poolFilter === "all" ? pool : pool.filter((im) => im.lens === poolFilter);
+  if (!shown.length && pool.length) grid.innerHTML = `<div class="empty" style="grid-column:1/-1">ไม่มีภาพในตัวกรองนี้</div>`;
+  for (const im of shown) {
+    const b = document.createElement("button");
+    b.className = "thumb" + (poolSelected.has(im.key) ? " on" : "");
+    b.innerHTML = `<span class="check"></span><img src="${im.url}" alt="" />` +
+      (im.lens ? `<span class="dset ${im.lens}">${im.lens === "normal" ? "เก่า" : "ใหม่"}</span>` : "") +
+      `<span class="name">${im.filename}</span>`;
+    b.onclick = () => { poolSelected.has(im.key) ? poolSelected.delete(im.key) : poolSelected.add(im.key); renderPool(); updateMakePointBtn(); };
+    grid.appendChild(b);
+  }
+  $("poolHint").hidden = pool.length > 0;
+  const counts = { all: pool.length, normal: pool.filter((im) => im.lens === "normal").length, wide: pool.filter((im) => im.lens === "wide").length };
+  $("poolFilter").querySelectorAll("button").forEach((b) => {
+    b.classList.toggle("on", b.dataset.f === poolFilter);
+    const base = { all: "ทั้งหมด", normal: "ชุดเก่า (normal)", wide: "ชุดใหม่ (wide)" }[b.dataset.f];
+    b.textContent = `${base} (${counts[b.dataset.f]})`;
+  });
+}
+$("poolFilter").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-f]");
+  if (!b) return;
+  poolFilter = b.dataset.f;
+  renderPool();
+});
+function updateMakePointBtn() {
+  $("selCount").textContent = poolSelected.size;
+  $("makePointBtn").disabled = poolSelected.size < 2 || poolSelected.size > 4;
+}
+$("makePointBtn").onclick = () => {
+  const chosen = pool.filter((im) => poolSelected.has(im.key));
+  pool = pool.filter((im) => !poolSelected.has(im.key));
+  poolSelected.clear();
+  // Best-effort stem so images added on a future folder-load can still find this point.
+  const stems = [...new Set(chosen.map((im) => stem(im.filename)).filter(Boolean))];
+  const p = createPoint(chosen, stems.length === 1 ? stems[0] : null);
+  armedPointId = p.id;
+  selectedPointId = p.id;
+  viewIndex = 0;
+  renderAll();
+};
+
+// ── points panel ──────────────────────────────────────────────────────────────
+function pointStatus(p) {
+  const lenses = new Set(p.images.map((i) => i.lens).filter(Boolean));
+  const hasXY = p.x != null && p.y != null;
+  const allTagged = p.images.every((i) => i.lens);
+  return hasXY && allTagged && lenses.has("normal") && lenses.has("wide") ? "ok" : "warn";
+}
+function cycleLens(img) {
+  img.lens = img.lens === "normal" ? "wide" : img.lens === "wide" ? "" : "normal";
+}
+function cycleDirection(img) {
+  img.direction = img.direction === "" ? "forward" : img.direction === "forward" ? "backward" : "";
+}
+function renderPoints() {
+  const list = $("pointsList");
+  list.innerHTML = "";
+  const points = [...cur().points].sort((a, b) => a.seq - b.seq);
+  $("pointCount").textContent = points.length;
+  if (!points.length) { list.innerHTML = `<div class="empty">ยังไม่มีจุด — เลือกภาพจากด้านซ้ายแล้วกด "สร้างจุดใหม่"<br>หรือปล่อยให้ระบบจับกลุ่มอัตโนมัติตอนโหลดโฟลเดอร์</div>`; return; }
+  for (const p of points) {
+    const card = document.createElement("div");
+    card.className = "point-card" + (armedPointId === p.id ? " armed" : "") + (selectedPointId === p.id ? " selected" : "");
+    card.addEventListener("click", (ev) => { if (!ev.target.closest("button, input")) selectPoint(p.id); });
+    const pid = `${floor}-p${String(p.seq).padStart(3, "0")}`;
+    const st = pointStatus(p);
+    card.innerHTML = `
+      <div class="row1">
+        <span class="status-dot ${st}"></span><span class="pid">${pid}</span><span class="sp"></span>
+        <button class="icon-btn" data-act="ungroup" title="คืนภาพทั้งหมดไปที่ pool">⇤</button>
+        <button class="icon-btn" data-act="delete" title="ลบจุดนี้">✕</button>
+      </div>
+      <div class="imgs">${p.images.map((im, k) => `
+        <div class="pimg" data-k="${k}">
+          ${im.url ? `<img src="${im.url}" alt="${im.filename}" title="${im.filename}" />`
+                   : `<div class="pimg-empty" title="${im.filename} — ยังไม่ได้โหลดไฟล์ภาพ">⏳</div>`}
+          <div class="tag">
+            <button class="lens-chip ${im.lens || "unset"}" data-act="lens" data-k="${k}">${im.lens ? (im.lens === "normal" ? "ปกติ" : "กว้าง") : "?"}</button>
+            <button class="dir-chip" data-act="dir" data-k="${k}">${im.direction ? (im.direction === "forward" ? "ไป" : "กลับ") : "–"}</button>
+          </div>
+          <button class="rm" data-act="rm" data-k="${k}" title="เอาภาพนี้ออก">×</button>
+        </div>`).join("")}</div>
+      <input type="text" placeholder="ห้อง / จุดสังเกต" value="${p.room.replace(/"/g, "&quot;")}" data-act="room" />
+      <input type="text" placeholder="หมายเหตุ" value="${p.notes.replace(/"/g, "&quot;")}" data-act="notes" />
+      <div class="xy">ตำแหน่ง: ${p.x != null ? `<b>${p.x.toFixed(1)}, ${p.y.toFixed(1)}</b> px` : "<i>ยังไม่ตั้ง</i>"}</div>
+      <button class="place-btn ${armedPointId === p.id ? "armed" : ""}" data-act="place">${armedPointId === p.id ? "◎ คลิกบนแผนที่เพื่อวางตำแหน่ง…" : "📍 ตั้ง/แก้ตำแหน่งบนแผนที่"}</button>
+    `;
+    card.querySelector('[data-act="delete"]').onclick = () => { cur().points = cur().points.filter((x) => x.id !== p.id); if (armedPointId === p.id) armedPointId = null; if (selectedPointId === p.id) selectedPointId = null; save(); renderAll(); };
+    card.querySelector('[data-act="ungroup"]').onclick = () => { pool.push(...p.images); cur().points = cur().points.filter((x) => x.id !== p.id); if (armedPointId === p.id) armedPointId = null; if (selectedPointId === p.id) selectedPointId = null; save(); renderAll(); };
+    card.querySelector('[data-act="place"]').onclick = () => { selectedPointId = p.id; armedPointId = armedPointId === p.id ? null : p.id; renderAll(); };
+    card.querySelector('[data-act="room"]').oninput = (e) => { p.room = e.target.value; save(); };
+    card.querySelector('[data-act="notes"]').oninput = (e) => { p.notes = e.target.value; save(); };
+    card.querySelectorAll('[data-act="lens"]').forEach((b) => b.onclick = () => { cycleLens(p.images[+b.dataset.k]); save(); renderPoints(); drawMap(); });
+    card.querySelectorAll('[data-act="dir"]').forEach((b) => b.onclick = () => { cycleDirection(p.images[+b.dataset.k]); save(); renderPoints(); });
+    card.querySelectorAll('[data-act="rm"]').forEach((b) => b.onclick = () => {
+      const k = +b.dataset.k;
+      const [im] = p.images.splice(k, 1);
+      if (im) pool.push(im);
+      if (!p.images.length) { cur().points = cur().points.filter((x) => x.id !== p.id); if (selectedPointId === p.id) selectedPointId = null; }
+      viewIndex = Math.min(viewIndex, Math.max(0, p.images.length - 1));
+      save(); renderAll();
+    });
+    list.appendChild(card);
+  }
+}
+
+// ── map ───────────────────────────────────────────────────────────────────────
+const NS = "http://www.w3.org/2000/svg";
+const svgEl = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+
+function loadFloorImage() {
+  const img = new Image();
+  img.onload = () => { mapNatural = { w: img.naturalWidth, h: img.naturalHeight }; resetZoom(); };
+  img.src = `map/${floor}.jpg`;
+}
+function resetZoom() { viewBox = [0, 0, mapNatural.w, mapNatural.h]; drawMap(); }
+function drawMap() {
+  const svg = $("map");
+  svg.innerHTML = "";
+  svg.setAttribute("viewBox", viewBox.join(" "));
+  svg.classList.toggle("disarmed", !armedPointId);
+  svgEl("image", { href: `map/${floor}.jpg`, x: 0, y: 0, width: mapNatural.w, height: mapNatural.h }, svg);
+  const u = viewBox[2] / mapNatural.w;   // keep marker size constant on screen regardless of zoom
+  for (const p of cur().points) {
+    if (p.x == null) continue;
+    const pid = `${p.seq}`;
+    const st = pointStatus(p);
+    const g = svgEl("g", { style: "cursor:pointer" }, svg);
+    g.onclick = (ev) => { ev.stopPropagation(); armedPointId = p.id; renderAll(); };
+    svgEl("circle", { cx: p.x, cy: p.y, r: 9 * u, fill: st === "ok" ? "var(--good)" : "var(--warn)",
+      stroke: p.id === armedPointId ? "#fff" : "rgba(0,0,0,.5)", "stroke-width": (p.id === armedPointId ? 3 : 1.5) * u }, g);
+    const t = svgEl("text", { x: p.x, y: p.y - 12 * u, "text-anchor": "middle", "font-size": 11 * u, fill: "#fff",
+      "paint-order": "stroke", stroke: "rgba(0,0,0,.7)", "stroke-width": 3 * u }, g);
+    t.textContent = pid;
+  }
+  drawHeadingArrow(svg, u);
+}
+
+// Same glyph as the original tool's drag handle (lucide-react "Navigation",
+// fill="currentColor"): a compass-arrow that pivots around its own base,
+// exactly like <Navigation> rotated via `transform-origin: 50% 100%` there.
+const NAV_ICON_PATH = "M3 11l19-9-9 19-2-8-8-2z";
+function drawHeadingArrow(svg, u) {
+  const p = cur().points.find((x) => x.id === selectedPointId);
+  if (!p || p.x == null) return;
+  const deg = p.heading || 0;
+  const s = u * 1.15;   // on-screen icon size stays ~28px regardless of zoom
+  const g = svgEl("g", { transform: `translate(${p.x} ${p.y}) rotate(${deg})`, style: "cursor:grab" }, svg);
+  const iconG = svgEl("g", { transform: `scale(${s}) translate(-12,-24)` }, g);
+  svgEl("path", { d: NAV_ICON_PATH, fill: "none", stroke: "var(--surface)", "stroke-width": 5, "stroke-linejoin": "round" }, iconG); // halo
+  svgEl("path", { d: NAV_ICON_PATH, fill: "var(--normal)", stroke: "var(--normal)", "stroke-width": 1, "stroke-linejoin": "round" }, iconG);
+  // A generous invisible hit target — the glyph itself is too thin to grab reliably.
+  const hit = svgEl("circle", { cx: 0, cy: -12 * s, r: 16 * u, fill: "transparent" }, g);
+  // setHeading() re-renders the map (drawMap() rebuilds the whole <svg>), which
+  // would destroy this very node mid-drag — so, like the original tool, the
+  // drag is tracked on `window`, not on the (disposable) handle element itself.
+  hit.addEventListener("pointerdown", (ev) => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    const move = (mv) => {
+      const { x, y } = svgPoint(mv);
+      const dx = x - p.x, dy = y - p.y;
+      setHeading(p, (Math.atan2(dx, -dy) * 180) / Math.PI);
+    };
+    const up = () => { window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up); };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  });
+}
+function svgPoint(evt) {
+  const svg = $("map"), pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+$("map").addEventListener("click", (ev) => {
+  if (!armedPointId) return;
+  const p = cur().points.find((x) => x.id === armedPointId);
+  if (!p) return;
+  const { x, y } = svgPoint(ev);
+  p.x = Math.max(0, Math.min(mapNatural.w, x));
+  p.y = Math.max(0, Math.min(mapNatural.h, y));
+  armedPointId = null;
+  save(); renderAll();
+});
+$("map").addEventListener("wheel", (ev) => {
+  ev.preventDefault();
+  const { x, y } = svgPoint(ev);
+  const factor = ev.deltaY > 0 ? 1.15 : 1 / 1.15;
+  let [vx, vy, vw, vh] = viewBox;
+  const nw = Math.min(mapNatural.w * 2, Math.max(mapNatural.w * 0.05, vw * factor));
+  const nh = nw * (vh / vw);
+  vx = x - (x - vx) * (nw / vw);
+  vy = y - (y - vy) * (nh / vh);
+  viewBox = [vx, vy, nw, nh];
+  drawMap();
+}, { passive: false });
+$("zoomIn").onclick = () => { const [vx, vy, vw, vh] = viewBox; const cx = vx + vw / 2, cy = vy + vh / 2, nw = vw / 1.4, nh = vh / 1.4; viewBox = [cx - nw / 2, cy - nh / 2, nw, nh]; drawMap(); };
+$("zoomOut").onclick = () => { const [vx, vy, vw, vh] = viewBox; const cx = vx + vw / 2, cy = vy + vh / 2, nw = vw * 1.4, nh = vh * 1.4; viewBox = [cx - nw / 2, cy - nh / 2, nw, nh]; drawMap(); };
+$("zoomReset").onclick = resetZoom;
+
+// ── header ───────────────────────────────────────────────────────────────────
+FLOORS.forEach((f) => { const o = document.createElement("option"); o.value = f; o.textContent = f; $("floorSelect").appendChild(o); });
+$("floorSelect").value = floor;
+$("floorSelect").onchange = (e) => {
+  floor = e.target.value; armedPointId = null; selectedPointId = null; viewIndex = 0; pool = []; poolSelected.clear(); poolFilter = "all";
+  load(); mergePreloads(); loadFloorImage(); renderAll();
+};
+$("loadFolderBtn").onclick = () => $("folderInput").click();
+$("folderInput").onchange = (e) => { if (e.target.files.length) handleFolder(e.target.files); e.target.value = ""; };
+
+function download(filename, text, type) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type }));
+  a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function csvCell(v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; }
+function rows() {
+  const out = [];
+  for (const f of FLOORS) for (const p of dataByFloor[f].points) {
+    if (p.x == null) continue;
+    const pid = `${f}-p${String(p.seq).padStart(3, "0")}`;
+    for (const im of p.images) {
+      out.push({
+        label_id: `${pid}_${im.lens || "unk"}${im.direction ? "_" + im.direction : ""}_${im.filename}`,
+        floor_id: f, point_group: pid, image_path: im.relpath || im.filename, lens: im.lens || "",
+        direction: im.direction || "", x_px: p.x.toFixed(2), y_px: p.y.toFixed(2),
+        heading_deg: p.heading === "" || p.heading == null ? "" : Number(p.heading).toFixed(1),
+        room: p.room || "", notes: p.notes || "", labeled_at: new Date().toISOString(),
+      });
+    }
+  }
+  return out;
+}
+$("exportCsvBtn").onclick = () => {
+  const r = rows();
+  if (!r.length) { alert("ยังไม่มีจุดที่ตั้งตำแหน่งแล้ว"); return; }
+  const cols = ["label_id", "floor_id", "point_group", "image_path", "lens", "direction", "x_px", "y_px", "heading_deg", "room", "notes", "labeled_at"];
+  const csv = [cols.join(","), ...r.map((row) => cols.map((c) => csvCell(row[c])).join(","))].join("\n");
+  download("ground_truth_lens_compare.csv", csv, "text/csv;charset=utf-8");
+};
+$("exportJsonBtn").onclick = () => {
+  const r = rows();
+  if (!r.length) { alert("ยังไม่มีจุดที่ตั้งตำแหน่งแล้ว"); return; }
+  download("ground_truth_lens_compare.json", JSON.stringify({ labels: r }, null, 2), "application/json");
+};
+// A blob: URL only lives as long as the tab that created it — pointless (and
+// wrong) to persist. A relative path (from a preload, or from a previous
+// export that already carried one) stays valid forever, so it's worth saving.
+const isStaticUrl = (url) => !!url && !url.startsWith("blob:");
+
+function snapshot() {
+  const snap = {};
+  for (const f of FLOORS) snap[f] = { nextSeq: dataByFloor[f].nextSeq, points: dataByFloor[f].points.map((p) => ({
+    id: p.id, seq: p.seq, x: p.x, y: p.y, heading: p.heading, room: p.room, notes: p.notes, stem: p.stem || null,
+    images: p.images.map((im) => ({
+      filename: im.filename, lens: im.lens, direction: im.direction,
+      relpath: im.relpath || null, url: isStaticUrl(im.url) ? im.url : null,
+    })),
+  })) };
+  return snap;
+}
+function restoreImage(im) { return { ...im, key: im.filename, url: isStaticUrl(im.url) ? im.url : null, file: null }; }
+$("saveSessionBtn").onclick = () => {
+  download(`label-session-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(snapshot(), null, 2), "application/json");
+};
+$("importBtn").onclick = () => $("importInput").click();
+$("importInput").onchange = (e) => {
+  const file = e.target.files[0]; e.target.value = "";
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const snap = JSON.parse(reader.result);
+      for (const f of FLOORS) {
+        if (!snap[f]) continue;
+        dataByFloor[f] = { nextSeq: snap[f].nextSeq || 1, points: (snap[f].points || []).map((p) => ({ ...p, images: p.images.map(restoreImage) })) };
+      }
+      save(); renderAll();
+      alert("นำเข้า session แล้ว — กด \"โหลดโฟลเดอร์ภาพ\" อีกครั้งเพื่อเชื่อมไฟล์ภาพกลับเข้ามา");
+    } catch (err) { alert("อ่านไฟล์ session ไม่สำเร็จ: " + err); }
+  };
+  reader.readAsText(file);
+};
+
+// ── persistence (best-effort; Export/Import JSON is the reliable path) ────────
+function save() {
+  try { localStorage.setItem("lens-label-session", JSON.stringify(snapshot())); }
+  catch { /* localStorage unavailable (e.g. some file:// setups) — Export/Import JSON still works */ }
+}
+function load() {
+  try {
+    const raw = localStorage.getItem("lens-label-session");
+    if (!raw) return;
+    const snap = JSON.parse(raw);
+    for (const f of FLOORS) {
+      if (!snap[f]) continue;
+      dataByFloor[f] = { nextSeq: snap[f].nextSeq || 1, points: (snap[f].points || []).map((p) => ({ ...p, images: p.images.map(restoreImage) })) };
+    }
+  } catch { /* ignore */ }
+}
+
+// ── preload: seed a floor with real, already-labeled ground truth ─────────────
+// label_image/label_floor<N>/preload-floor<N>.js (generated by
+// build_label_preload.py) sets window.LABEL_PRELOAD[floorId] — a plain
+// <script>, not fetch()'d JSON, so it still loads from file://. Only applied
+// to a floor that has NO data yet (nothing saved locally), so it never
+// overwrites real work — see the comment on mergePreloads() below.
+function preloadScripts() {
+  return Promise.all(FLOORS.map((f) => new Promise((resolve) => {
+    const s = document.createElement("script");
+    s.src = `label_image/label_${f}/preload-${f}.js`;
+    s.onload = () => resolve();
+    s.onerror = () => resolve();   // no preload for this floor yet — fine
+    document.head.appendChild(s);
+  })));
+}
+function mergePreloads() {
+  const preload = window.LABEL_PRELOAD || {};
+  let seeded = [];
+  for (const f of FLOORS) {
+    if (dataByFloor[f].points.length > 0 || !preload[f]) continue;
+    dataByFloor[f] = {
+      nextSeq: preload[f].nextSeq || 1,
+      points: (preload[f].points || []).map((p) => ({
+        ...p, id: p.id || uid(),
+        // Unlike a restored session's blob: URLs (dead after reload, nulled in
+        // load()/importInput below), a preload's `url` is a real path next to
+        // this HTML file (see build_label_preload.py) -- it stays valid as-is,
+        // no folder pick needed just to see the seeded photos.
+        images: (p.images || []).map(restoreImage),
+      })),
+    };
+    seeded.push(f);
+  }
+  if (seeded.length) save();
+  return seeded;
+}
+
+function renderAll() {
+  const total = cur().points.filter((p) => p.x != null).length;
+  $("statusPill").textContent = `${floor} · ${total} จุด label แล้ว`;
+  renderPool(); updateMakePointBtn(); renderPoints(); renderViewer(); drawMap();
+}
+
+preloadScripts().then(() => {
+  load();
+  const seeded = mergePreloads();
+  loadFloorImage();
+  renderAll();
+  if (seeded.includes(floor)) {
+    $("hintBar").textContent = `โหลดข้อมูล label ของเดิม (เลนส์ปกติ) มาให้แล้ว ${cur().points.length} จุด พร้อมรูปจริง — ` +
+      `ถ่ายเลนส์กว้างเพิ่มแล้วกด "โหลดโฟลเดอร์ภาพ" เลือก label_image/ เพื่อต่อภาพใหม่เข้าจุดเดิม`;
+  }
+});
+</script>
+</body>
+</html>

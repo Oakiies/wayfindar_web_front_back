@@ -1,0 +1,250 @@
+{
+  "video": "D:\\video\\video_from_iphone_pare\\IMG_1895.MOV",
+  "image_size": [
+    1920,
+    1080
+  ],
+  "fps": 29.989436148211336,
+  "method": "Existing P4Pf solver; median of 20,21,22s; validation on 23,24s",
+  "K": [
+    [
+      910.9377016822198,
+      0.0,
+      964.7
+    ],
+    [
+      0.0,
+      910.9377016822198,
+      546.2
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "map_K": [
+    [
+      1400.0,
+      0.0,
+      964.7
+    ],
+    [
+      0.0,
+      1400.0,
+      546.2
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "distortion": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "assumptions": [
+    "fixed focal, square pixels",
+    "principal point inherited from map image center",
+    "zero residual distortion assumed for phone-processed video; not measured",
+    "20-24s calibration warmup is included in output, not independent evaluation"
+  ],
+  "focal_estimates": [
+    {
+      "time": 0.0,
+      "estimate": {
+        "focal_px": 801.1958693771314,
+        "inliers": 12,
+        "median_reproj_error_px": 3.7225430529186525
+      }
+    },
+    {
+      "time": 1.0,
+      "estimate": {
+        "focal_px": 2013.870017671531,
+        "inliers": 8,
+        "median_reproj_error_px": 2.6053706434949646
+      }
+    },
+    {
+      "time": 2.0,
+      "estimate": {
+        "focal_px": 442.83274061682,
+        "inliers": 0,
+        "median_reproj_error_px": null
+      }
+    },
+    {
+      "time": 3.0,
+      "estimate": {
+        "focal_px": 900.6565266603172,
+        "inliers": 9,
+        "median_reproj_error_px": 2.392870605710449
+      }
+    },
+    {
+      "time": 4.0,
+      "estimate": {
+        "focal_px": 899.0855550382105,
+        "inliers": 58,
+        "median_reproj_error_px": 3.3322896564172595
+      }
+    },
+    {
+      "time": 5.0,
+      "estimate": {
+        "focal_px": 917.8342416247957,
+        "inliers": 65,
+        "median_reproj_error_px": 2.623605896592543
+      }
+    },
+    {
+      "time": 6.0,
+      "estimate": {
+        "focal_px": 910.9377016822198,
+        "inliers": 63,
+        "median_reproj_error_px": 1.9388135075767778
+      }
+    },
+    {
+      "time": 7.0,
+      "estimate": {
+        "focal_px": 1083.7973223691065,
+        "inliers": 59,
+        "median_reproj_error_px": 2.978076221877934
+      }
+    },
+    {
+      "time": 8.0,
+      "estimate": {
+        "focal_px": 933.1482608556421,
+        "inliers": 59,
+        "median_reproj_error_px": 4.028241518502104
+      }
+    },
+    {
+      "time": 9.0,
+      "estimate": {
+        "focal_px": 1034.928277861748,
+        "inliers": 63,
+        "median_reproj_error_px": 4.583893211078948
+      }
+    },
+    {
+      "time": 10.0,
+      "estimate": {
+        "focal_px": 953.4302582645419,
+        "inliers": 55,
+        "median_reproj_error_px": 3.6898202808015195
+      }
+    },
+    {
+      "time": 11.0,
+      "estimate": {
+        "focal_px": 931.6553521893125,
+        "inliers": 54,
+        "median_reproj_error_px": 3.6000149372432473
+      }
+    },
+    {
+      "time": 12.0,
+      "estimate": {
+        "focal_px": 909.3194580215123,
+        "inliers": 38,
+        "median_reproj_error_px": 3.1349558067214307
+      }
+    },
+    {
+      "time": 13.0,
+      "estimate": {
+        "focal_px": 885.9269702158625,
+        "inliers": 26,
+        "median_reproj_error_px": 3.1041997487100463
+      }
+    },
+    {
+      "time": 14.0,
+      "estimate": {
+        "focal_px": 923.4335292398229,
+        "inliers": 25,
+        "median_reproj_error_px": 2.5702041846060037
+      }
+    },
+    {
+      "time": 15.0,
+      "estimate": {
+        "focal_px": 892.1277224776704,
+        "inliers": 26,
+        "median_reproj_error_px": 3.6402863970527606
+      }
+    },
+    {
+      "time": 16.0,
+      "estimate": {
+        "focal_px": 876.4962669958807,
+        "inliers": 24,
+        "median_reproj_error_px": 3.363599160930727
+      }
+    },
+    {
+      "time": 17.0,
+      "estimate": {
+        "focal_px": 914.0998034662999,
+        "inliers": 29,
+        "median_reproj_error_px": 2.514574766008586
+      }
+    },
+    {
+      "time": 18.0,
+      "estimate": {
+        "focal_px": 883.5771041805406,
+        "inliers": 29,
+        "median_reproj_error_px": 2.83006911401368
+      }
+    },
+    {
+      "time": 19.0,
+      "estimate": {
+        "focal_px": 887.4085893413777,
+        "inliers": 34,
+        "median_reproj_error_px": 2.850687011948489
+      }
+    }
+  ],
+  "validation": [
+    {
+      "model": "map_K",
+      "time": 18.0,
+      "accepted": true,
+      "inliers": 23,
+      "error": 2.871960953608089
+    },
+    {
+      "model": "map_K",
+      "time": 19.0,
+      "accepted": true,
+      "inliers": 24,
+      "error": 2.576906375284282
+    },
+    {
+      "model": "estimated_K",
+      "time": 18.0,
+      "accepted": true,
+      "inliers": 27,
+      "error": 2.5836238873867585
+    },
+    {
+      "model": "estimated_K",
+      "time": 19.0,
+      "accepted": true,
+      "inliers": 34,
+      "error": 2.201174930389903
+    }
+  ],
+  "hfov_deg": 93.00428874062627,
+  "focal_mad_px": 22.210559173422325
+}

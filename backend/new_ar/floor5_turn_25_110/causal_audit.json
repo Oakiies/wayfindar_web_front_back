@@ -1,0 +1,89 @@
+{
+  "checks": {
+    "backend_ready_before_camera": true,
+    "all_seed_results_arrive_after_source": true,
+    "all_seed_wall_times_after_source": true,
+    "all_calibration_evidence_is_past": true,
+    "all_rendered_frames_have_no_negative_latency": true
+  },
+  "all_pass": true,
+  "longest_pose_gaps": [
+    {
+      "start_s": 75.36666666666666,
+      "end_s": 76.86666666666666,
+      "duration_s": 1.5
+    },
+    {
+      "start_s": 105.8,
+      "end_s": 107.2,
+      "duration_s": 1.4000000000000057
+    },
+    {
+      "start_s": 7.166666666666667,
+      "end_s": 8.133333333333333,
+      "duration_s": 0.9666666666666659
+    },
+    {
+      "start_s": 0.0,
+      "end_s": 0.4666666666666667,
+      "duration_s": 0.4666666666666667
+    },
+    {
+      "start_s": 75.06666666666666,
+      "end_s": 75.2,
+      "duration_s": 0.13333333333333997
+    },
+    {
+      "start_s": 5.833333333333333,
+      "end_s": 5.866666666666666,
+      "duration_s": 0.033333333333333215
+    },
+    {
+      "start_s": 6.133333333333334,
+      "end_s": 6.166666666666667,
+      "duration_s": 0.033333333333333215
+    },
+    {
+      "start_s": 61.63333333333333,
+      "end_s": 61.666666666666664,
+      "duration_s": 0.03333333333333144
+    }
+  ],
+  "longest_visible_ar_gaps": [
+    {
+      "start_s": 69.03333333333333,
+      "end_s": 76.86666666666666,
+      "duration_s": 7.833333333333329
+    },
+    {
+      "start_s": 0.0,
+      "end_s": 6.966666666666667,
+      "duration_s": 6.966666666666667
+    },
+    {
+      "start_s": 105.8,
+      "end_s": 107.2,
+      "duration_s": 1.4000000000000057
+    },
+    {
+      "start_s": 7.166666666666667,
+      "end_s": 8.133333333333333,
+      "duration_s": 0.9666666666666659
+    },
+    {
+      "start_s": 61.86666666666667,
+      "end_s": 61.93333333333333,
+      "duration_s": 0.06666666666666288
+    },
+    {
+      "start_s": 61.53333333333333,
+      "end_s": 61.56666666666667,
+      "duration_s": 0.033333333333338544
+    },
+    {
+      "start_s": 61.63333333333333,
+      "end_s": 61.666666666666664,
+      "duration_s": 0.03333333333333144
+    }
+  ]
+}

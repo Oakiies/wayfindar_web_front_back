@@ -1,0 +1,19 @@
+﻿{
+    "video":  "Floor1_3.mov",
+    "session_id":  1789062552630,
+    "sample_target_video_s":  60,
+    "active_at_capture":  true,
+    "frame_count":  3607,
+    "history_length":  1787,
+    "video_timestamp_s":  60.0925,
+    "current_floor":  "floor1",
+    "destination_floor":  "floor5",
+    "tracking_mode":  "causal_klt_pnp",
+    "method":  "KLT-PnP",
+    "tracking_status":  "tracked",
+    "ar_world_status":  "hidden:no_ribbon",
+    "causal_source_frame":  3512,
+    "current_tracking_frame":  3606,
+    "async_localize_time_s":  0.27377430023625493,
+    "path_segment_count":  5
+}

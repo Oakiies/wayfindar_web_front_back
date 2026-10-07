@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>เทียบตำแหน่ง: ครอป / ซูม / resolution / calibration</title>
+<style>
+  /* Data comes from backend/poc_camera_variation/export_web_data.py */
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --axis: #c3c2b7; --ring: rgba(11,11,11,.10);
+    --ref: #0b0b0b; --mapk: #eb6834; --calib: #2a78d6; --truth: #1baf7a;
+    --chip: #f0efec; --chip-on: #0b0b0b; --chip-on-ink: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,.10);
+      --ref: #ffffff; --mapk: #d95926; --calib: #3987e5; --truth: #199e70;
+      --chip: #262624; --chip-on: #ffffff; --chip-on-ink: #0b0b0b;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,.10);
+    --ref: #ffffff; --mapk: #d95926; --calib: #3987e5; --truth: #199e70;
+    --chip: #262624; --chip-on: #ffffff; --chip-on-ink: #0b0b0b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", "Leelawadee UI", "Noto Sans Thai", sans-serif; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 24px 20px 48px; }
+  h1 { margin: 0; font-size: clamp(22px, 3vw, 30px); line-height: 1.2; }
+  .lede { margin: 6px 0 0; color: var(--ink-2); max-width: 900px; }
+  h2 { font-size: 16px; margin: 0 0 10px; }
+  .card { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 16px; }
+
+  .cases { display: flex; flex-wrap: wrap; gap: 18px; margin: 20px 0 14px; }
+  .group-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 0; border-radius: 999px; padding: 8px 14px; background: var(--chip); color: var(--ink);
+          font: inherit; font-size: 14px; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-ink); font-weight: 600; }
+  .chip:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--calib); outline-offset: 2px; }
+
+  .verdict { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .verdict .say { font-size: 16px; }
+  .verdict .say b { display: block; font-size: 18px; margin-bottom: 4px; }
+  .tile .k { font-size: 13px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; }
+  .tile .v { font-size: 30px; font-weight: 700; margin-top: 2px; }
+  .tile .s { font-size: 13px; color: var(--ink-2); }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex: none; }
+
+  .main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 14px; }
+  .views { display: grid; gap: 10px; align-content: start; }
+  .card, .main > *, .charts > *, .verdict > * { min-width: 0; }
+  figure.view { margin: 0; }
+  figure.view figcaption { font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+  canvas.cam { width: 100%; aspect-ratio: 16 / 9; display: block; border-radius: 8px; background: #000; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .legend button { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--ring); background: transparent;
+                   color: var(--ink); border-radius: 999px; padding: 5px 11px; font: inherit; font-size: 13px; cursor: pointer; }
+  .legend button[aria-pressed="false"] { opacity: .4; }
+  .legend button[aria-pressed="false"] .dot { background: transparent !important; box-shadow: inset 0 0 0 2px var(--muted); }
+  svg.map { width: 100%; display: block; border-radius: 8px; background: #fff; }
+
+  .player { display: flex; align-items: center; gap: 12px; margin: 14px 0; }
+  .player button.play { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--chip-on); color: var(--chip-on-ink);
+                        font-size: 16px; cursor: pointer; flex: none; }
+  .player input[type=range] { flex: 1; accent-color: var(--calib); min-width: 0; }
+  .player .t { font-variant-numeric: tabular-nums; min-width: 88px; text-align: right; color: var(--ink-2); }
+  .player select { font: inherit; padding: 6px; border-radius: 8px; border: 1px solid var(--ring); background: var(--surface); color: var(--ink); }
+
+  .charts { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; }
+  .chart { position: relative; }
+  .chart svg { width: 100%; display: block; overflow: visible; }
+  .chart .note { font-size: 13px; color: var(--ink-2); margin: -4px 0 8px; }
+  .tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--ring);
+         border-radius: 8px; padding: 6px 9px; font-size: 13px; box-shadow: 0 4px 14px rgba(0,0,0,.12); white-space: nowrap; }
+  .tip .row { display: flex; align-items: center; gap: 6px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--grid); }
+  th { color: var(--ink-2); font-weight: 600; font-size: 13px; }
+  td.num { font-variant-numeric: tabular-nums; text-align: right; }
+  th.num { text-align: right; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: var(--chip); }
+  tbody tr.on { background: var(--chip); font-weight: 600; }
+  .tablewrap { overflow-x: auto; }
+  .foot { color: var(--muted); font-size: 13px; margin-top: 18px; }
+
+  @media (max-width: 900px) {
+    .main, .charts { grid-template-columns: 1fr; }
+    .verdict { grid-template-columns: 1fr 1fr; }
+    .verdict .say { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding-inline: 16px; }
+    .verdict { grid-template-columns: 1fr; }
+    .tile .v { font-size: 24px; }
+    .player { flex-wrap: wrap; }
+    .player input[type=range] { flex-basis: 100%; order: 3; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>ตำแหน่งผู้ใช้เปลี่ยนไปยังไง เมื่อครอป / ซูม / ลด resolution / เปลี่ยนกล้อง</h1>
+  <p class="lede">เลือกกรณีด้านล่าง แล้วกดเล่น — ซ้ายคือภาพที่ส่งให้ระบบ ขวาคือตำแหน่งบนแผนที่
+    เทียบกับ <b>ตำแหน่งปกติ</b> (ภาพต้นฉบับ + calibration) · สีส้ม = ใช้ K ของแผนที่ตรง ๆ · สีน้ำเงิน = หลังใช้ calibration</p>
+
+  <div class="cases" id="cases"></div>
+
+  <div class="verdict">
+    <div class="card say" id="say"></div>
+    <div class="card tile" id="tileMap"></div>
+    <div class="card tile" id="tileCal"></div>
+  </div>
+
+  <div class="main">
+    <div class="card views">
+      <h2>กล้องเห็นอะไร</h2>
+      <figure class="view"><canvas class="cam" id="camOrig" width="512" height="288"></canvas>
+        <figcaption id="capOrig">ภาพต้นฉบับ · กรอบ = ส่วนที่เหลือหลังครอป/ซูม</figcaption></figure>
+      <figure class="view"><canvas class="cam" id="camSys" width="512" height="288"></canvas>
+        <figcaption id="capSys"></figcaption></figure>
+    </div>
+    <div class="card">
+      <h2>ตำแหน่งบนแผนที่</h2>
+      <div class="legend" id="legend"></div>
+      <svg class="map" id="map" role="img" aria-label="ตำแหน่งบนแผนที่"></svg>
+    </div>
+  </div>
+
+  <div class="card player">
+    <button class="play" id="play" aria-label="เล่น">▶</button>
+    <input type="range" id="slider" min="0" max="1" value="0" aria-label="เวลา" />
+    <span class="t" id="tlabel">0.0 s</span>
+    <select id="speed" aria-label="ความเร็ว">
+      <option value="1">1x</option><option value="4" selected>4x</option><option value="10">10x</option>
+    </select>
+  </div>
+
+  <div class="charts">
+    <div class="card chart" id="errCard">
+      <h2 id="errTitle">ระยะคลาดจากตำแหน่งปกติ ตามเวลา</h2>
+      <p class="note" id="errNote">px บนแผนที่ (แผนที่กว้าง 500 px) · ชี้เพื่อดูค่า · คลิกเพื่อกระโดดไปเวลานั้น</p>
+      <svg id="errChart" height="230"></svg>
+      <div class="tip" id="errTip" hidden></div>
+    </div>
+    <div class="card chart" id="fCard">
+      <h2>focal ที่ระบบใช้</h2>
+      <p class="note" id="fNote">calibration ค่อย ๆ ปรับ focal เข้าหาค่าที่ถูก</p>
+      <svg id="fChart" height="230"></svg>
+      <div class="tip" id="fTip" hidden></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h2>สรุปทุกกรณี (คลิกแถวเพื่อเปิดดู)</h2>
+    <div class="tablewrap"><table id="summary"></table></div>
+  </div>
+
+  <p class="foot">ข้อมูล: backend/poc_camera_variation (รายงานเต็มใน REPORT.md) · localize 1 ครั้ง/วินาที ด้วย MegaLoc + SuperPoint/LightGlue แบบ production
+    · ตำแหน่งเป็นค่าดิบก่อน smoothing · ภาพกล้องในหน้านี้ย่อเหลือ 512×288 เพื่อให้โหลดเร็ว (ระบบใช้ภาพเต็ม)</p>
+</div>
+
+<script src="data.js"></script>
+<script>
+const ROOT = "";
+const CASES = [
+  { id: "px540", floor: "floor5", group: "ลด resolution", label: "960×540 (ครึ่งหนึ่ง)", view: { type: "lowres", f: 0.5 },
+    sys: "ระบบได้ภาพ 960×540 มุมเท่าเดิม แล้ว resize กลับเป็น 1920×1080",
+    say: ["ลด resolution แทบไม่มีผล", "ระบบ resize ทุกภาพเป็น 1920×1080 ก่อนหาตำแหน่งอยู่แล้ว มุมมองเท่าเดิม ตำแหน่งจึงเท่าเดิม ทั้ง K แผนที่และ calibration"] },
+  { id: "crop75", floor: "floor5", group: "ครอป (เลนส์เดิม เซนเซอร์เล็กลง)", label: "ครอป 75%", view: { type: "crop", f: 0.75 },
+    sys: "ครอปตรงกลาง 1440×810 → ระบบขยายเป็น 1920×1080 = เหมือนซูมเข้า 1.33x",
+    say: ["ครอป = ภาพแคบลง = เหมือนซูมเข้า", "ถ้าระบบยังคิดว่าเป็นเลนส์เดิม (K แผนที่) ตำแหน่งจะไปข้างหน้าเกินจริง · calibration ปรับ focal ให้เองภายใน ~15 วิ แล้วตรงกับปกติ"] },
+  { id: "crop50", floor: "floor5", group: "ครอป (เลนส์เดิม เซนเซอร์เล็กลง)", label: "ครอป 50%", view: { type: "crop", f: 0.5 },
+    sys: "ครอปตรงกลาง 960×540 → ระบบขยายเป็น 1920×1080 = เหมือนซูมเข้า 2x",
+    say: ["ครอปมาก ตำแหน่งยิ่งคลาด", "K แผนที่: ตำแหน่งไปข้างหน้าจริงเกือบทุกเฟรม และหาตำแหน่งไม่ได้บ่อยขึ้น · calibration แก้ได้เกือบหมด"] },
+  { id: "crop43", floor: "floor5", group: "ครอป (เลนส์เดิม เซนเซอร์เล็กลง)", label: "ครอป 4:3", view: { type: "crop43" },
+    sys: "ครอป 1440×1080 (4:3) → ระบบยืดเป็น 16:9 ภาพจึงดูอ้วน",
+    say: ["ภาพ 4:3 calibration แก้ไม่ได้", "ระบบยืดภาพ 4:3 เป็น 16:9 ทำให้ focal แนวนอน ≠ แนวตั้ง แต่ calibration ประมาณได้ค่าเดียว จึงแกว่งไม่เข้าที่ ช่วงแรกแย่กว่าไม่ปรับ"] },
+  { id: "zoom2x", floor: "floor5", group: "ซูม", label: "ซูมอิน 2x", view: { type: "crop", f: 0.5 },
+    sys: "ซูมดิจิทัล 2x (ครอป 50% แล้วขยายกลับ 1920×1080)",
+    say: ["ซูมอิน 2x = ครอป 50%", "ผลเท่ากับครอป 50% เพราะหลัง resize ระบบได้ภาพเหมือนกัน · K แผนที่คลาดไปข้างหน้า · calibration แก้ได้"] },
+  { id: "zoomout75", floor: "floor5", group: "ซูม", label: "ซูมเอาต์ 0.75x", view: { type: "pad", f: 0.75 },
+    sys: "ภาพย่อเหลือ 75% มีขอบดำรอบ = เหมือนเลนส์กว้างขึ้น",
+    say: ["ซูมเอาต์ ตำแหน่งถอยหลัง", "ภาพดูไกลขึ้น ระบบที่ใช้ K แผนที่จึงวางผู้ใช้ไว้ข้างหลังจริงเกือบทุกเฟรม · calibration แก้ได้"] },
+  { id: "zoomdyn", floor: "floor5", group: "ซูม", label: "ซูมเปลี่ยนตลอด", view: { type: "dyn" },
+    sys: "ซูมไป-กลับ 1x → 2x → 1x ทุก 120 วินาที",
+    say: ["ซูมเปลี่ยนระหว่างเดิน calibration ตามช้า", "calibration ตามได้แต่ช้ากว่าจริงประมาณ 10 วิ (ปรับได้ครั้งละไม่เกิน 2%) · ดูกราฟ focal ด้านล่าง"] },
+  { id: "wide", floor: "floor1", group: "กล้องคนละตัว (ชั้น 1)", label: "iPhone มุมกว้าง", view: { type: "none" },
+    sys: "กล้อง iPhone มุมกว้าง 1920×1080 ส่งเข้าระบบตรง ๆ",
+    say: ["กล้องคนละตัว ต้องรู้ focal ของกล้องนั้น", "กล้องนี้ focal ≈ 921 px (แผนที่ 1400 px) · K แผนที่: ตำแหน่งกระโดดและหลุดทางเดิน · calibration: เส้นทางเรียบอยู่บนทางเดิน · คลิปนี้ไม่มีตำแหน่งอ้างอิง จึงเทียบระหว่างสองแบบ"] },
+];
+
+const $ = (id) => document.getElementById(id);
+const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+const dist = (a, b) => (a && b ? Math.hypot(a[0] - b[0], a[1] - b[1]) : null);
+const median = (xs) => { const v = xs.filter((x) => x != null).sort((a, b) => a - b); return v.length ? v[Math.floor((v.length - 1) / 2)] * 0.5 + v[Math.ceil((v.length - 1) / 2)] * 0.5 : null; };
+const fmt = (x, d = 1) => (x == null ? "–" : x.toFixed(d));
+
+let DATA, cur = CASES[2], idx = 0, playing = false, timer = null;
+const show = { ref: true, map: true, cal: true };
+const frameCache = new Map();
+
+// Series for the current case: reference / map K / calibrated positions.
+function series(c) {
+  const fl = DATA.floors[c.floor], k = fl.cases[c.id];
+  return { fl, k, ref: fl.reference, map: k.map, cal: k.selfcal };
+}
+// Error of each series: vs. the "normal" reference on floor5, vs. each other on floor1.
+function errors(c) {
+  const s = series(c);
+  if (s.ref) return { map: s.map.map((p, i) => dist(p, s.ref[i])), cal: s.cal.map((p, i) => dist(p, s.ref[i])) };
+  return { gap: s.map.map((p, i) => dist(p, s.cal[i])) };
+}
+function jumps(path) {
+  let n = 0, last = null;
+  for (const p of path) { if (p) { if (last && dist(p, last) > 40) n++; last = p; } }
+  return n;
+}
+const fails = (path) => path.filter((p) => !p).length;
+
+// ── case chips ──────────────────────────────────────────────────────────────
+function buildCases() {
+  const box = $("cases");
+  const groups = [...new Set(CASES.map((c) => c.group))];
+  for (const g of groups) {
+    const wrap = document.createElement("div");
+    wrap.innerHTML = `<div class="group-label">${g}</div><div class="chips"></div>`;
+    for (const c of CASES.filter((x) => x.group === g)) {
+      const b = document.createElement("button");
+      b.className = "chip"; b.textContent = c.label; b.dataset.id = c.id;
+      b.onclick = () => selectCase(c.id);
+      wrap.lastChild.appendChild(b);
+    }
+    box.appendChild(wrap);
+  }
+}
+
+function selectCase(id) {
+  const prev = cur;
+  cur = CASES.find((c) => c.id === id);
+  document.querySelectorAll(".chip").forEach((b) => b.setAttribute("aria-pressed", b.dataset.id === id));
+  const n = DATA.floors[cur.floor].n;
+  $("slider").max = n - 1;
+  if (prev.floor !== cur.floor) idx = 0;
+  idx = Math.min(idx, n - 1);
+  buildLegend(); fitMap(); renderVerdict(); renderSummary();
+  update();
+}
+
+// ── verdict tiles ───────────────────────────────────────────────────────────
+function renderVerdict() {
+  const s = series(cur), e = errors(cur);
+  $("say").innerHTML = `<b>${cur.say[0]}</b>${cur.say[1]}`;
+  if (s.ref) {
+    $("tileMap").innerHTML = `<div class="k"><span class="dot" style="background:var(--mapk)"></span>ใช้ K แผนที่ · คลาดจากปกติ</div>
+      <div class="v">${fmt(median(e.map))} px</div><div class="s">หาตำแหน่งไม่ได้ ${fails(s.map)} จาก ${s.map.length} เฟรม</div>`;
+    $("tileCal").innerHTML = `<div class="k"><span class="dot" style="background:var(--calib)"></span>หลัง calibration · คลาดจากปกติ</div>
+      <div class="v">${fmt(median(e.cal))} px</div><div class="s">หาตำแหน่งไม่ได้ ${fails(s.cal)} จาก ${s.cal.length} เฟรม</div>`;
+  } else {
+    $("tileMap").innerHTML = `<div class="k"><span class="dot" style="background:var(--mapk)"></span>ใช้ K แผนที่ (1400)</div>
+      <div class="v">${jumps(s.map)} ครั้ง</div><div class="s">ตำแหน่งกระโดด &gt;40 px · หาไม่ได้ ${fails(s.map)}/${s.map.length}</div>`;
+    $("tileCal").innerHTML = `<div class="k"><span class="dot" style="background:var(--calib)"></span>หลัง calibration (${Math.round(s.fl.focal_est)})</div>
+      <div class="v">${jumps(s.cal)} ครั้ง</div><div class="s">ตำแหน่งกระโดด &gt;40 px · หาไม่ได้ ${fails(s.cal)}/${s.cal.length}</div>`;
+  }
+}
+
+// ── camera views ────────────────────────────────────────────────────────────
+function frame(i) {
+  const fl = DATA.floors[cur.floor];
+  const key = `${fl.frames}/${i}`;
+  if (!frameCache.has(key)) {
+    const img = new Image();
+    img.src = `${ROOT}${fl.frames}/${String(i).padStart(4, "0")}.jpg`;
+    frameCache.set(key, img);
+    if (frameCache.size > 60) frameCache.delete(frameCache.keys().next().value);
+  }
+  return frameCache.get(key);
+}
+function viewRect(c, i, W, H) {
+  // Kept source region [x, y, w, h] in source pixels, and how the system shows it.
+  const v = c.view;
+  if (v.type === "crop") return { x: W * (1 - v.f) / 2, y: H * (1 - v.f) / 2, w: W * v.f, h: H * v.f };
+  if (v.type === "dyn") { const z = DATA.floors.floor5.cases.zoomdyn.zoom[i]; const f = 1 / z;
+    return { x: W * (1 - f) / 2, y: H * (1 - f) / 2, w: W * f, h: H * f, z }; }
+  if (v.type === "crop43") return { x: W * 0.125, y: 0, w: W * 0.75, h: H };
+  return null;
+}
+function drawCams() {
+  const img = frame(idx);
+  const draw = () => {
+    const o = $("camOrig").getContext("2d"), s = $("camSys").getContext("2d");
+    const W = 512, H = 288;
+    o.drawImage(img, 0, 0, W, H);
+    const r = viewRect(cur, idx, W, H);
+    if (r) {
+      o.lineWidth = 4; o.strokeStyle = "rgba(0,0,0,.55)"; o.strokeRect(r.x, r.y, r.w, r.h);
+      o.lineWidth = 2; o.strokeStyle = "#ffffff"; o.strokeRect(r.x, r.y, r.w, r.h);
+    } else if (cur.view.type === "pad") {
+      o.lineWidth = 2; o.strokeStyle = "#ffffff"; o.strokeRect(1, 1, W - 2, H - 2);
+    }
+    s.imageSmoothingEnabled = true;
+    s.fillStyle = "#000"; s.fillRect(0, 0, W, H);
+    if (r) s.drawImage(img, r.x, r.y, r.w, r.h, 0, 0, W, H);
+    else if (cur.view.type === "pad") { const f = cur.view.f; s.drawImage(img, W * (1 - f) / 2, H * (1 - f) / 2, W * f, H * f); }
+    else if (cur.view.type === "lowres") {
+      // 512 px here stands for 1920; a 960-wide query is a 256-wide image scaled back up.
+      const tmp = document.createElement("canvas"); tmp.width = W * cur.view.f; tmp.height = H * cur.view.f;
+      tmp.getContext("2d").drawImage(img, 0, 0, tmp.width, tmp.height);
+      s.imageSmoothingEnabled = false; s.drawImage(tmp, 0, 0, W, H);
+    } else s.drawImage(img, 0, 0, W, H);
+    const zoomNow = r && r.z ? ` · ตอนนี้ซูม ${r.z.toFixed(2)}x` : "";
+    $("capSys").textContent = `ภาพที่ระบบได้ · ${cur.sys}${zoomNow}`;
+  };
+  if (img.complete && img.naturalWidth) draw(); else img.onload = draw;
+  for (let k = 1; k <= 4; k++) if (idx + k < DATA.floors[cur.floor].n) frame(idx + k);
+}
+
+// ── map ─────────────────────────────────────────────────────────────────────
+const LAYERS = () => {
+  const s = series(cur);
+  return [
+    s.ref && { key: "ref", name: "ตำแหน่งปกติ (ภาพต้นฉบับ + calibration)", color: "var(--ref)", path: s.ref },
+    { key: "map", name: "ใช้ K แผนที่", color: "var(--mapk)", path: s.map },
+    { key: "cal", name: "หลัง calibration", color: "var(--calib)", path: s.cal },
+  ].filter(Boolean);
+};
+function buildLegend() {
+  const box = $("legend"); box.innerHTML = "";
+  for (const L of LAYERS()) {
+    const b = document.createElement("button");
+    b.setAttribute("aria-pressed", show[L.key]);
+    b.innerHTML = `<span class="dot" style="background:${L.color}"></span>${L.name}`;
+    b.onclick = () => { show[L.key] = !show[L.key]; b.setAttribute("aria-pressed", show[L.key]); drawMap(); };
+    box.appendChild(b);
+  }
+}
+let view = [0, 0, 500, 500];
+function fitMap() {
+  const pts = LAYERS().flatMap((L) => L.path).filter(Boolean);
+  let x0 = Math.min(...pts.map((p) => p[0])), x1 = Math.max(...pts.map((p) => p[0]));
+  let y0 = Math.min(...pts.map((p) => p[1])), y1 = Math.max(...pts.map((p) => p[1]));
+  const pad = 28;
+  let w = x1 - x0 + 2 * pad, h = y1 - y0 + 2 * pad;
+  // Frame the walked area; clamp the aspect so a long corridor still gets a usable width.
+  const aspect = Math.min(1.4, Math.max(0.75, w / h));
+  if (w / h < aspect) w = h * aspect; else h = w / aspect;
+  view = [(x0 + x1) / 2 - w / 2, (y0 + y1) / 2 - h / 2, w, h];
+}
+function splitRuns(path, from, to) {
+  const runs = []; let run = [];
+  for (let i = from; i <= to; i++) {
+    const p = path[i];
+    if (p) run.push(p); else if (run.length) { runs.push(run); run = []; }
+  }
+  if (run.length) runs.push(run);
+  return runs;
+}
+function lastKnown(path, i) { for (let k = i; k >= 0; k--) if (path[k]) return { p: path[k], live: k === i }; return null; }
+function drawMap() {
+  const svg = $("map"), fl = DATA.floors[cur.floor];
+  svg.innerHTML = "";
+  svg.setAttribute("viewBox", view.join(" "));
+  el("image", { href: fl.map_image, x: 0, y: 0, width: fl.map_size[0], height: fl.map_size[1], opacity: 0.55 }, svg);
+  const u = view[2] / 500;   // stroke/marker scale so sizes stay constant on screen
+  const layers = LAYERS().filter((L) => show[L.key]);
+  for (const L of layers)
+    for (const run of splitRuns(L.path, 0, L.path.length - 1))
+      el("polyline", { points: run.map((p) => p.join(",")).join(" "), fill: "none", stroke: L.color,
+        "stroke-width": 1.4 * u, opacity: 0.22, "stroke-linejoin": "round" }, svg);
+  const from = Math.max(0, idx - 20);
+  for (const L of layers)
+    for (const run of splitRuns(L.path, from, idx))
+      el("polyline", { points: run.map((p) => p.join(",")).join(" "), fill: "none", stroke: L.color,
+        "stroke-width": 3 * u, "stroke-linecap": "round", "stroke-linejoin": "round" }, svg);
+  const ref = show.ref ? lastKnown(series(cur).ref || [], idx) : null;
+  for (const L of layers) {
+    if (L.key === "ref" || !ref) continue;
+    const m = lastKnown(L.path, idx);
+    if (m) el("line", { x1: ref.p[0], y1: ref.p[1], x2: m.p[0], y2: m.p[1], stroke: L.color, "stroke-width": 1.5 * u, opacity: 0.9 }, svg);
+  }
+  for (const L of layers) {
+    const m = lastKnown(L.path, idx);
+    if (!m) continue;
+    const r = (L.key === "ref" ? 7 : 6) * u;
+    if (m.live) {
+      el("circle", { cx: m.p[0], cy: m.p[1], r: r + 2 * u, fill: css("--surface") }, svg);
+      el("circle", { cx: m.p[0], cy: m.p[1], r, fill: L.color }, svg);
+    } else {
+      el("circle", { cx: m.p[0], cy: m.p[1], r, fill: css("--surface"), stroke: L.color, "stroke-width": 2 * u }, svg);
+    }
+  }
+}
+
+// ── charts ──────────────────────────────────────────────────────────────────
+function lineChart(svg, tip, { lines, yLabel, yMin = 0, yMax, fmtY, legendNote }) {
+  const W = svg.clientWidth || 600, H = 230, m = { l: 48, r: 12, t: 10, b: 30 };
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.innerHTML = "";
+  const n = lines[0].values.length, step = DATA.floors[cur.floor].step_s;
+  const all = lines.flatMap((l) => l.values).filter((v) => v != null);
+  const hi = yMax ?? Math.max(10, Math.ceil(Math.max(...all) / 10) * 10);
+  const lo = yMin ?? Math.floor(Math.min(...all) / 100) * 100;
+  const X = (i) => m.l + (i / (n - 1)) * (W - m.l - m.r);
+  const Y = (v) => m.t + (1 - (Math.min(v, hi) - lo) / (hi - lo)) * (H - m.t - m.b);
+  for (let k = 0; k <= 4; k++) {
+    const v = lo + (hi - lo) * k / 4, y = Y(v);
+    el("line", { x1: m.l, x2: W - m.r, y1: y, y2: y, stroke: css("--grid") }, svg);
+    const t = el("text", { x: m.l - 6, y: y + 4, "text-anchor": "end", "font-size": 11, fill: css("--muted") }, svg);
+    t.textContent = fmtY(v);
+  }
+  const tMax = (n - 1) * step;
+  for (let s = 0; s <= tMax; s += tMax > 200 ? 60 : 30) {
+    const t = el("text", { x: X(s / step), y: H - 10, "text-anchor": "middle", "font-size": 11, fill: css("--muted") }, svg);
+    t.textContent = `${s}s`;
+  }
+  el("line", { x1: m.l, x2: W - m.r, y1: H - m.b, y2: H - m.b, stroke: css("--axis") }, svg);
+  for (const l of lines) {
+    let d = "", pen = false;
+    l.values.forEach((v, i) => { if (v == null) { pen = false; return; } d += `${pen ? "L" : "M"}${X(i).toFixed(1)},${Y(v).toFixed(1)}`; pen = true; });
+    el("path", { d, fill: "none", stroke: l.color, "stroke-width": l.width || 2, "stroke-linejoin": "round", opacity: l.opacity || 1 }, svg);
+  }
+  const cross = el("line", { x1: X(idx), x2: X(idx), y1: m.t, y2: H - m.b, stroke: css("--ink"), "stroke-width": 1 }, svg);
+  const hit = el("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: "transparent", style: "cursor:pointer" }, svg);
+  const at = (ev) => { const r = svg.getBoundingClientRect(); const x = (ev.clientX - r.left) * (W / r.width);
+    return Math.max(0, Math.min(n - 1, Math.round((x - m.l) / (W - m.l - m.r) * (n - 1)))); };
+  hit.onmousemove = (ev) => {
+    const i = at(ev);
+    tip.hidden = false;
+    tip.innerHTML = `<div style="color:var(--ink-2)">t = ${(i * step).toFixed(0)} s</div>` + lines.filter((l) => l.name).map((l) =>
+      `<div class="row"><span class="dot" style="background:${l.color}"></span>${l.name}: <b>${l.values[i] == null ? "หาไม่ได้" : fmtY(l.values[i])}</b></div>`).join("");
+    const r = svg.getBoundingClientRect(), px = X(i) * r.width / W;
+    tip.style.left = `${Math.min(px + 24, r.width - 170)}px`; tip.style.top = `${svg.offsetTop + 4}px`;
+  };
+  hit.onmouseleave = () => { tip.hidden = true; };
+  hit.onclick = (ev) => { idx = at(ev); update(); };
+  return cross;
+}
+function drawCharts() {
+  const s = series(cur), e = errors(cur);
+  if (s.ref) {
+    $("errTitle").textContent = "ระยะคลาดจากตำแหน่งปกติ ตามเวลา";
+    lineChart($("errChart"), $("errTip"), { fmtY: (v) => `${v.toFixed(v < 10 ? 1 : 0)} px`, yMin: 0,
+      yMax: Math.max(20, Math.min(80, Math.ceil(Math.max(...e.map.filter((v) => v != null)) / 10) * 10)),
+      lines: [{ name: "K แผนที่", color: css("--mapk"), values: e.map }, { name: "หลัง calibration", color: css("--calib"), values: e.cal }] });
+  } else {
+    $("errTitle").textContent = "ระยะห่างระหว่างตำแหน่ง K แผนที่ กับ หลัง calibration";
+    lineChart($("errChart"), $("errTip"), { fmtY: (v) => `${v.toFixed(0)} px`, yMin: 0,
+      lines: [{ name: "ห่างกัน", color: css("--mapk"), values: e.gap }] });
+  }
+  const k = s.k, mapF = s.fl.map_f;
+  const lines = [{ name: "K แผนที่", color: css("--mapk"), values: k.f_selfcal.map(() => mapF) },
+                 { name: "calibration", color: css("--calib"), values: k.f_selfcal }];
+  if (k.f_true) lines.push({ name: cur.id === "crop43" ? "ค่าที่ถูก (fx)" : "ค่าที่ถูก", color: css("--truth"), values: k.f_true, width: 2.5 });
+  $("fNote").innerHTML = k.f_true ? `<span class="dot" style="background:var(--truth)"></span> เขียว = focal ที่ถูกต้องตามการครอป/ซูม`
+    : `กล้องนี้ไม่มีค่าที่ถูกให้เทียบ · calibration ประมาณได้ ≈ ${Math.round(s.fl.focal_est)} px`;
+  const vals = lines.flatMap((l) => l.values).filter((v) => v != null);
+  lineChart($("fChart"), $("fTip"), { fmtY: (v) => `${Math.round(v)}`, yMin: Math.floor(Math.min(...vals) / 200) * 200,
+    yMax: Math.ceil(Math.max(...vals) / 200) * 200, lines });
+}
+
+// ── summary table ───────────────────────────────────────────────────────────
+function renderSummary() {
+  const rows = CASES.map((c) => {
+    const s = series(c), e = errors(c);
+    return s.ref
+      ? `<tr data-id="${c.id}" class="${c.id === cur.id ? "on" : ""}"><td>${c.group} · ${c.label}</td>
+          <td class="num">${fmt(median(e.map))} px</td><td class="num">${fmt(median(e.cal))} px</td>
+          <td class="num">${fails(s.map)} / ${fails(s.cal)}</td></tr>`
+      : `<tr data-id="${c.id}" class="${c.id === cur.id ? "on" : ""}"><td>${c.group} · ${c.label}</td>
+          <td class="num">กระโดด ${jumps(s.map)} ครั้ง</td><td class="num">กระโดด ${jumps(s.cal)} ครั้ง</td>
+          <td class="num">${fails(s.map)} / ${fails(s.cal)}</td></tr>`;
+  }).join("");
+  $("summary").innerHTML = `<thead><tr><th>กรณี</th><th class="num">ใช้ K แผนที่ · คลาด median</th>
+    <th class="num">หลัง calibration · คลาด median</th><th class="num">หาไม่ได้ (K แผนที่ / calibration)</th></tr></thead><tbody>${rows}</tbody>`;
+  document.querySelectorAll("#summary tbody tr").forEach((tr) => { tr.onclick = () => selectCase(tr.dataset.id); });
+}
+
+// ── player ──────────────────────────────────────────────────────────────────
+function update() {
+  try { history.replaceState(null, "", `?case=${cur.id}&t=${idx}`); } catch { /* file:// in some browsers */ }
+  $("slider").value = idx;
+  $("tlabel").textContent = `${(idx * DATA.floors[cur.floor].step_s).toFixed(0)} s`;
+  drawCams(); drawMap(); drawCharts();
+}
+function setPlaying(on) {
+  playing = on; $("play").textContent = on ? "❚❚" : "▶"; $("play").setAttribute("aria-label", on ? "หยุด" : "เล่น");
+  clearInterval(timer);
+  if (on) timer = setInterval(() => {
+    const n = DATA.floors[cur.floor].n;
+    if (idx >= n - 1) { setPlaying(false); return; }
+    idx++; update();
+  }, 1000 / Number($("speed").value));
+}
+$("play").onclick = () => setPlaying(!playing);
+$("speed").onchange = () => playing && setPlaying(true);
+$("slider").oninput = (e) => { idx = Number(e.target.value); update(); };
+window.addEventListener("resize", () => DATA && drawCharts());
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => DATA && update());
+
+// data.js is a plain script (not fetched JSON) so the page also works from file://
+if (!window.CAMERA_VARIATION_DATA) {
+  $("say").innerHTML = "<b>ไม่พบ data.js</b>รัน backend/poc_camera_variation/export_web_data.py ก่อน";
+} else {
+  DATA = window.CAMERA_VARIATION_DATA; buildCases();
+  const q = new URLSearchParams(location.search);
+  const start = CASES.find((c) => c.id === q.get("case")) || cur;
+  idx = Math.max(0, Number(q.get("t")) || 0);
+  cur = start; selectCase(start.id);
+}
+</script>
+</body>
+</html>

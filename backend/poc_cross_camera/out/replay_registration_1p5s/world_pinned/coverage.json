@@ -1,0 +1,14 @@
+{
+  "frames": 1800,
+  "fps": 29.963451281912445,
+  "payload_frames_before_after": [
+    1270,
+    1270
+  ],
+  "visible_polygon_frames_before_after": [
+    1270,
+    1270
+  ],
+  "baseline_interpolated": true,
+  "note": "Coverage, not spatial accuracy. Baseline excludes browser easing. Destination marker is not drawn by this diagnostic renderer."
+}

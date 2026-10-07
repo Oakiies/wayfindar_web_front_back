@@ -1,0 +1,22 @@
+{
+  "experiment": "visual-only turn handoff with route-corner completion gate",
+  "video": "D:\\video\\video_from_iphone_oak_wide\\IMG_6955.MOV",
+  "input_updates": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\non_imu_1p5s_localization_updates.json",
+  "start_seconds": 28.0,
+  "end_seconds": 48.0,
+  "frames_written": 602,
+  "fps": 29.963451281912445,
+  "hidden_frames": 369,
+  "hidden_seconds": 12.315003252737721,
+  "turn_completed_seen": true,
+  "last_corner_distance": -20.409027099609375,
+  "thresholds": {
+    "turn_trigger_distance": 34.0,
+    "turn_complete_margin": 7.0,
+    "motion_dx_threshold": 0.35,
+    "settle_seconds": 0.25
+  },
+  "comparison_output": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_01_turn_handoff\\003_turn_handoff_28_48_comparison.mp4",
+  "candidate_output": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_01_turn_handoff\\003_turn_handoff_28_48.mp4",
+  "policy": "hide old AR during visual turn handoff; restore only after fresh pose passes route corner"
+}

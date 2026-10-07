@@ -1,0 +1,130 @@
+{
+  "video": "D:\\video\\video_from_iphone_pare\\IMG_1895.MOV",
+  "image_size": [
+    1920,
+    1080
+  ],
+  "fps": 29.989436148211336,
+  "method": "Existing P4Pf solver; median of 20,21,22s; validation on 23,24s",
+  "K": [
+    [
+      895.3922408430876,
+      0.0,
+      964.7
+    ],
+    [
+      0.0,
+      895.3922408430876,
+      546.2
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "map_K": [
+    [
+      1400.0,
+      0.0,
+      964.7
+    ],
+    [
+      0.0,
+      1400.0,
+      546.2
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "distortion": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "assumptions": [
+    "fixed focal, square pixels",
+    "principal point inherited from map image center",
+    "zero residual distortion assumed for phone-processed video; not measured",
+    "20-24s calibration warmup is included in output, not independent evaluation"
+  ],
+  "focal_estimates": [
+    {
+      "time": 20.0,
+      "estimate": {
+        "focal_px": 893.6981579816141,
+        "inliers": 36,
+        "median_reproj_error_px": 2.4521530636701865
+      }
+    },
+    {
+      "time": 21.0,
+      "estimate": {
+        "focal_px": 895.3922408430876,
+        "inliers": 34,
+        "median_reproj_error_px": 3.1720145362672696
+      }
+    },
+    {
+      "time": 22.0,
+      "estimate": {
+        "focal_px": 990.5323628694931,
+        "inliers": 21,
+        "median_reproj_error_px": 1.3584542772110233
+      }
+    },
+    {
+      "time": 23.0,
+      "estimate": {
+        "focal_px": 960.233034602845,
+        "inliers": 31,
+        "median_reproj_error_px": 3.2326133860859882
+      }
+    },
+    {
+      "time": 24.0,
+      "estimate": {
+        "focal_px": 860.2424484443482,
+        "inliers": 31,
+        "median_reproj_error_px": 2.1372102612595802
+      }
+    }
+  ],
+  "validation": [
+    {
+      "model": "map_K",
+      "time": 23.0,
+      "accepted": true,
+      "inliers": 23,
+      "error": 2.186668115417605
+    },
+    {
+      "model": "map_K",
+      "time": 24.0,
+      "accepted": true,
+      "inliers": 26,
+      "error": 2.5260674068767304
+    },
+    {
+      "model": "estimated_K",
+      "time": 23.0,
+      "accepted": true,
+      "inliers": 30,
+      "error": 2.7031039208504613
+    },
+    {
+      "model": "estimated_K",
+      "time": 24.0,
+      "accepted": true,
+      "inliers": 28,
+      "error": 1.391412473573022
+    }
+  ],
+  "hfov_deg": 93.98865183250781,
+  "focal_mad_px": 1.6940828614734755
+}

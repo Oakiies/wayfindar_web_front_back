@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>ซูมอิน — floor5</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <nav class="modes">
+    <a href="index.html">เทียบเลนส์ (normal vs wide)</a>
+    <a href="crop.html">ครอป</a>
+    <a href="resize.html">resize</a>
+    <a href="zoom.html" class="active">ซูมอิน</a>
+    <a href="iphone11.html">iPhone 11</a>
+  </nav>
+
+  <h1>ซูมอิน (digital zoom) — ยัง localize ได้ไหม — <span id="floorLabel"></span></h1>
+  <div class="sub">ครอปกลางภาพแล้วขยายกลับเป็นขนาดเดิม (เหมือนซูมดิจิทัลตอนถ่าย) แล้ว localize ด้วย K แผนที่ตรง ๆ เทียบกับตำแหน่งของภาพต้นฉบับ</div>
+
+  <div class="points" id="points"></div>
+  <div class="points" id="shots"></div>
+  <div class="points" id="lensSwitch"></div>
+  <div id="refToggle" style="margin-bottom:16px;"></div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>ภาพต้นฉบับ</h2>
+      <div class="photo-wrap"><img id="baseImg"><div class="tag" id="baseTag"></div></div>
+      <div class="meta" id="baseMeta"></div>
+    </div>
+    <div class="panel">
+      <h2>ภาพหลังซูมอิน</h2>
+      <div class="photo-wrap"><img id="transformImg"><div class="tag" id="transformTag"></div></div>
+      <div class="meta" id="transformMeta"></div>
+    </div>
+  </div>
+
+  <div class="layout" style="margin-top:16px; grid-template-columns: 1fr 1fr;">
+    <div class="panel">
+      <h2>ระดับซูม (คลิกเพื่อดู, ติ๊กเพื่อโชว์/ซ่อนบนแผนที่)</h2>
+      <div class="level-list" id="levelList"></div>
+    </div>
+    <div class="panel">
+      <h2>แผนที่</h2>
+      <div class="map-wrap">
+        <img id="mapImg">
+        <div class="marker ref" id="mRef"></div>
+        <div id="dynMarkers"></div>
+      </div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--ref)"></i> ต้นฉบับ (อ้างอิง)</span>
+        <span>จุดสี = แต่ละระดับซูม (ติ๊กซ้ายเพื่อเปิด/ปิด, จุดที่เลือกอยู่จะใหญ่กว่า)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">ซูมอิน = ครอป + ขยายกลับ ระบบยังคิดว่าใช้เลนส์เดิม (K แผนที่) จึงตีความว่ากล้องอยู่ใกล้ฉากกว่าจริง เหมือนกรณีครอป แต่ภาพผลลัพธ์มีขนาดเท่าต้นฉบับเสมอ (1920x1080) เลยดูไม่ออกด้วยตาว่าถูกซูมมา ต่างจากครอปที่เห็นขนาดเล็กลงชัดเจน</div>
+
+  <script src="transforms_data.js"></script>
+  <script>const MODE = "zoom";</script>
+  <script src="transforms.js"></script>
+</body>
+</html>

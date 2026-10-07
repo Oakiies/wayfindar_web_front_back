@@ -1,0 +1,13 @@
+{
+  "experiment": "target-frame tracked-landmark PnP over replay gap",
+  "source_timestamp": 37.01175774332285,
+  "geometry_source_timestamp": 36.02,
+  "end_seconds": 39.1,
+  "frames": 63,
+  "tracked_pnp_accepted_frames": 51,
+  "buffered_pose_frames": 2,
+  "comparison_output": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_05_gap_tracked_pnp\\005_tracked_pnp_gap_36_39_comparison.mp4",
+  "candidate_output": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_05_gap_tracked_pnp\\006_tracked_pnp_gap_36_39.mp4",
+  "records_output": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_05_gap_tracked_pnp\\tracked_pnp_gap_36_39_per_frame.json",
+  "policy": "Project fixed world route from target-frame 2D-3D PnP; hide on gate failure; never warp or hold screen polygons."
+}

@@ -1,0 +1,15 @@
+{
+  "experiment": "screen-space KLT rejection vs world route reprojection",
+  "video": "D:\\video\\video_from_iphone_oak_wide\\IMG_6955.MOV",
+  "start_seconds": 24.0,
+  "end_seconds": 50.0,
+  "fps": 29.963451281912445,
+  "frames_reviewed": 782,
+  "world_pose_frames": 697,
+  "world_visible_frames": 697,
+  "comparison_output": "poc_cross_camera\\out\\ar_reasonableness_poc\\round_03_world_approach\\001_world_approach_graph_24_50_comparison.mp4",
+  "candidate_output": "poc_cross_camera\\out\\ar_reasonableness_poc\\round_03_world_approach\\002_world_approach_graph_24_50.mp4",
+  "records_output": "poc_cross_camera\\out\\ar_reasonableness_poc\\round_03_world_approach\\world_approach_graph_24_50_per_frame.json",
+  "decision": "Reject screen-warped world AR. Reproject fixed world geometry from a current camera pose; hide it when no pose is available.",
+  "replay_limit": "Buffered camera interpolation uses a future pose and is not a live tracking implementation."
+}

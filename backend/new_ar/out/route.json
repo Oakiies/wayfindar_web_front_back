@@ -1,0 +1,67 @@
+{
+  "assumption": "Replay test route, inferred corridor direction; destination not supplied by user",
+  "labels": [
+    "Intersection 3",
+    "Intersection 1",
+    "Intersection 2",
+    "M23_B",
+    "M22_A",
+    "M19",
+    "M18",
+    "Intersection 8",
+    "M21_A",
+    "M16",
+    "Intersection 10",
+    "M21_B"
+  ],
+  "points": [
+    [
+      313.0,
+      215.0
+    ],
+    [
+      313.0,
+      253.0
+    ],
+    [
+      313.0,
+      312.0
+    ],
+    [
+      338.0,
+      312.0
+    ],
+    [
+      338.0,
+      333.0
+    ],
+    [
+      338.0,
+      351.0
+    ],
+    [
+      338.0,
+      378.8486562942009
+    ],
+    [
+      338.0,
+      391.0
+    ],
+    [
+      338.0,
+      408.0
+    ],
+    [
+      338.0,
+      433.427121102248
+    ],
+    [
+      338.0,
+      446.0
+    ],
+    [
+      338.0,
+      466.0
+    ]
+  ]
+}

@@ -1,0 +1,822 @@
+{
+  "graph": {
+    "directed": false,
+    "metadata": {
+      "building_name": "อาคารของฉัน",
+      "floors": [
+        "floor_siamdis3"
+      ],
+      "created_date": "2026-10-06",
+      "scale": 1,
+      "defined_types": [
+        {
+          "id": "intersection",
+          "label": "Intersection",
+          "color": "#3b82f6"
+        },
+        {
+          "id": "room_access",
+          "label": "Room Access",
+          "color": "#14b8a6"
+        },
+        {
+          "id": "entrance",
+          "label": "Entrance",
+          "color": "#10b981"
+        },
+        {
+          "id": "restroom",
+          "label": "Restroom",
+          "color": "#06b6d4"
+        },
+        {
+          "id": "elevator",
+          "label": "Elevator",
+          "color": "#8b5cf6"
+        },
+        {
+          "id": "stairs",
+          "label": "Stairs",
+          "color": "#f59e0b"
+        },
+        {
+          "id": "fire_exit",
+          "label": "Fire Exit",
+          "color": "#ef4444"
+        },
+        {
+          "id": "poi",
+          "label": "POI",
+          "color": "#ec4899"
+        },
+        {
+          "id": "room",
+          "label": "Room",
+          "color": "#6366f1"
+        }
+      ]
+    },
+    "nodes": {
+      "node-1791207971741": {
+        "label": "Have a zeed",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 285,
+            "y": 398
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791207978574": {
+        "label": "TWANG",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 428.6153821136354,
+            "y": 430.84615375837325
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791207980241": {
+        "label": "Auntie annes's",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 483.611491032008,
+            "y": 353.8383715951188
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791207981674": {
+        "label": "KON TIN",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 522.6153821136348,
+            "y": 520.846153758373
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791207983391": {
+        "label": "Cha tra mue",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 611.6153821136348,
+            "y": 610.846153758373
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791207986740": {
+        "label": "KAMU",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 734.0978722463121,
+            "y": 635.6749474964746
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791207997574": {
+        "label": "kungthongseefood",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 382.015098342131,
+            "y": 623.246275374732
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208004291": {
+        "label": "Kagonoya",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 554.3288797640331,
+            "y": 738
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208021075": {
+        "label": "ODS",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 762.782697293906,
+            "y": 738
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208023058": {
+        "label": "LUXOPTIC",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 1002,
+            "y": 640
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208024474": {
+        "label": "KPOPMERCH",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 1055,
+            "y": 574
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208025991": {
+        "label": "JAI CHAN SPA",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 886.9867305918798,
+            "y": 589.1535253829393
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208027774": {
+        "label": "STIP BROW HOUSE",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 1042.0910426365483,
+            "y": 533.1118005650726
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208032057": {
+        "label": "PHUFA",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 544.5413818557444,
+            "y": 273.17555340280234
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208034241": {
+        "label": "SUKI DEKU",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "room",
+          "position": {
+            "x": 627.6153821136348,
+            "y": 400.84615375837325
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208184675": {
+        "label": "Intersection 1",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 346,
+            "y": 459
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208185925": {
+        "label": "Intersection 2",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 400.5224205284225,
+            "y": 401.6602305879476
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208191675": {
+        "label": "Intersection 3",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 462.6153821136354,
+            "y": 337.84615375837325
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208212309": {
+        "label": "Intersection 4",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 599.8888547124,
+            "y": 312.9823396118671
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208226608": {
+        "label": "Intersection 5",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 677.6153821136348,
+            "y": 451.84615375837325
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208229408": {
+        "label": "Intersection 6",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 561.6153821136348,
+            "y": 559.846153758373
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791208234891": {
+        "label": "Intersection 7",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 664.1095454911939,
+            "y": 636.8422626767458
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791214614259": {
+        "label": "Intersection 8",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 923,
+            "y": 738
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791214646493": {
+        "label": "Intersection 9",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 179.17120626189848,
+            "y": 284.16731518027115
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791214745643": {
+        "label": "Intersection 10",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 751.6153821136348,
+            "y": 526.846153758373
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791214789159": {
+        "label": "Intersection 11",
+        "metadata": {
+          "floor": "floor_siamdis3",
+          "type": "intersection",
+          "position": {
+            "x": 826.1095454911938,
+            "y": 601.1730019556608
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      }
+    },
+    "edges": [
+      {
+        "source": "node-1791207971741",
+        "source_label": "Have a zeed",
+        "target": "node-1791208184675",
+        "target_label": "Intersection 1",
+        "metadata": {
+          "type": "hallway",
+          "distance": 88.52683209061533,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208184675",
+        "source_label": "Intersection 1",
+        "target": "node-1791208185925",
+        "target_label": "Intersection 2",
+        "metadata": {
+          "type": "hallway",
+          "distance": 95.4829827770373,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208185925",
+        "source_label": "Intersection 2",
+        "target": "node-1791207978574",
+        "target_label": "TWANG",
+        "metadata": {
+          "type": "hallway",
+          "distance": 36.235341863986875,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208185925",
+        "source_label": "Intersection 2",
+        "target": "node-1791208191675",
+        "target_label": "Intersection 3",
+        "metadata": {
+          "type": "hallway",
+          "distance": 89.27485648266257,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791207978574",
+        "source_label": "TWANG",
+        "target": "node-1791207981674",
+        "target_label": "KON TIN",
+        "metadata": {
+          "type": "hallway",
+          "distance": 130.11533345459327,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791207981674",
+        "source_label": "KON TIN",
+        "target": "node-1791208229408",
+        "target_label": "Intersection 6",
+        "metadata": {
+          "type": "hallway",
+          "distance": 55.154328932550705,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208229408",
+        "source_label": "Intersection 6",
+        "target": "node-1791207983391",
+        "target_label": "Cha tra mue",
+        "metadata": {
+          "type": "hallway",
+          "distance": 71.42128534267638,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791207983391",
+        "source_label": "Cha tra mue",
+        "target": "node-1791208234891",
+        "target_label": "Intersection 7",
+        "metadata": {
+          "type": "hallway",
+          "distance": 71.11961754677819,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208234891",
+        "source_label": "Intersection 7",
+        "target": "node-1791207986740",
+        "target_label": "KAMU",
+        "metadata": {
+          "type": "hallway",
+          "distance": 91,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208025991",
+        "source_label": "JAI CHAN SPA",
+        "target": "node-1791208023058",
+        "target_label": "LUXOPTIC",
+        "metadata": {
+          "type": "hallway",
+          "distance": 128.640596686286,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791207986740",
+        "source_label": "KAMU",
+        "target": "node-1791208023058",
+        "target_label": "LUXOPTIC",
+        "metadata": {
+          "type": "hallway",
+          "distance": 239.5331330369986,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208023058",
+        "source_label": "LUXOPTIC",
+        "target": "node-1791208024474",
+        "target_label": "KPOPMERCH",
+        "metadata": {
+          "type": "hallway",
+          "distance": 82.88391448273413,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208024474",
+        "source_label": "KPOPMERCH",
+        "target": "node-1791208027774",
+        "target_label": "STIP BROW HOUSE",
+        "metadata": {
+          "type": "hallway",
+          "distance": 46.0926242778469,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208023058",
+        "source_label": "LUXOPTIC",
+        "target": "node-1791208027774",
+        "target_label": "STIP BROW HOUSE",
+        "metadata": {
+          "type": "hallway",
+          "distance": 113.17465543380159,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208023058",
+        "source_label": "LUXOPTIC",
+        "target": "node-1791214614259",
+        "target_label": "Intersection 8",
+        "metadata": {
+          "type": "hallway",
+          "distance": 123.56036403046957,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791214614259",
+        "source_label": "Intersection 8",
+        "target": "node-1791208021075",
+        "target_label": "ODS",
+        "metadata": {
+          "type": "hallway",
+          "distance": 172,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208021075",
+        "source_label": "ODS",
+        "target": "node-1791208234891",
+        "target_label": "Intersection 7",
+        "metadata": {
+          "type": "hallway",
+          "distance": 130.29965464267354,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208021075",
+        "source_label": "ODS",
+        "target": "node-1791208004291",
+        "target_label": "Kagonoya",
+        "metadata": {
+          "type": "hallway",
+          "distance": 211.00947846009194,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208004291",
+        "source_label": "Kagonoya",
+        "target": "node-1791207997574",
+        "target_label": "kungthongseefood",
+        "metadata": {
+          "type": "hallway",
+          "distance": 211.62466774929618,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791207997574",
+        "source_label": "kungthongseefood",
+        "target": "node-1791208184675",
+        "target_label": "Intersection 1",
+        "metadata": {
+          "type": "hallway",
+          "distance": 159.3643623900902,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791207971741",
+        "source_label": "Have a zeed",
+        "target": "node-1791214646493",
+        "target_label": "Intersection 9",
+        "metadata": {
+          "type": "hallway",
+          "distance": 167.73789077009405,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791214646493",
+        "source_label": "Intersection 9",
+        "target": "node-1791208032057",
+        "target_label": "PHUFA",
+        "metadata": {
+          "type": "hallway",
+          "distance": 395.51121568822197,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208032057",
+        "source_label": "PHUFA",
+        "target": "node-1791208191675",
+        "target_label": "Intersection 3",
+        "metadata": {
+          "type": "hallway",
+          "distance": 126.81980877312029,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208191675",
+        "source_label": "Intersection 3",
+        "target": "node-1791207980241",
+        "target_label": "Auntie annes's",
+        "metadata": {
+          "type": "hallway",
+          "distance": 41.036569057366385,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791207980241",
+        "source_label": "Auntie annes's",
+        "target": "node-1791208226608",
+        "target_label": "Intersection 5",
+        "metadata": {
+          "type": "hallway",
+          "distance": 193.13207915827965,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208034241",
+        "source_label": "SUKI DEKU",
+        "target": "node-1791208226608",
+        "target_label": "Intersection 5",
+        "metadata": {
+          "type": "hallway",
+          "distance": 78.587530817554,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208034241",
+        "source_label": "SUKI DEKU",
+        "target": "node-1791208212309",
+        "target_label": "Intersection 4",
+        "metadata": {
+          "type": "hallway",
+          "distance": 88.00504612617055,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208212309",
+        "source_label": "Intersection 4",
+        "target": "node-1791208032057",
+        "target_label": "PHUFA",
+        "metadata": {
+          "type": "hallway",
+          "distance": 64.65093074348873,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208226608",
+        "source_label": "Intersection 5",
+        "target": "node-1791214745643",
+        "target_label": "Intersection 10",
+        "metadata": {
+          "type": "hallway",
+          "distance": 104.65180361560904,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791214745643",
+        "source_label": "Intersection 10",
+        "target": "node-1791208234891",
+        "target_label": "Intersection 7",
+        "metadata": {
+          "type": "hallway",
+          "distance": 113.64858116140297,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791208229408",
+        "source_label": "Intersection 6",
+        "target": "node-1791208226608",
+        "target_label": "Intersection 5",
+        "metadata": {
+          "type": "hallway",
+          "distance": 129.41792766073794,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791207986740",
+        "source_label": "KAMU",
+        "target": "node-1791214789159",
+        "target_label": "Intersection 11",
+        "metadata": {
+          "type": "hallway",
+          "distance": 98.26765622230008,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791214789159",
+        "source_label": "Intersection 11",
+        "target": "node-1791208025991",
+        "target_label": "JAI CHAN SPA",
+        "metadata": {
+          "type": "hallway",
+          "distance": 62.052393047048454,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791207980241",
+        "source_label": "Auntie annes's",
+        "target": "node-1791208034241",
+        "target_label": "SUKI DEKU",
+        "metadata": {
+          "type": "hallway",
+          "distance": 151.4821845319014,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791214745643",
+        "source_label": "Intersection 10",
+        "target": "node-1791214789159",
+        "target_label": "Intersection 11",
+        "metadata": {
+          "type": "hallway",
+          "distance": 105.23241297368935,
+          "accessible": true,
+          "bidirectional": true
+        }
+      }
+    ]
+  }
+}

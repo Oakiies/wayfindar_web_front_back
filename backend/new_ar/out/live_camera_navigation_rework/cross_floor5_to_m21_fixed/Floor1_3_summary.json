@@ -1,0 +1,87 @@
+{
+  "schema": "luna_live_camera_navigation_rework_v1",
+  "backend_url": "http://127.0.0.1:5011",
+  "session_id": 1789065695550,
+  "video_filename": "Floor1_3.mov",
+  "source_video": {
+    "source_path": "D:\\video\\Floor1_3.mov",
+    "bytes": 1353223153,
+    "fps": 60.007550146973365,
+    "frame_count": 35368,
+    "duration_s": 589.3925,
+    "width": 1920,
+    "height": 1080,
+    "transform": "none; decoded with OpenCV, server downsamples 60 FPS to 30 FPS"
+  },
+  "destination": "m21",
+  "start_floor": "floor5",
+  "destination_floor": "floor1",
+  "sample_target_video_s": 60.0,
+  "captured_event_count": 1804,
+  "captured_update_count": 1786,
+  "first_update_timestamp_s": 0.5333333333333333,
+  "last_update_timestamp_s": 60.02583333333334,
+  "tracking_status_counts": {
+    "tracked": 1786
+  },
+  "ar_world_status_counts": {
+    "payload_ready": 1786
+  },
+  "payload_ready_update_count": 1786,
+  "projected_geometry_update_count": 1786,
+  "first_projected_geometry_s": 0.5333333333333333,
+  "last_projected_geometry_s": 60.02583333333334,
+  "visible_intervals": [
+    {
+      "start_s": 0.5333333333333333,
+      "end_s": 60.02583333333334,
+      "duration_s": 59.49250000000001,
+      "reason": "payload_ready"
+    }
+  ],
+  "hidden_intervals": [],
+  "delivery_lag_s": {
+    "p50": -0.05956221262614747,
+    "p95": 0.0,
+    "max": 0.07171936670938805
+  },
+  "server_to_client_wall_latency_s": {
+    "p50": 0.0010008811950683594,
+    "p95": 0.002001047134399414,
+    "max": 0.05674123764038086
+  },
+  "simulated_frontend_pose_age_s": {
+    "p50": 0.006764434178663237,
+    "p95": 0.02498991966247388,
+    "max": 0.07171936670938805,
+    "gate_s": 0.15
+  },
+  "source_to_current_video_s": {
+    "p50": 1.0658333333333303,
+    "p95": 1.833333333333333,
+    "max": 4.715835430332504
+  },
+  "tracking_diagnostics_last_event": null,
+  "floor_transition_events": [
+    {
+      "type": "floor_transition",
+      "frame": 28,
+      "timestamp": 0.4666666666666667,
+      "from_floor": "floor5",
+      "to_floor": "floor1",
+      "reason": "visual_reacquire_current_frame",
+      "tracking_mode": "causal_klt_pnp",
+      "event_seq": 16,
+      "emit_wall_time_s": 1789065696.1775103,
+      "session_id": 1789065695550,
+      "_evidence": {
+        "received_wall_time_s": 1789065696.1775103,
+        "receive_elapsed_from_first_event_s": 0.5691263675689697
+      }
+    }
+  ],
+  "clock": "receive_wall_time_s and emit_wall_time_s are epoch time.time() seconds on the same host; simulated presentation uses relative receive elapsed time, not browser video.currentTime",
+  "browser_qa": "not performed; this is offline receive-clock simulation plus OpenCV render_v2 projection QA",
+  "offline_renderer": "backend/poc_ar_arrow/ar_arrow_v2.py::render_v2; output is not evidence of WebGL pixels",
+  "timeline_path": "new_ar\\out\\live_camera_navigation_rework\\cross_floor5_to_m21_fixed\\Floor1_3_timeline.jsonl"
+}

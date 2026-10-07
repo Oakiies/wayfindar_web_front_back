@@ -1,0 +1,280 @@
+{
+  "experiment": "multi-frame full-intrinsics self-calibration",
+  "video": "D:\\wayfindar\\floor1_wide_pare.MOV",
+  "method": "OpenCV calibrateCameraExtended with CALIB_USE_INTRINSIC_GUESS; one independent pose per accepted view; estimates fx, fy, cx, cy and standard k1, k2, p1, p2, k3 distortion.",
+  "coordinate_system": "query features resized to map reference image resolution",
+  "map_K": [
+    [
+      1400.0,
+      0.0,
+      964.7
+    ],
+    [
+      0.0,
+      1400.0,
+      546.2
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "map_distortion": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "image_size": [
+    1920,
+    1080
+  ],
+  "sampled_frames": 10,
+  "accepted_views": 8,
+  "frame_rows": [
+    {
+      "frame": 0,
+      "time_s": 0.0,
+      "accepted": false,
+      "inliers": 10,
+      "production_success": true,
+      "production_reproj_px": 2.75293348360561
+    },
+    {
+      "frame": 300,
+      "time_s": 10.004,
+      "accepted": true,
+      "inliers": 39,
+      "production_success": true,
+      "production_reproj_px": 4.018340157381415
+    },
+    {
+      "frame": 600,
+      "time_s": 20.007,
+      "accepted": true,
+      "inliers": 25,
+      "production_success": true,
+      "production_reproj_px": 3.641041547187895
+    },
+    {
+      "frame": 900,
+      "time_s": 30.011,
+      "accepted": true,
+      "inliers": 21,
+      "production_success": true,
+      "production_reproj_px": 3.837174445306881
+    },
+    {
+      "frame": 1200,
+      "time_s": 40.014,
+      "accepted": true,
+      "inliers": 13,
+      "production_success": true,
+      "production_reproj_px": 3.0189415140093927
+    },
+    {
+      "frame": 1500,
+      "time_s": 50.018,
+      "accepted": true,
+      "inliers": 18,
+      "production_success": true,
+      "production_reproj_px": 2.781549069501898
+    },
+    {
+      "frame": 1800,
+      "time_s": 60.021,
+      "accepted": false,
+      "inliers": 10,
+      "production_success": true,
+      "production_reproj_px": 4.4832600184878455
+    },
+    {
+      "frame": 2100,
+      "time_s": 70.025,
+      "accepted": true,
+      "inliers": 16,
+      "production_success": true,
+      "production_reproj_px": 3.388319205386335
+    },
+    {
+      "frame": 2400,
+      "time_s": 80.028,
+      "accepted": true,
+      "inliers": 19,
+      "production_success": true,
+      "production_reproj_px": 2.2640237399149767
+    },
+    {
+      "frame": 2700,
+      "time_s": 90.032,
+      "accepted": true,
+      "inliers": 25,
+      "production_success": true,
+      "production_reproj_px": 3.005236722944226
+    }
+  ],
+  "calibration": {
+    "rms_reproj_px": 6.6867105889815885,
+    "estimated_K": [
+      [
+        1327.1572697505092,
+        0.0,
+        1012.7657416784427
+      ],
+      [
+        0.0,
+        1337.4108306949026,
+        518.327759190821
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "estimated_distortion": [
+      -0.139365869645314,
+      9.60311069285936,
+      0.0062262134907400965,
+      0.01616657080114545,
+      -60.71688219812791
+    ],
+    "std_K_opencv": [
+      59.84837617906491,
+      58.96584043707106,
+      21.106809256470935,
+      30.92568051440588,
+      0.6200742041422005,
+      10.396735617549803,
+      0.014869955445976071,
+      0.008280787666665087,
+      54.72552581903832,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "std_distortion_opencv": [
+      0.025671150749903237,
+      0.018164973109566256,
+      0.0042591071010018985,
+      0.01899424585413694,
+      0.019862065850206338,
+      0.06437824532735595,
+      0.025898002538718164,
+      0.02049210517536197,
+      0.0069795258532205084,
+      0.04845189969187166,
+      0.044522768677325346,
+      0.102824135982318,
+      0.02952620967278127,
+      0.024822901337071216,
+      0.007482612384692118,
+      0.07132381412174615,
+      0.0754372036668812,
+      0.05650941613235734,
+      0.027652848774447823,
+      0.03872722323236762,
+      0.022709995877895975,
+      0.14071428251046192,
+      0.19741692405811648,
+      0.1495803766172504,
+      0.024337367118436846,
+      0.017409742274041944,
+      0.0141035338773212,
+      0.06904155035880463,
+      0.08653897418872927,
+      0.10231346082710047,
+      0.01283736703830555,
+      0.015375392931774094,
+      0.03748028069098034,
+      0.0884173142740515,
+      0.12779595137157293,
+      0.048255504573503485,
+      0.0122112199939049,
+      0.017076481164559537,
+      0.038719737255916285,
+      0.06993101290755273,
+      0.09482404797314918,
+      0.03992419374985287,
+      0.021199159969621274,
+      0.016671237347230593,
+      0.018972980197903576,
+      0.010573009516692771,
+      0.021638739893753565,
+      0.08035781440432556
+    ],
+    "plausible": false,
+    "plausibility_reasons": [
+      "distortion magnitude too large"
+    ]
+  },
+  "pose_comparison": {
+    "views": [
+      {
+        "frame": 300,
+        "map_median_reproj_px": 4.05161941473561,
+        "estimated_median_reproj_px": 3.482551762711367,
+        "position_delta_world_units": 0.06254051908395207
+      },
+      {
+        "frame": 600,
+        "map_median_reproj_px": 3.4088162906304085,
+        "estimated_median_reproj_px": 3.0234954855549767,
+        "position_delta_world_units": 0.10969847558514566
+      },
+      {
+        "frame": 900,
+        "map_median_reproj_px": 3.7925571547125365,
+        "estimated_median_reproj_px": 138.45075355285823,
+        "position_delta_world_units": 0.9121496800660734
+      },
+      {
+        "frame": 1200,
+        "map_median_reproj_px": 14.344958604420583,
+        "estimated_median_reproj_px": 324839667758557.8,
+        "position_delta_world_units": 4.86916164580333
+      },
+      {
+        "frame": 1500,
+        "map_median_reproj_px": 2.508873485281932,
+        "estimated_median_reproj_px": 68.57751042573247,
+        "position_delta_world_units": 1.2718688693349192
+      },
+      {
+        "frame": 2100,
+        "map_median_reproj_px": 3.4388978606788707,
+        "estimated_median_reproj_px": 3.554952680309047,
+        "position_delta_world_units": 0.05491438870619325
+      },
+      {
+        "frame": 2400,
+        "map_median_reproj_px": 2.4242318760962838,
+        "estimated_median_reproj_px": 2.3222613920120394,
+        "position_delta_world_units": 0.040860515324810984
+      },
+      {
+        "frame": 2700,
+        "map_median_reproj_px": 2.9360336518463956,
+        "estimated_median_reproj_px": 2.9701973734675766,
+        "position_delta_world_units": 0.07661739945052287
+      }
+    ],
+    "median_position_delta_world_units": 0.09315793751783427,
+    "p95_position_delta_world_units": 3.6101091740393842,
+    "median_map_reproj_px": 3.42385707565464,
+    "median_estimated_reproj_px": 3.5187522215102067
+  },
+  "decision": {
+    "use_full_intrinsics": false,
+    "fallback": "keep map K and zero distortion when the plausibility/reprojection gate fails",
+    "warning": "This benchmark does not prove camera ground truth; full intrinsics can be weakly observable when the views have little parallax or image coverage."
+  }
+}

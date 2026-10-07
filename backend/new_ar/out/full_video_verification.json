@@ -1,0 +1,16 @@
+{
+  "file": "D:\\wayfindar\\WebNav_front_back\\backend\\new_ar\\IMG_1895_AR_0_60.mp4",
+  "frames": 1800,
+  "fps": 30.00667098307072,
+  "duration_s": 59.986661,
+  "resolution": [
+    1280,
+    720
+  ],
+  "all_frames_same_resolution": true,
+  "bytes": 49115480,
+  "sha256": "63a66cb2adc941dd3f25305cb60dafc965ae5468bf1d71f1c69546622dcc286e",
+  "warmup_frames": 600,
+  "ar_frames": 1200,
+  "note": "0-20s is original video with explicit calibration/warmup label; AR world renderer starts after camera calibration and verified pose."
+}

@@ -1,0 +1,34 @@
+﻿{
+    "captured_at":  "2026-09-11T01:01:31.6679956+07:00",
+    "port":  5000,
+    "pid":  46664,
+    "process_started":  "2026-09-10T23:53:48.6868790+07:00",
+    "command_line":  "\"C:\\Users\\PC02\\miniconda3\\envs\\mast3r-slam\\python.exe\" -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 5000 ",
+    "active":  false,
+    "session_id":  null,
+    "video":  null,
+    "destination":  null,
+    "current_floor":  null,
+    "timestamp":  null,
+    "tracking_mode":  null,
+    "tracking_status":  null,
+    "ar_world_status":  null,
+    "has_ar_payload":  false,
+    "update_keys":  [
+                        null
+                    ],
+    "files":  [
+                  {
+                      "modified":  "2026-09-11T00:36:46.0347000+07:00",
+                      "path":  "D:\\wayfindar\\WebNav_front_back\\backend\\app\\services\\video_processor.py"
+                  },
+                  {
+                      "modified":  "2026-09-11T00:30:33.5627425+07:00",
+                      "path":  "D:\\wayfindar\\WebNav_front_back\\backend\\app\\services\\ar_service.py"
+                  },
+                  {
+                      "modified":  "2026-09-11T00:37:20.0826726+07:00",
+                      "path":  "D:\\wayfindar\\WebNav_front_back\\backend\\app\\core\\localizer.py"
+                  }
+              ]
+}

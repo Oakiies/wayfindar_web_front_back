@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>resize ภาพ — floor5</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <nav class="modes">
+    <a href="index.html">เทียบเลนส์ (normal vs wide)</a>
+    <a href="crop.html">ครอป</a>
+    <a href="resize.html" class="active">resize</a>
+    <a href="zoom.html">ซูมอิน</a>
+    <a href="iphone11.html">iPhone 11</a>
+  </nav>
+
+  <h1>resize ภาพให้เล็กลง — ยัง localize ได้ไหม — <span id="floorLabel"></span></h1>
+  <div class="sub">ย่อทั้งภาพลง (มุมมองเท่าเดิม พิกเซลน้อยลง) แล้ว localize ด้วย K แผนที่ตรง ๆ เทียบกับตำแหน่งของภาพต้นฉบับ</div>
+
+  <div class="points" id="points"></div>
+  <div class="points" id="shots"></div>
+  <div class="points" id="lensSwitch"></div>
+  <div id="refToggle" style="margin-bottom:16px;"></div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>ภาพต้นฉบับ</h2>
+      <div class="photo-wrap"><img id="baseImg"><div class="tag" id="baseTag"></div></div>
+      <div class="meta" id="baseMeta"></div>
+    </div>
+    <div class="panel">
+      <h2>ภาพหลัง resize</h2>
+      <div class="photo-wrap"><img id="transformImg"><div class="tag" id="transformTag"></div></div>
+      <div class="meta" id="transformMeta"></div>
+    </div>
+  </div>
+
+  <div class="layout" style="margin-top:16px; grid-template-columns: 1fr 1fr;">
+    <div class="panel">
+      <h2>ขนาดที่ resize (คลิกเพื่อดู, ติ๊กเพื่อโชว์/ซ่อนบนแผนที่)</h2>
+      <div class="level-list" id="levelList"></div>
+    </div>
+    <div class="panel">
+      <h2>แผนที่</h2>
+      <div class="map-wrap">
+        <img id="mapImg">
+        <div class="marker ref" id="mRef"></div>
+        <div id="dynMarkers"></div>
+      </div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--ref)"></i> ต้นฉบับ (อ้างอิง)</span>
+        <span>จุดสี = แต่ละขนาด resize (ติ๊กซ้ายเพื่อเปิด/ปิด, จุดที่เลือกอยู่จะใหญ่กว่า)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">resize ไม่เปลี่ยนมุมมอง (FoV) ระบบจะย่อภาพกลับไปที่ขนาดอ้างอิงของ K แผนที่ก่อนดึง feature อยู่แล้ว จำนวนพิกเซลที่ลดลงจึงแทบไม่กระทบตำแหน่ง (ต่างจากครอป/ซูมที่เปลี่ยน FoV จริง) — คาดว่าตำแหน่งจะนิ่งใกล้เคียงต้นฉบับแม้ย่อเล็กลงมาก จน inliers เริ่มไม่พอ</div>
+
+  <script src="transforms_data.js"></script>
+  <script>const MODE = "resize";</script>
+  <script src="transforms.js"></script>
+</body>
+</html>

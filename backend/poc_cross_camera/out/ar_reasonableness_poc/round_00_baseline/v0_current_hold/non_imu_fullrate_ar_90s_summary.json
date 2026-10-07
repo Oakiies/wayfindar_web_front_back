@@ -1,0 +1,21 @@
+{
+  "video": "D:\\video\\video_from_iphone_oak_wide\\IMG_6955.MOV",
+  "duration_seconds": 60.0,
+  "source_fps": 29.963451281912445,
+  "source_size": [
+    1920,
+    1080
+  ],
+  "render_size": [
+    1280,
+    720
+  ],
+  "frames_written": 1801,
+  "anchor_count": 120,
+  "jump_gated_anchor_count": 32,
+  "flow_accepted": 1800,
+  "flow_attempts": 1800,
+  "flow_accept_rate": 1.0,
+  "output": "D:\\wayfindar\\WebNav_front_back\\backend\\poc_cross_camera\\out\\ar_reasonableness_poc\\round_00_baseline\\v0_current_hold\\non_imu_fullrate_ar_90s_comparison.mp4",
+  "note": "Natural-speed full-frame render; backend PnP anchors remain sparse at 1.5 seconds."
+}

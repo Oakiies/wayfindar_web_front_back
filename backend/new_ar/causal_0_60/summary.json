@@ -1,0 +1,25 @@
+{
+  "video": "D:\\video\\video_from_iphone_pare\\IMG_1895.MOV",
+  "frames": 1800,
+  "fps": 29.989436148211336,
+  "duration_s": 60.021135145862274,
+  "prepare_s": 5.267732500098646,
+  "ready_before_camera": true,
+  "first_pose_source_s": 0.5668662763775881,
+  "first_pose_available_s": 0.7242570999078453,
+  "first_calibration_available_s": 3.21338630001992,
+  "accepted": 1732,
+  "calibration_versions": 36,
+  "latency_p50_p95_max_s": [
+    0.015853237934841502,
+    0.11738879963522604,
+    0.20085959235486062
+  ],
+  "compute_p50_p95_max_s": [
+    0.011240800144150853,
+    0.020278469892218706,
+    0.1973766996525228
+  ],
+  "pending_work_at_end": false,
+  "provenance": "Reference-only scene preparation; strictly sequential query frames and asynchronous past-frame measurements. No cached video calibration, future-frame fitting or retroactive K updates."
+}

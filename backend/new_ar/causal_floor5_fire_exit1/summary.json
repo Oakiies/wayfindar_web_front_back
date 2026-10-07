@@ -1,0 +1,25 @@
+{
+  "video": "D:\\video\\floor5_2.mp4",
+  "frames": 3597,
+  "fps": 59.94005994005994,
+  "duration_s": 60.00995,
+  "prepare_s": 8.841845400165766,
+  "ready_before_camera": true,
+  "first_pose_source_s": 0.45045,
+  "first_pose_available_s": 0.6872931998223066,
+  "first_calibration_available_s": 2.6123581998981535,
+  "accepted": 3428,
+  "calibration_versions": 31,
+  "latency_p50_p95_max_s": [
+    5.787652566844471,
+    12.87264396655331,
+    13.691734633239108
+  ],
+  "compute_p50_p95_max_s": [
+    0.01122989971190691,
+    0.013998880237340925,
+    0.6263238000683486
+  ],
+  "pending_work_at_end": true,
+  "provenance": "Reference-only scene preparation; strictly sequential query frames and asynchronous past-frame measurements. No cached video calibration, future-frame fitting or retroactive K updates."
+}

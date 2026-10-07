@@ -1,0 +1,46 @@
+{
+  "method": "Project held-out ground landmarks onto each proposed floor plane, then compare with observed image pixels. Same K and independent direct pose at each held-out frame.",
+  "note": "9 automatically selected sparse floor candidates, not manually surveyed ground truth. This evaluates floor-plane alignment, not whole-route accuracy.",
+  "current_median_px": 138.61354709144015,
+  "new_median_px": 23.277362146672925,
+  "rows": [
+    {
+      "time": 50,
+      "count": 3,
+      "current_pixel_errors": [
+        60.346520545987694,
+        62.668293161394764,
+        71.62607427594027
+      ],
+      "current_median_px": 62.668293161394764,
+      "new_pixel_errors": [
+        29.357338662054115,
+        26.701348709858564,
+        33.654918428276495
+      ],
+      "new_median_px": 29.357338662054115
+    },
+    {
+      "time": 59,
+      "count": 6,
+      "current_pixel_errors": [
+        109.48297455155142,
+        146.35806506872188,
+        138.61354709144015,
+        201.1848327728604,
+        206.3916726637546,
+        230.6683593502957
+      ],
+      "current_median_px": 173.77144892079116,
+      "new_pixel_errors": [
+        14.05559751544527,
+        26.412941685614456,
+        10.295848852337281,
+        4.944820980330435,
+        11.204879134043237,
+        23.277362146672925
+      ],
+      "new_median_px": 12.630238324744253
+    }
+  ]
+}

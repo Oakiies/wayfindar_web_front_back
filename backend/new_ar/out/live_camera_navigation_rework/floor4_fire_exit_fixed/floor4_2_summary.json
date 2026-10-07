@@ -1,0 +1,59 @@
+{
+  "schema": "luna_live_camera_navigation_rework_v1",
+  "backend_url": "http://127.0.0.1:5011",
+  "session_id": 1789065036358,
+  "video_filename": "floor4_2.mov",
+  "source_video": {
+    "source_path": "D:\\video\\floor4_2.mov",
+    "bytes": 830376700,
+    "fps": 60.007579498604684,
+    "frame_count": 21772,
+    "duration_s": 362.8208333333333,
+    "width": 1920,
+    "height": 1080,
+    "transform": "none; decoded with OpenCV, server downsamples 60 FPS to 30 FPS"
+  },
+  "destination": "fire_exit1",
+  "start_floor": "4",
+  "destination_floor": "4",
+  "sample_target_video_s": 60.0,
+  "captured_event_count": 1,
+  "captured_update_count": 0,
+  "first_update_timestamp_s": null,
+  "last_update_timestamp_s": null,
+  "tracking_status_counts": {},
+  "ar_world_status_counts": {},
+  "payload_ready_update_count": 0,
+  "projected_geometry_update_count": 0,
+  "first_projected_geometry_s": null,
+  "last_projected_geometry_s": null,
+  "visible_intervals": [],
+  "hidden_intervals": [],
+  "delivery_lag_s": {
+    "p50": null,
+    "p95": null,
+    "max": null
+  },
+  "server_to_client_wall_latency_s": {
+    "p50": null,
+    "p95": null,
+    "max": null
+  },
+  "simulated_frontend_pose_age_s": {
+    "p50": null,
+    "p95": null,
+    "max": null,
+    "gate_s": 0.15
+  },
+  "source_to_current_video_s": {
+    "p50": null,
+    "p95": null,
+    "max": null
+  },
+  "tracking_diagnostics_last_event": null,
+  "floor_transition_events": [],
+  "clock": "receive_wall_time_s and emit_wall_time_s are epoch time.time() seconds on the same host; simulated presentation uses relative receive elapsed time, not browser video.currentTime",
+  "browser_qa": "not performed; this is offline receive-clock simulation plus OpenCV render_v2 projection QA",
+  "offline_renderer": "backend/poc_ar_arrow/ar_arrow_v2.py::render_v2; output is not evidence of WebGL pixels",
+  "timeline_path": "new_ar\\out\\live_camera_navigation_rework\\floor4_fire_exit_fixed\\floor4_2_timeline.jsonl"
+}

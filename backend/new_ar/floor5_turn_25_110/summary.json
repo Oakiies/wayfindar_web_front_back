@@ -1,0 +1,25 @@
+{
+  "video": "D:\\wayfindar\\WebNav_front_back\\backend\\new_ar\\floor5_turn_25_110\\input_0_110_30fps.mp4",
+  "frames": 3300,
+  "fps": 30.0,
+  "duration_s": 110.0,
+  "prepare_s": 4.593125899787992,
+  "ready_before_camera": true,
+  "first_pose_source_s": 0.4666666666666667,
+  "first_pose_available_s": 0.5884762997739017,
+  "first_calibration_available_s": 2.2467304999008775,
+  "accepted": 3161,
+  "calibration_versions": 28,
+  "latency_p50_p95_max_s": [
+    0.01604533333641811,
+    0.12684313675078204,
+    0.1877106335324541
+  ],
+  "compute_p50_p95_max_s": [
+    0.011631150031462312,
+    0.01888471501879394,
+    0.1839390997774899
+  ],
+  "pending_work_at_end": true,
+  "provenance": "Reference-only scene preparation; strictly sequential query frames and asynchronous past-frame measurements. No cached video calibration, future-frame fitting or retroactive K updates."
+}

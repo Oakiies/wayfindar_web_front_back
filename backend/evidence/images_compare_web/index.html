@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>normal vs wide — floor5</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .marker.naive { background: var(--naive); z-index: 2; }
+  .marker.corrected { background: var(--corrected); z-index: 2; }
+  .layout { grid-template-columns: 1fr 1fr 1fr; }
+</style>
+</head>
+<body>
+  <nav class="modes">
+    <a href="index.html" class="active">เทียบเลนส์ (normal vs wide)</a>
+    <a href="crop.html">ครอป</a>
+    <a href="resize.html">resize</a>
+    <a href="zoom.html">ซูมอิน</a>
+    <a href="iphone11.html">iPhone 11</a>
+  </nav>
+
+  <h1>ตำแหน่งจาก normal vs wide (ultrawide) — <span id="floorLabel"></span></h1>
+  <div class="sub">คู่ภาพถ่ายจากจุดเดียวกัน เทียบผลตำแหน่งบนแผนที่เมื่อเลนส์ต่างกัน</div>
+
+  <div class="points" id="points"></div>
+  <div class="points" id="shots"></div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>ภาพ normal (K แผนที่)</h2>
+      <div class="photo-wrap"><img id="normalImg"><div class="tag">normal</div></div>
+      <div class="meta" id="normalMeta"></div>
+    </div>
+    <div class="panel">
+      <h2>ภาพ wide / ultrawide</h2>
+      <div class="photo-wrap"><img id="wideImg"><div class="tag">wide</div></div>
+      <div class="meta" id="wideMeta"></div>
+    </div>
+    <div class="panel">
+      <h2>แผนที่</h2>
+      <div class="map-wrap">
+        <img id="mapImg">
+        <div class="marker ref" id="mRef"></div>
+        <div class="marker naive" id="mNaive"></div>
+        <div class="marker corrected" id="mCorrected"></div>
+      </div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--ref)"></i> normal (อ้างอิง, K แผนที่)</span>
+        <span><i class="dot" style="background:var(--naive)"></i> wide + K แผนที่ (ไม่ปรับ)</span>
+        <span><i class="dot" style="background:var(--corrected)"></i> wide + self-calibration</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="note" id="focalNote"></div>
+
+  <script src="data.js"></script>
+  <script>
+    const IMG_BASE = "../images_compare/";
+    const MAP_BASE = "../map/";
+    let curPoint = 0, curShot = 0;
+
+    function fmtXY(r) {
+      if (!r || !r.success || !r.xy) return '<span class="fail">หาตำแหน่งไม่ได้</span>';
+      return `(${r.xy[0].toFixed(1)}, ${r.xy[1].toFixed(1)}) px · inliers ${r.num_inliers}`;
+    }
+
+    function placeMarker(el, r) {
+      if (!r || !r.success || !r.xy) { el.style.display = "none"; return; }
+      el.style.display = "block";
+      el.style.left = (r.xy[0] / 500 * 100) + "%";
+      el.style.top = (r.xy[1] / 500 * 100) + "%";
+    }
+
+    function render() {
+      const pt = DATA.points[curPoint];
+      const shot = pt.shots[curShot];
+
+      document.getElementById("normalImg").src = IMG_BASE + shot.normal_img.replace("images_compare/", "");
+      document.getElementById("wideImg").src = IMG_BASE + shot.wide_img.replace("images_compare/", "");
+      document.getElementById("mapImg").src = MAP_BASE + DATA.floor_id + ".jpg";
+
+      document.getElementById("normalMeta").innerHTML = "<b>ตำแหน่ง:</b> " + fmtXY(shot.normal);
+      document.getElementById("wideMeta").innerHTML =
+        "<b>K แผนที่:</b> " + fmtXY(shot.wide_naive) + "<br><b>self-cal:</b> " + fmtXY(shot.wide_corrected);
+
+      placeMarker(document.getElementById("mRef"), shot.normal);
+      placeMarker(document.getElementById("mNaive"), shot.wide_naive);
+      placeMarker(document.getElementById("mCorrected"), shot.wide_corrected);
+    }
+
+    function buildButtons() {
+      const ptsEl = document.getElementById("points");
+      ptsEl.innerHTML = "";
+      DATA.points.forEach((pt, i) => {
+        const b = document.createElement("button");
+        b.className = "pt-btn" + (i === curPoint ? " active" : "");
+        b.textContent = "จุด " + pt.point;
+        b.onclick = () => { curPoint = i; curShot = 0; buildButtons(); render(); };
+        ptsEl.appendChild(b);
+      });
+
+      const shotsEl = document.getElementById("shots");
+      shotsEl.innerHTML = "";
+      DATA.points[curPoint].shots.forEach((_, i) => {
+        const b = document.createElement("button");
+        b.className = "shot-btn" + (i === curShot ? " active" : "");
+        b.textContent = "ช็อต " + (i + 1);
+        b.onclick = () => { curShot = i; buildButtons(); render(); };
+        shotsEl.appendChild(b);
+      });
+    }
+
+    document.getElementById("floorLabel").textContent = DATA.floor_id;
+    document.getElementById("focalNote").innerHTML =
+      `<b>focal ที่ประมาณได้สำหรับเลนส์ wide:</b> ${DATA.wide_focal_est.toFixed(0)} px ` +
+      `(map K = ${DATA.map_K.f.toFixed(0)} px) — ประมาณจาก self-calibration แบบรวม session ข้ามภาพ wide ทั้งหมด ` +
+      `(${DATA.wide_selfcal_estimates.length} ค่า: ${DATA.wide_selfcal_estimates.map(v => v.toFixed(0)).join(", ")} px, ใช้ median) ` +
+      `เพราะเป็นเลนส์เดียวกันทุกภาพ · จุดขาว (normal) คือค่าอ้างอิง ไม่ใช่ ground truth จริง แต่เป็นภาพที่ถ่ายด้วยฟอร์แมตเดียวกับกล้องแผนที่`;
+
+    buildButtons();
+    render();
+  </script>
+</body>
+</html>
