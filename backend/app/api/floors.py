@@ -15,7 +15,7 @@ from werkzeug.utils import secure_filename
 import app.config as config
 import app.core.navigation as nav
 from app.services.state import state
-from app.services.floor_service import get_floor_list, get_floor_map_image
+from app.services.floor_service import get_floor_list, get_floor_map_image, get_venues, set_focus_venue
 from app.services.nav_service import normalize_place_name
 from app.services.video_processor import (
     allowed_file,
@@ -33,7 +33,23 @@ def get_floors():
     return {
         'floors': get_floor_list(),
         'default_floor': state.default_floor_id,
+        'focus_venue': state.focus_venue,
     }
+
+
+@router.get('/api/focus')
+def get_focus():
+    return {'focus_venue': state.focus_venue, 'venues': get_venues()}
+
+
+@router.post('/api/focus')
+def post_focus(payload: dict):
+    """Body {"venue": "<id>"} focuses one venue; {"venue": null} clears it."""
+    try:
+        set_focus_venue(payload.get('venue'))
+    except ValueError as exc:
+        return JSONResponse({'success': False, 'error': str(exc)}, status_code=400)
+    return {'success': True, 'focus_venue': state.focus_venue, 'current_floor': state.current_floor_id}
 
 
 @router.get('/api/rooms')

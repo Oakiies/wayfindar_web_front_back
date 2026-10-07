@@ -15,7 +15,6 @@ old sparse-payload behaviour with a visual-tracking policy:
 from __future__ import annotations
 
 import argparse
-import copy
 import json
 import math
 from pathlib import Path
@@ -34,9 +33,9 @@ from render_fullrate_non_imu_ar import (
     payload_screen_polygons,
     safe_visual_warp,
     track_homography,
-    translate_polygons,
 )
 from run_non_imu_video_comparison import overlay_centroid
+from video_naming import next_video_path
 
 
 Polygon = tuple[np.ndarray, tuple[int, int, int], float, str]
@@ -50,6 +49,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--start", type=float, default=80.0)
     parser.add_argument("--duration", type=float, default=100.0)
     parser.add_argument("--caret-suppress", type=float, default=0.75)
+    parser.add_argument("--tag", type=str, default="turns_80_180")
     return parser.parse_args()
 
 
@@ -132,13 +132,6 @@ def draw_overlay(frame: np.ndarray, polygons: list[Polygon]) -> np.ndarray:
     return out
 
 
-def update_lookup(anchors: list[dict[str, Any]], timestamp: float) -> dict[str, Any] | None:
-    index = anchor_index_at(anchors, timestamp)
-    if index < 0:
-        return None
-    return anchors[index].get("update")
-
-
 def enrich_anchors(updates: list[dict[str, Any]]) -> list[dict[str, Any]]:
     anchors = fresh_anchors(updates)
     by_timestamp = {
@@ -171,8 +164,13 @@ def main() -> int:
 
     cap.set(cv2.CAP_PROP_POS_MSEC, start * 1000.0)
     panel_size = (640, 360)
-    comparison_path = args.output_dir / "non_imu_stale_free_ar_turns_80_180_comparison.mp4"
-    improved_path = args.output_dir / "non_imu_stale_free_ar_turns_80_180.mp4"
+    safe_tag = "".join(char if char.isalnum() or char in "-_" else "_" for char in args.tag)
+    comparison_path = next_video_path(
+        args.output_dir, f"non_imu_stale_free_ar_{safe_tag}_comparison"
+    )
+    improved_path = next_video_path(
+        args.output_dir, f"non_imu_stale_free_ar_{safe_tag}"
+    )
     writer = open_writer(comparison_path, (panel_size[0] * 2, panel_size[1]), fps)
     improved_writer = open_writer(improved_path, panel_size, fps)
 
@@ -239,7 +237,13 @@ def main() -> int:
                 visual_polygons = baseline
 
             display_polygons = visual_polygons
-            if timestamp < caret_suppress_until:
+            if current_state == "arrived":
+                # Arrival is terminal for route geometry. Do not let a cached
+                # PoC payload reintroduce the last turn after the user reaches
+                # the destination.
+                display_polygons = []
+                caret_suppressed_frames += 1
+            elif timestamp < caret_suppress_until:
                 display_polygons = strip_carets(display_polygons)
                 caret_suppressed_frames += 1
 
@@ -280,7 +284,7 @@ def main() -> int:
         "improved_output": str(improved_path),
         "policy": "full-rate KLT propagation + fresh-anchor correction + route-state reset + short caret hand-off",
     }
-    summary_path = args.output_dir / "non_imu_stale_free_ar_turns_80_180_summary.json"
+    summary_path = args.output_dir / f"non_imu_stale_free_ar_{safe_tag}_summary.json"
     summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     return 0

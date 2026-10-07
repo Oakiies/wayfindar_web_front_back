@@ -135,9 +135,16 @@ class Localizer:
               f"(match={self.matching_mode}, retrieval={self.retrieval_mode})...")
 
         self.K = loc.load_camera_intrinsics(self.data_dir)
+        self.map_K = np.asarray(self.K, dtype=np.float64).copy()
+        # Retrieval/matching models are shared by live camera requests and the
+        # causal video worker. Serialize inference at this boundary while
+        # keeping the request handler itself non-blocking.
+        self._localize_lock = threading.RLock()
+        self._calibration_generation = 0
         # Map K is provisional; query-side calibration runs asynchronously.
         self.camera_self_calibrator = CameraSelfCalibrator(
-            self.K, on_commit=self._commit_camera_calibration,
+            self.K,
+            on_commit=lambda calibrated_K: self._commit_camera_calibration(calibrated_K, 0),
         )
         self.mappoint_dict = loc.load_mappoints(self.data_dir)
 
@@ -281,12 +288,34 @@ class Localizer:
 
     # ── Public API ───────────────────────────────────────────────────────────
 
-    def _commit_camera_calibration(self, calibrated_K: np.ndarray) -> None:
+    def _commit_camera_calibration(self, calibrated_K: np.ndarray, generation: int | None = None) -> None:
         # Replace the reference after a request has copied K for its pipeline.
+        if generation is not None and generation != self._calibration_generation:
+            return
         self.K = np.asarray(calibrated_K, dtype=np.float64).copy()
         print(f"[CALIB] committed image-only focal={self.K[0, 0]:.1f}px")
 
-    def localize(self, image_input):
+    def reset_camera_calibration(self) -> None:
+        """Start a new camera session from map intrinsics without reloading maps."""
+        previous = getattr(self, 'camera_self_calibrator', None)
+        if previous is not None:
+            previous.close()
+        self._calibration_generation += 1
+        generation = self._calibration_generation
+        self.K = self.map_K.copy()
+        self.camera_self_calibrator = CameraSelfCalibrator(
+            self.K,
+            on_commit=lambda calibrated_K: self._commit_camera_calibration(calibrated_K, generation),
+        )
+
+    def localize(
+        self,
+        image_input,
+        return_correspondences: bool = False,
+        *,
+        camera_K=None,
+        calibration_callback=None,
+    ):
         """
         Localize a single frame (Path or numpy array).
         Returns (result dict, xy_map tuple or None).
@@ -306,7 +335,10 @@ class Localizer:
         use_superglue = use_superpoint and self.superglue_matcher is not None
 
         p = lc.LOCALIZATION_PARAMS
-        camera_K = self.camera_self_calibrator.active_K()
+        camera_K = (
+            self.camera_self_calibrator.active_K()
+            if camera_K is None else np.asarray(camera_K, dtype=np.float64).copy()
+        )
 
         # A sweep/retry can localize the same image through several hypotheses.
         # Deduplicate that image so one physical frame contributes at most one
@@ -318,35 +350,39 @@ class Localizer:
             calibration_frame_token = ("path", str(image_input))
 
         def submit_calibration(points_2d, points_3d):
+            if calibration_callback is not None:
+                return calibration_callback(points_2d, points_3d)
             return self.camera_self_calibrator.submit(
                 points_2d, points_3d, frame_token=calibration_frame_token,
             )
 
-        result = loc.localize_image(
-            image_input,
-            self.database,
-            self.mappoint_dict,
-            camera_K,
-            pca_model=self.pca_model,
-            floor_config=self.floor_config,
-            netvlad_model=self.retrieval_model,
-            superpoint_extractor=self.superpoint_extractor,
-            superglue_matcher=self.superglue_matcher,
-            H_matrix=self.H_matrix,
-            top_k=p['top_k'],
-            reproj_threshold=p['reproj_threshold'],
-            min_inliers=p['min_inliers'],
-            min_inlier_ratio=p['min_inlier_ratio'],
-            max_median_reproj_error=p['max_median_reproj_error'],
-            floor_plan_size=floor_plan_size,
-            verbose=False,
-            debug_mode=self.debug_mode,
-            allow_orb_fallback=False,
-            allow_keyframe_fallback=False,
-            use_superpoint=use_superpoint,
-            use_superglue=use_superglue,
-            calibration_callback=submit_calibration,
-        )
+        with self._localize_lock:
+            result = loc.localize_image(
+                image_input,
+                self.database,
+                self.mappoint_dict,
+                camera_K,
+                pca_model=self.pca_model,
+                floor_config=self.floor_config,
+                netvlad_model=self.retrieval_model,
+                superpoint_extractor=self.superpoint_extractor,
+                superglue_matcher=self.superglue_matcher,
+                H_matrix=self.H_matrix,
+                top_k=p['top_k'],
+                reproj_threshold=p['reproj_threshold'],
+                min_inliers=p['min_inliers'],
+                min_inlier_ratio=p['min_inlier_ratio'],
+                max_median_reproj_error=p['max_median_reproj_error'],
+                floor_plan_size=floor_plan_size,
+                verbose=False,
+                debug_mode=self.debug_mode,
+                allow_orb_fallback=False,
+                allow_keyframe_fallback=False,
+                use_superpoint=use_superpoint,
+                use_superglue=use_superglue,
+                calibration_callback=submit_calibration,
+                return_correspondences=return_correspondences,
+            )
 
         xy_map = None
         if result['success']:
@@ -360,6 +396,19 @@ class Localizer:
             print("Localization Failed.")
 
         if isinstance(result, dict):
+            if return_correspondences and result.get('_tracking_points_3d') is not None:
+                # The production matcher exposes 2D/3D pairs, while the
+                # temporal tracker also needs stable map-point identities for
+                # bounded deduplication. Reconstruct them from the immutable
+                # map database; points originate from this exact dictionary.
+                point_ids = []
+                by_point = {
+                    np.asarray(point, dtype=np.float32).tobytes(): int(mp_id)
+                    for mp_id, point in self.mappoint_dict.items()
+                }
+                for point in result['_tracking_points_3d']:
+                    point_ids.append(by_point.get(np.asarray(point, dtype=np.float32).tobytes(), -1))
+                result['_tracking_mp_ids'] = np.asarray(point_ids, dtype=np.int64)
             result['matching_mode'] = self.matching_mode
             result['requested_matching_mode'] = self.requested_matching_mode
             result['keyframes_dir'] = str(self.keyframes_dir)

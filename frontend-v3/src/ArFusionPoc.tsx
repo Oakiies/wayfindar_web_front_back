@@ -1163,7 +1163,7 @@ export default function ArFusionPoc() {
           pdrPoseRef={arPdrPoseRef}
           // This page must show only the world-registered AR from
           // poc_ar_arrow. Do not draw the screen-space fallback route.
-          strictWorldAr={Boolean(destinationId)}
+          strictWorldAr
         />
       </div>
 

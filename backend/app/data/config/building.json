@@ -1,4 +1,4 @@
-{
+﻿{
   "building_id": "main_building",
   "connector_groups": [
     {
@@ -228,6 +228,34 @@
       "label": "Floor 5",
       "map_image": "map/floor5.jpg",
       "order": 5
+    },
+    {
+      "id": "floor_siamdis2",
+      "label": "Siam Discovery F2",
+      "order": 7,
+      "enabled": true,
+      "map_image": "map/siamdis_floor2.jpg",
+      "graph_json": "json_map/siamdis_floor2.json",
+      "data_dir": "map_data/result_siam_dis_floor2_4",
+      "venue": "siamdis",
+      "map_size": [
+        1221,
+        1035
+      ]
+    },
+    {
+      "id": "floor_siamdis3",
+      "label": "Siam Discovery F3",
+      "order": 8,
+      "enabled": true,
+      "map_image": "map/siamdis_floor3.png",
+      "graph_json": "json_map/siamdis_floor3.json",
+      "data_dir": "map_data/result_siam_dis_floor3_2",
+      "venue": "siamdis",
+      "map_size": [
+        1430,
+        1100
+      ]
     }
   ],
   "name": "IT Building",

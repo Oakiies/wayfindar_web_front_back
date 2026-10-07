@@ -4,11 +4,13 @@ import MapCanvas from './MapCanvas';
 import BottomSheet from './ui/BottomSheet';
 import IconButton from './ui/IconButton';
 import { shortFloorLabel } from '../lib/floorLabel';
+import { type MapFrame } from '../lib/mapFrame';
 import { type Store } from '../types/navigation';
 
 interface StoreDetailViewProps {
   selectedStore: Store;
   mapImageUrl: string;
+  mapFrame?: MapFrame | null;
   openSearch: () => void;
   resetToMap: () => void;
   handleStartRoute: () => void;
@@ -17,6 +19,7 @@ interface StoreDetailViewProps {
 const StoreDetailView: React.FC<StoreDetailViewProps> = ({
   selectedStore,
   mapImageUrl,
+  mapFrame,
   openSearch,
   resetToMap,
   handleStartRoute,
@@ -28,6 +31,7 @@ const StoreDetailView: React.FC<StoreDetailViewProps> = ({
       <div className="absolute inset-0 z-0 overflow-hidden">
         <MapCanvas
           mapImageUrl={mapImageUrl}
+          mapFrame={mapFrame}
           markers={[
             {
               id: selectedStore.id,

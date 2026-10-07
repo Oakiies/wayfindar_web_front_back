@@ -1,4 +1,4 @@
-{
+﻿{
   "graph": {
     "directed": false,
     "metadata": {
@@ -733,30 +733,6 @@
         "metadata": {
           "type": "hallway",
           "distance": 59,
-          "accessible": true,
-          "bidirectional": true
-        }
-      },
-      {
-        "source": "node-1774618842742",
-        "source_label": "M23_A",
-        "target": "node-1774618887993",
-        "target_label": "Intersection 2",
-        "metadata": {
-          "type": "hallway",
-          "distance": 64.07807737440318,
-          "accessible": true,
-          "bidirectional": true
-        }
-      },
-      {
-        "source": "node-1774618883843",
-        "source_label": "Intersection 1",
-        "target": "node-1774618841059",
-        "target_label": "M23_B",
-        "metadata": {
-          "type": "hallway",
-          "distance": 64.07807737440318,
           "accessible": true,
           "bidirectional": true
         }

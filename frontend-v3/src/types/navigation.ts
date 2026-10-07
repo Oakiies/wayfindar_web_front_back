@@ -1,4 +1,6 @@
-﻿export interface MapPoint {
+﻿import { type MapFrame } from '../lib/mapFrame';
+
+export interface MapPoint {
   x: number;
   y: number;
 }
@@ -9,6 +11,10 @@ export interface FloorInfo {
   order: number;
   mapImageUrl: string;
   graphJsonUrl: string;
+  /** Building/venue tag from building.json; floors sharing one can be focused together. */
+  venue?: string;
+  /** Set when the plan is not the legacy 500x500; see lib/mapFrame.ts. */
+  mapFrame?: MapFrame | null;
 }
 
 export interface Store {

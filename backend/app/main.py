@@ -8,10 +8,14 @@ reports readiness. Routers preserve the original /api/* paths.
 The localization stack under core/ and services/ is navigate_indoor's; see
 app/README_PORT.md for what was adapted at the framework boundary.
 """
+import hashlib
+import os
 import sys
 import threading
+import time
 import traceback
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 # Force UTF-8 console output before anything else can print.
 #
@@ -43,6 +47,39 @@ from app.api.debug import router as debug_router
 
 _init_done = threading.Event()
 _init_error: Exception | None = None
+_server_started_wall_time = time.time()
+
+
+def _runtime_fingerprint() -> dict:
+    """Return a content fingerprint that identifies the code this process runs."""
+    app_dir = Path(__file__).resolve().parent
+    files = (
+        Path('app/main.py'),
+        Path('app/services/video_processor.py'),
+        Path('app/services/ar_service.py'),
+        Path('app/core/localizer.py'),
+        Path('app/core/self_calibration.py'),
+    )
+    digest = hashlib.sha256()
+    present = []
+    for relative in files:
+        path = app_dir.parent / relative
+        try:
+            data = path.read_bytes()
+        except OSError:
+            continue
+        digest.update(str(relative).encode('utf-8'))
+        digest.update(b'\0')
+        digest.update(data)
+        present.append(str(relative).replace('\\', '/'))
+    return {
+        'code_fingerprint': digest.hexdigest()[:16],
+        'code_files': present,
+        'pid': os.getpid(),
+        'server_started_wall_time': _server_started_wall_time,
+        'server_started_iso': time.strftime('%Y-%m-%dT%H:%M:%S%z', time.localtime(_server_started_wall_time)),
+        'luna_pipeline': 'causal_klt_pnp_v2',
+    }
 
 
 def _bg_init() -> None:
@@ -106,6 +143,16 @@ def healthz():
         'matching_mode': config.MATCHING_MODE,
         'accel_mode': config.ACCEL_MODE,
         'preload_all_floors': config.PRELOAD_ALL_FLOORS,
+        **_runtime_fingerprint(),
+    }
+
+
+@app.get('/api/runtime-info')
+def runtime_info():
+    """Proxy-safe runtime identity endpoint for the Vite frontend."""
+    return {
+        'ready': _init_done.is_set() and _init_error is None,
+        **_runtime_fingerprint(),
     }
 
 

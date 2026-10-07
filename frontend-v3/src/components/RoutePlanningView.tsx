@@ -4,6 +4,7 @@ import MapCanvas from './MapCanvas';
 import BottomSheet from './ui/BottomSheet';
 import IconButton from './ui/IconButton';
 import { shortFloorLabel } from '../lib/floorLabel';
+import { type MapFrame } from '../lib/mapFrame';
 import { type MapPoint, type Store } from '../types/navigation';
 
 export type SearchContext = 'map' | 'route-origin' | 'route-destination';
@@ -15,6 +16,7 @@ interface RoutePlanningViewProps {
   routeTime: string;
   routeMeta: string;
   mapImageUrl: string;
+  mapFrame?: MapFrame | null;
   activeFloorLabel: string;
   routePath: MapPoint[];
   originPoint: MapPoint | null;
@@ -33,6 +35,7 @@ const RoutePlanningView: React.FC<RoutePlanningViewProps> = ({
   routeTime,
   routeMeta,
   mapImageUrl,
+  mapFrame,
   activeFloorLabel,
   routePath,
   originPoint,
@@ -77,7 +80,7 @@ const RoutePlanningView: React.FC<RoutePlanningViewProps> = ({
   return (
     <div className="relative flex h-full flex-col overflow-hidden bg-paper">
       <div className="relative h-full overflow-hidden">
-        <MapCanvas mapImageUrl={mapImageUrl} route={routePath} markers={markers} interactive className="h-full w-full" />
+        <MapCanvas mapImageUrl={mapImageUrl} mapFrame={mapFrame} route={routePath} markers={markers} interactive className="h-full w-full" />
 
         <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-52 bg-gradient-to-b from-paper/90 to-transparent" />
 

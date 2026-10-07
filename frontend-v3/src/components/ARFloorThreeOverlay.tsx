@@ -86,6 +86,29 @@ function applyWorldIntrinsics(
   camera.projectionMatrixInverse.copy(m).invert();
 }
 
+function intrinsicsForVideoImage(
+  video: HTMLVideoElement | null | undefined,
+  K: [number, number, number, number],
+  calibrationSize: [number, number],
+): { K: [number, number, number, number]; imgWH: [number, number] } {
+  const [calibrationWidth, calibrationHeight] = calibrationSize;
+  const videoWidth = video?.videoWidth || calibrationWidth;
+  const videoHeight = video?.videoHeight || calibrationHeight;
+  const aspectDelta = Math.abs(Math.log((videoWidth / videoHeight) / (calibrationWidth / calibrationHeight)));
+  // ArFusion can rotate portrait camera frames into the landscape calibration
+  // image before upload. In that case native video dimensions are not a simple
+  // resize of the localized image, so keep the payload coordinate system.
+  const useNativeSize = aspectDelta < 0.35;
+  const width = useNativeSize ? videoWidth : calibrationWidth;
+  const height = useNativeSize ? videoHeight : calibrationHeight;
+  const scaleX = width / calibrationWidth;
+  const scaleY = height / calibrationHeight;
+  return {
+    K: [K[0] * scaleX, K[1] * scaleY, K[2] * scaleX, K[3] * scaleY],
+    imgWH: [width, height],
+  };
+}
+
 /**
  * Camera pose from the OpenCV extrinsics (X_cam = R * X_world + t).
  *
@@ -290,6 +313,8 @@ interface ARFloorThreeOverlayProps {
   videoFit?: 'contain' | 'cover';
   /** Replay PoC mode: a missing v2 payload means no AR geometry, not a stylized fallback. */
   strictWorldAr?: boolean;
+  /** Disable camera easing for timestamp-aligned video replay. */
+  smoothCameraPose?: boolean;
 }
 
 export interface ArPdrPose {
@@ -599,7 +624,8 @@ const ARFloorThreeOverlay: React.FC<ARFloorThreeOverlayProps> = ({
   pdrPoseRef,
   videoRef,
   videoFit = 'contain',
-  strictWorldAr = false,
+  strictWorldAr = true,
+  smoothCameraPose = true,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -615,10 +641,9 @@ const ARFloorThreeOverlay: React.FC<ARFloorThreeOverlayProps> = ({
   const worldPoseLastUpdateAtRef = useRef(0);
   const worldYawAxisRef = useRef<THREE.Vector3 | null>(null);
   const worldIntrinsicsRef = useRef<{ K: [number, number, number, number]; imgWH: [number, number] } | null>(null);
-  // The image size to lay the canvas out against. This must be the payload's
-  // calibration image size because K is expressed in that same coordinate
-  // system; using the browser's possibly downscaled video dimensions would
-  // silently apply the projection scale twice.
+  // The payload intrinsics use the backend's calibration image size. The
+  // rendered camera uses the video's native pixels, so updateSize scales K
+  // into that coordinate system before laying out the canvas.
   const imgWHRef = useRef<[number, number] | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const chevronGeometryRef = useRef<THREE.ExtrudeGeometry | null>(null);
@@ -724,17 +749,19 @@ const ARFloorThreeOverlay: React.FC<ARFloorThreeOverlayProps> = ({
       }
       // Match the canvas to the live video's fit mode and native image size.
       // Stylized fallback has no image projection, so it lays out full-bleed.
-      const imgWH: [number, number] | null = worldModeRef.current
-        ? imgWHRef.current
+      const intrinsics = worldIntrinsicsRef.current;
+      const displayIntrinsics = worldModeRef.current && intrinsics
+        ? intrinsicsForVideoImage(videoRef?.current, intrinsics.K, intrinsics.imgWH)
         : null;
+      const imgWH: [number, number] | null = displayIntrinsics?.imgWH ?? null;
+      imgWHRef.current = imgWH;
       const layout = layoutArCanvas(canvas, rendererRef.current, imgWH, videoFit);
-      // The pixel-registered camera's projection matrix comes from K/imgWH
-      if (worldModeRef.current && worldIntrinsicsRef.current && layout) {
+      if (displayIntrinsics && layout) {
         applyWorldIntrinsics(
           cameraRef.current,
-          worldIntrinsicsRef.current.K,
-          worldIntrinsicsRef.current.imgWH[0],
-          worldIntrinsicsRef.current.imgWH[1],
+          displayIntrinsics.K,
+          displayIntrinsics.imgWH[0],
+          displayIntrinsics.imgWH[1],
           layout,
         );
       } else if (!worldModeRef.current) {
@@ -750,6 +777,8 @@ const ARFloorThreeOverlay: React.FC<ARFloorThreeOverlayProps> = ({
     const observer = new ResizeObserver(updateSize);
     const resizeTarget = canvas.parentElement ?? canvas;
     observer.observe(resizeTarget);
+    const video = videoRef?.current;
+    video?.addEventListener('loadedmetadata', updateSize);
     window.addEventListener('resize', updateSize);
 
     const renderLoop = () => {
@@ -773,8 +802,8 @@ const ARFloorThreeOverlay: React.FC<ARFloorThreeOverlayProps> = ({
           // VaL fixes arrive at a much lower rate than the render loop. Smooth
           // the visual-pose correction so a new fix does not teleport the AR
           // camera and make the floor lane appear to jump sideways.
-          const positionFollow = 1 - Math.exp(-dt / 0.18);
-          const rotationFollow = 1 - Math.exp(-dt / 0.22);
+          const positionFollow = smoothCameraPose ? 1 - Math.exp(-dt / 0.18) : 1;
+          const rotationFollow = smoothCameraPose ? 1 - Math.exp(-dt / 0.22) : 1;
           worldSmoothPoseRef.current.position.lerp(targetPose.position, positionFollow);
           worldSmoothPoseRef.current.quaternion.slerp(targetPose.quaternion, rotationFollow).normalize();
           cameraRef.current.position.copy(worldSmoothPoseRef.current.position);
@@ -806,6 +835,7 @@ const ARFloorThreeOverlay: React.FC<ARFloorThreeOverlayProps> = ({
         animationFrameRef.current = null;
       }
       window.removeEventListener('resize', updateSize);
+      video?.removeEventListener('loadedmetadata', updateSize);
       observer.disconnect();
 
       markerLabelTextureRef.current?.dispose();
@@ -841,7 +871,7 @@ const ARFloorThreeOverlay: React.FC<ARFloorThreeOverlayProps> = ({
       markerGroupRef.current = null;
       worldGroupRef.current = null;
     };
-  }, [videoRef, pdrPoseRef, videoFit]);
+  }, [videoRef, pdrPoseRef, videoFit, smoothCameraPose]);
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -866,7 +896,13 @@ const ARFloorThreeOverlay: React.FC<ARFloorThreeOverlayProps> = ({
     // leave the stylized fallback empty rather than drawing both at once.
     // The AR Fusion PoC enables strictWorldAr so it never shows a screen-space
     // arrow that could be mistaken for a floor-registered cue.
-    if (!enabled || arWorld || strictWorldAr) {
+    const worldCarets = Array.isArray(arWorld?.carets)
+      ? arWorld.carets
+      : arWorld?.chevrons ?? [];
+    const hasWorldGeometry = !!arWorld && (
+      worldCarets.length > 0 || (arWorld.ribbon_quads?.length ?? 0) > 0
+    );
+    if (!enabled || hasWorldGeometry || strictWorldAr) {
       return;
     }
 
@@ -944,7 +980,13 @@ const ARFloorThreeOverlay: React.FC<ARFloorThreeOverlayProps> = ({
     [...worldGroup.children].forEach(disposeWorldObject);
     worldGroup.clear();
 
-    const worldCarets = arWorld?.carets?.length ? arWorld.carets : arWorld?.chevrons ?? [];
+    // An explicitly empty v2 `carets` array is semantic: the backend has
+    // classified the current route as a shallow corridor bend and wants only
+    // the continuous ribbon. Fall back to legacy `chevrons` only when the
+    // payload predates the `carets` field entirely.
+    const worldCarets = Array.isArray(arWorld?.carets)
+      ? arWorld.carets
+      : arWorld?.chevrons ?? [];
     const hasRibbon = (arWorld?.ribbon_quads?.length ?? 0) > 0;
     const hasWorld = enabled && !!arWorld && (worldCarets.length > 0 || hasRibbon) && arWorld.imgWH[0] > 0 && arWorld.imgWH[1] > 0;
     worldModeRef.current = hasWorld;
@@ -973,19 +1015,21 @@ const ARFloorThreeOverlay: React.FC<ARFloorThreeOverlayProps> = ({
     }
 
     const [imgW, imgH] = arWorld.imgWH;
-    imgWHRef.current = [imgW, imgH];
+    const calibrationIntrinsics = {
+      K: [...arWorld.K] as [number, number, number, number],
+      imgWH: [imgW, imgH] as [number, number],
+    };
+    worldIntrinsicsRef.current = calibrationIntrinsics;
+    const displayIntrinsics = intrinsicsForVideoImage(videoRef?.current, calibrationIntrinsics.K, calibrationIntrinsics.imgWH);
+    imgWHRef.current = displayIntrinsics.imgWH;
     const layout = layoutArCanvas(
       canvas,
       renderer,
-      // K/imgWH describe the actual image coordinate system used by PnP.
-      // The live video may be a downscaled 1280x720 stream while calibration
-      // remains 1920x1080; using video dimensions here would scale K twice.
-      [imgW, imgH],
+      displayIntrinsics.imgWH,
       videoFit,
     );
 
-    worldIntrinsicsRef.current = { K: [...arWorld.K] as [number, number, number, number], imgWH: [imgW, imgH] };
-    applyWorldIntrinsics(camera, arWorld.K, imgW, imgH, layout ?? undefined);
+    applyWorldIntrinsics(camera, displayIntrinsics.K, displayIntrinsics.imgWH[0], displayIntrinsics.imgWH[1], layout ?? undefined);
     worldBasePoseRef.current = {
       R: arWorld.R.map((row) => [...row]),
       t: [...arWorld.t],

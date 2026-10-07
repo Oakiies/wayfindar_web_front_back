@@ -16,6 +16,7 @@ import ARFloorThreeOverlay, { type TransitionTargetMarker } from './ARFloorThree
 import MapCanvas from './MapCanvas';
 import IconButton from './ui/IconButton';
 import FloorRail from './ui/FloorRail';
+import { type MapFrame } from '../lib/mapFrame';
 import { type MapPoint, type Store } from '../types/navigation';
 import { type ArWorldPayload } from '../services/navigationTestService';
 import { buildNavigationGuidance, type GuidanceKind } from '../utils/navigationGuidance';
@@ -33,6 +34,7 @@ interface NavigationViewProps {
   routeMeta: string;
   destination: string;
   mapImageUrl: string;
+  mapFrame?: MapFrame | null;
   routePath: MapPoint[];
   originPoint: MapPoint | null;
   destinationPoint: MapPoint | null;
@@ -71,6 +73,7 @@ const NavigationView: React.FC<NavigationViewProps> = ({
   routeMeta,
   destination,
   mapImageUrl,
+  mapFrame,
   routePath,
   originPoint,
   destinationPoint,
@@ -307,6 +310,7 @@ const NavigationView: React.FC<NavigationViewProps> = ({
                     arWorld={liveArWorld}
                     videoRef={cameraVideoRef}
                     videoFit="cover"
+                    strictWorldAr
                   />
                 </div>
               )}
@@ -389,6 +393,8 @@ const NavigationView: React.FC<NavigationViewProps> = ({
             >
               <MapCanvas
                 mapImageUrl={mapImageUrl}
+                mapFrame={mapFrame}
+                followPose
                 route={routePath}
                 markers={mapMarkers}
                 currentPose={currentPose}
@@ -435,6 +441,8 @@ const NavigationView: React.FC<NavigationViewProps> = ({
 
         <MapCanvas
           mapImageUrl={mapImageUrl}
+          mapFrame={mapFrame}
+          followPose
           route={routePath}
           markers={mapMarkers}
           currentPose={currentPose}

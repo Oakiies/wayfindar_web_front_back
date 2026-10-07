@@ -974,6 +974,7 @@ def main():
     stabilizer = PoseStabilizer(alpha=0.24, max_jump_m=1.0,
                                 max_turn_deg=22.0, turn_follow_deg=6.0,
                                 turn_alpha=0.50,
+                                expected_interval_s=max(0.25, args.step / FPS),
                                 metres_per_unit=proj.metres_per_unit)
     pin_filter = _PinPoseFilter(proj.metres_per_unit)
     pose_dumped = False

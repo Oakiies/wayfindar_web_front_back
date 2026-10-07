@@ -2,9 +2,11 @@ import { Loader2, Play, Square, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { API_BASE_URL, buildApiUrl, fetchNavigationState, startNavigationTest, stopNavigationTest, uploadVideoFile } from '../services/navigationTestService';
 import ARFloorThreeOverlay from './ARFloorThreeOverlay';
+import { replayArPose, replayPoseBracket } from '../services/replayArPose';
 import { type ArWorldPayload } from '../services/navigationTestService';
 import MapCanvas from './MapCanvas';
-import { type MapPoint, type Store } from '../types/navigation';
+import { toMapUnits } from '../lib/mapFrame';
+import { type FloorInfo, type MapPoint, type Store } from '../types/navigation';
 
 type StreamUpdate = {
   frame?: number;
@@ -15,6 +17,12 @@ type StreamUpdate = {
   destination_floor?: string;
   method?: string;
   tracking_mode?: string;
+  tracking_status?: string;
+  ar_world_status?: string;
+  ar_payload_ready?: boolean;
+  ar_projected_geometry?: boolean;
+  ar_geometry_counts?: Record<string, number>;
+  reason?: string;
   orientation?: number;
   relative_bearing?: number;
   ar_bearing?: number;
@@ -35,6 +43,8 @@ interface VideoTestPanelProps {
   open: boolean;
   stores: Store[];
   selectedFloorId: string;
+  /** Floors by id, for the map frame of non-500x500 plans. */
+  floorsById?: Map<string, FloorInfo>;
   livePosition?: MapPoint | null;
   liveHeadingDeg?: number | null;
   liveRoutePath?: MapPoint[];
@@ -61,14 +71,16 @@ function nowLabel(): string {
 }
 
 const API_LABEL = API_BASE_URL || 'same-origin (/api via Vite proxy)';
-const REPLAY_START_BUFFER_SECONDS = 3;
-const REPLAY_RESUME_BUFFER_SECONDS = 2;
-const REPLAY_LOW_WATER_SECONDS = 0.3;
+// The backend is paced on the video's native clock. Keep only a tiny startup
+// cushion so the demo behaves like a live camera instead of waiting for a
+// multi-second replay buffer.
+const REPLAY_START_BUFFER_SECONDS = 0.15;
 
 const VideoTestPanel = ({
   open,
   stores,
   selectedFloorId,
+  floorsById,
   onNavigationStart,
   onNavigationUpdate,
   onNavigationStop,
@@ -86,6 +98,7 @@ const VideoTestPanel = ({
   const activeSessionIdRef = useRef<number | null>(null);
   const runningRef = useRef(false);
   const hasLocalizationUpdateRef = useRef(false);
+  const transientLocalizationMissesRef = useRef(0);
   const attemptedReplayReconnectRef = useRef(false);
   const firstFixWatchdogRef = useRef<number | null>(null);
   const timelineUpdatesRef = useRef<StreamUpdate[]>([]);
@@ -97,14 +110,17 @@ const VideoTestPanel = ({
   const [lastUploadedFingerprint, setLastUploadedFingerprint] = useState<string | null>(null);
   const [lastUploadedFilename, setLastUploadedFilename] = useState<string | null>(null);
   const [destinationStoreId, setDestinationStoreId] = useState('');
-  // Keep the working PoC cadence for the main Walkthrough replay.
-  const [intervalSeconds, setIntervalSeconds] = useState(0.05);
+  // Real navigation sends a backend keyframe about every 1.5s; the backend
+  // now propagates that pose through native frames with KLT/PnP, so this
+  // cadence no longer makes the AR overlay freeze between requests.
+  const [intervalSeconds, setIntervalSeconds] = useState(1.5);
   const [debugMode, setDebugMode] = useState(false);
   const [busy, setBusy] = useState(false);
   const [running, setRunning] = useState(false);
   const [statusText, setStatusText] = useState('Idle');
   const [lastUpdate, setLastUpdate] = useState<StreamUpdate | null>(null);
   const [presentedUpdate, setPresentedUpdate] = useState<StreamUpdate | null>(null);
+  const [syncedArWorld, setSyncedArWorld] = useState<ArWorldPayload | null>(null);
   const [processingComplete, setProcessingComplete] = useState(false);
   const [isReplayBuffering, setIsReplayBuffering] = useState(false);
   const [bufferedThroughSeconds, setBufferedThroughSeconds] = useState(0);
@@ -133,7 +149,6 @@ const VideoTestPanel = ({
   // by video.currentTime. The backend can process much faster than playback,
   // so lastUpdate is intentionally not used for rendering.
   const displayUpdate = presentedUpdate;
-  const syncedArWorld: ArWorldPayload | null = displayUpdate?.ar_world ?? null;
   const demoFloorId = displayUpdate?.current_floor || detectedFloorId || selectedFloorId;
   const demoMapUrl = displayUpdate?.map_image_url
     ? buildApiUrl(displayUpdate.map_image_url)
@@ -151,7 +166,7 @@ const VideoTestPanel = ({
   const pocInstruction = displayUpdate?.nav_text?.toUpperCase() ?? null;
   const pocInstructionClass = displayUpdate?.ar_state === 'arrived'
     ? 'border-emerald-300/45 bg-emerald-950/75 text-emerald-100'
-    : pocInstruction?.startsWith('TURN')
+    : syncedArWorld && pocInstruction?.startsWith('TURN')
       ? 'border-amber-300/45 bg-amber-950/75 text-amber-100'
       : 'border-cyan-200/35 bg-slate-950/70 text-cyan-100';
   const displayRoute = demoRoute;
@@ -160,6 +175,15 @@ const VideoTestPanel = ({
       ? { x: destinationStore.x, y: destinationStore.y }
       : null
   );
+  // Backend poses/routes are in plan pixels; MapCanvas draws in 500-unit map
+  // space. Store coordinates are already in map units, so only payload
+  // coordinates are converted.
+  const demoFrame = floorsById?.get(demoFloorId)?.mapFrame ?? null;
+  const mapRoute = useMemo(() => displayRoute.map((point) => toMapUnits(demoFrame, point)), [displayRoute, demoFrame]);
+  const mapPose = displayPosition ? toMapUnits(demoFrame, displayPosition) : null;
+  const mapDestination = displayUpdate?.destination_coords
+    ? toMapUnits(demoFrame, displayUpdate.destination_coords)
+    : demoDestination;
 
   const addLog = (line: string) => {
     setLogs((previous) => [`[${nowLabel()}] ${line}`, ...previous].slice(0, 40));
@@ -187,18 +211,6 @@ const VideoTestPanel = ({
     const latestTimestamp = Number(updates[updates.length - 1]?.timestamp);
     if (Number.isFinite(latestTimestamp)) {
       setBufferedThroughSeconds(latestTimestamp);
-      const video = videoElementRef.current;
-      if (
-        video &&
-        bufferingPauseRef.current &&
-        latestTimestamp - video.currentTime >= REPLAY_RESUME_BUFFER_SECONDS
-      ) {
-        bufferingPauseRef.current = false;
-        setIsReplayBuffering(false);
-        void video.play().catch(() => {
-          // Playback controls remain available if autoplay is blocked.
-        });
-      }
     }
   };
 
@@ -384,6 +396,7 @@ const VideoTestPanel = ({
     setUploadProgress(null);
     stopStatePolling();
     clearFirstFixWatchdog();
+    transientLocalizationMissesRef.current = 0;
     closeStream();
   };
 
@@ -466,7 +479,13 @@ const VideoTestPanel = ({
       if (type === 'update') {
         hasLocalizationUpdateRef.current = true;
         clearFirstFixWatchdog();
-        setStatusText('Running');
+        setStatusText(
+          payload.tracking_status === 'tracking_lost'
+            ? 'Finding position'
+            : payload.tracking_status === 'pose_rejected'
+              ? 'Checking position'
+              : 'Running'
+        );
         setRunning(true);
         if (payload.current_floor) {
           setDetectedFloorId(payload.current_floor);
@@ -491,12 +510,26 @@ const VideoTestPanel = ({
       }
 
       if (type === 'error') {
-        addLog(`Error: ${payload.message ?? 'unknown error'}`);
         const hasFrame = typeof payload.frame === 'number';
-        if (!hasFrame) {
-          resetSessionState('Error');
-          onNavigationStop?.();
+        if (hasFrame) {
+          // A frame-level miss is expected while the first visual fix is being
+          // found (and later when a keyframe needs a reseed). It is transient;
+          // keep the stream alive and show one useful status instead of logging
+          // the same message once per native video frame.
+          transientLocalizationMissesRef.current += 1;
+          if (
+            !hasLocalizationUpdateRef.current &&
+            transientLocalizationMissesRef.current === 1
+          ) {
+            setStatusText('Finding position');
+            addLog('Finding position (temporary frame miss; retrying)');
+          }
+          return;
         }
+
+        addLog(`Error: ${payload.message ?? 'unknown error'}`);
+        resetSessionState('Error');
+        onNavigationStop?.();
         return;
       }
 
@@ -536,6 +569,7 @@ const VideoTestPanel = ({
       setLastUpdate(null);
       setUploadProgress(null);
       hasLocalizationUpdateRef.current = false;
+      transientLocalizationMissesRef.current = 0;
       attemptedReplayReconnectRef.current = false;
       pollErrorCountRef.current = 0;
       lastHistoryLengthRef.current = 0;
@@ -685,27 +719,23 @@ const VideoTestPanel = ({
       let selected: StreamUpdate | null = null;
       for (const update of updates) {
         const timestamp = update.timestamp;
-        if (typeof timestamp !== 'number' || timestamp > currentTime + 0.05) {
+        if (typeof timestamp !== 'number') continue;
+        if (timestamp > currentTime) {
           break;
         }
         selected = update;
       }
+      // Navigation/map state follows the latest event, including HOLD. Use
+      // only the pose at or before the visible video time: the replay must not
+      // peek at a future backend sample to make the current frame look smooth.
+      const [poseLeft] = replayPoseBracket(updates, currentTime);
+      setSyncedArWorld(replayArPose(poseLeft, null, currentTime));
       setPresentedUpdate((previous) => previous === selected ? previous : selected);
     };
     const tick = () => {
       synchronizePresentedUpdate();
-      const updates = timelineUpdatesRef.current;
-      const latestTimestamp = Number(updates[updates.length - 1]?.timestamp);
-      if (
-        runningRef.current &&
-        Number.isFinite(latestTimestamp) &&
-        latestTimestamp - video.currentTime < REPLAY_LOW_WATER_SECONDS
-      ) {
-        bufferingPauseRef.current = true;
-        setIsReplayBuffering(true);
-        video.pause();
-        return;
-      }
+      // A camera feed never pauses while localization catches up. Keep the
+      // replay moving and let the AR layer show the most recent causal pose.
       if (!video.paused && !video.ended) {
         animationFrame = window.requestAnimationFrame(tick);
       }
@@ -753,7 +783,11 @@ const VideoTestPanel = ({
 
     playbackStartedRef.current = true;
     const startPlayback = () => {
-      video.currentTime = Math.max(0, firstTimestamp);
+      // Always present the complete uploaded clip from t=0.  The first
+      // backend sample is only a readiness signal; seeking to it would hide
+      // the opening frames and make the AR timeline look offset from the user
+      // video.  Frames before the first causal pose simply have no world AR.
+      video.currentTime = 0;
       bufferingPauseRef.current = false;
       setIsReplayBuffering(false);
       void video.play().catch(() => {
@@ -874,25 +908,31 @@ const VideoTestPanel = ({
                   transitionTarget={null}
                   arWorld={syncedArWorld}
                   videoRef={videoElementRef}
-                  // Replay must match poc_ar_arrow: if the backend has no
-                  // trustworthy world payload for a frame, hide the AR layer
-                  // instead of drawing the unrelated screen-fixed fallback.
+                  // Use the registered world payload whenever it is valid.
+                  // World AR only: never draw the stylized screen-space
+                  // fallback during a payload/tracking gap.
                   strictWorldAr
+                  smoothCameraPose={false}
                   enabled
                 />
               )}
 
               {demoViewMode === 'ar' && (
-                <div className={`pointer-events-none absolute bottom-4 left-1/2 z-20 -translate-x-1/2 rounded-full border px-4 py-2 text-[11px] font-semibold tracking-[0.08em] shadow-lg backdrop-blur ${pocInstructionClass}`}>
+                <div role="status" aria-live="polite" className={`pointer-events-none absolute bottom-4 left-1/2 z-20 -translate-x-1/2 rounded-full border px-4 py-2 text-center text-[11px] font-semibold tracking-[0.08em] shadow-lg backdrop-blur ${pocInstructionClass}`}>
                   {displayUpdate?.ar_state === 'arrived'
-                    ? 'ARRIVED'
-                    : pocInstruction
-                      ? pocInstruction
-                      : syncedArWorld
-                        ? 'FOLLOW THE AR PATH'
-                      : displayPosition
-                        ? 'WAITING FOR CAMERA POSE'
-                        : 'WAITING FOR LOCALIZATION'}
+                    ? 'ถึงบริเวณปลายทาง • ตรวจสอบป้ายห้อง'
+                    : !syncedArWorld
+                      ? String(displayUpdate?.ar_world_status ?? '').includes('route_behind_camera')
+                        ? 'เส้นทางอยู่ด้านหลังกล้อง • กลับตัวตามแผนที่'
+                        : displayUpdate?.tracking_status === 'tracking_lost'
+                          ? 'กำลังหาตำแหน่งใหม่ • ยกกล้องให้เห็นทางเดิน'
+                          : displayPosition
+                            ? 'กำลังปรับตำแหน่ง • ดูแผนที่ประกอบ'
+                            : 'กำลังหาตำแหน่งเริ่มต้น'
+                      : <>
+                          <span className="block">{pocInstruction || 'ดูเส้นทางบนแผนที่'}</span>
+                          <span className="block font-normal">AR payload พร้อม • ใช้แผนที่ประกอบ</span>
+                        </>}
                 </div>
               )}
             </div>
@@ -933,7 +973,7 @@ const VideoTestPanel = ({
                 onClick={() => void enterLandscapeArMode()}
                 className={`rounded-full px-3 py-1.5 transition ${demoViewMode === 'ar' ? 'bg-cyan-400 text-slate-950' : 'text-white/70 hover:text-white'}`}
               >
-                AR
+                AR ทดลอง
               </button>
             </div>
           )}
@@ -955,16 +995,18 @@ const VideoTestPanel = ({
             <div className="aspect-square overflow-hidden rounded-xl bg-slate-100">
               <MapCanvas
                 mapImageUrl={demoMapUrl}
-                route={displayRoute}
-                currentPose={displayPosition ? {
-                  x: displayPosition.x,
-                  y: displayPosition.y,
+                mapFrame={demoFrame}
+                followPose
+                route={mapRoute}
+                currentPose={mapPose ? {
+                  x: mapPose.x,
+                  y: mapPose.y,
                   headingDeg: displayHeading ?? undefined,
                 } : null}
-                markers={demoDestination ? [{
+                markers={mapDestination ? [{
                   id: 'demo-destination',
-                  x: demoDestination.x,
-                  y: demoDestination.y,
+                  x: mapDestination.x,
+                  y: mapDestination.y,
                   color: '#dc2626',
                   size: 7,
                   label: 'D',
@@ -1028,7 +1070,7 @@ const VideoTestPanel = ({
               <p className="text-sm text-slate-700">Auto detect from video</p>
             </div>
             <label className="block">
-              <span className="mb-1 block text-xs font-semibold text-slate-600">Frame interval (sec)</span>
+              <span className="mb-1 block text-xs font-semibold text-slate-600">Backend keyframe interval (sec)</span>
               <input
                 type="number"
                 min={0.05}
@@ -1038,7 +1080,7 @@ const VideoTestPanel = ({
                 onChange={(event) => setIntervalSeconds(Number.parseFloat(event.target.value))}
                 className="w-full rounded-lg border border-slate-300 bg-white px-2 py-2 text-sm text-slate-800"
               />
-              <p className="mt-1 text-[11px] text-slate-500">PoC cadence: 0.05 sec (~20 FPS)</p>
+              <p className="mt-1 text-[11px] text-slate-500">KLT/PnP tracks native video frames between backend requests.</p>
             </label>
           </div>
 
@@ -1080,16 +1122,24 @@ const VideoTestPanel = ({
             </div>
             {lastUpdate ? (
               <div className="space-y-1 text-xs text-slate-700">
-                <p>Frame: {typeof lastUpdate.frame === 'number' ? lastUpdate.frame : '-'}</p>
-                <p>Floor: {lastUpdate.current_floor ?? '-'}</p>
+                <p>
+                  Video frame:{' '}
+                  {typeof displayUpdate?.frame === 'number' ? displayUpdate.frame : '-'}
+                </p>
+                <p>
+                  Backend latest:{' '}
+                  {typeof lastUpdate.frame === 'number' ? lastUpdate.frame : '-'}
+                </p>
+                <p>Floor: {displayUpdate?.current_floor ?? lastUpdate.current_floor ?? '-'}</p>
                 <p>
                   Position:{' '}
-                  {lastUpdate.position
-                    ? `${lastUpdate.position.x.toFixed(1)}, ${lastUpdate.position.y.toFixed(1)}`
+                  {displayUpdate?.position
+                    ? `${displayUpdate.position.x.toFixed(1)}, ${displayUpdate.position.y.toFixed(1)}`
                     : '-'}
                 </p>
-                <p>Method: {lastUpdate.method ?? '-'}</p>
-                <p>Tracking: {lastUpdate.tracking_mode ?? '-'}</p>
+                <p>Method: {displayUpdate?.method ?? lastUpdate.method ?? '-'}</p>
+               <p>Tracking: {displayUpdate?.tracking_status ?? lastUpdate.tracking_status ?? displayUpdate?.tracking_mode ?? lastUpdate.tracking_mode ?? '-'}</p>
+               <p>AR: {displayUpdate?.ar_world_status ?? lastUpdate.ar_world_status ?? '-'}</p>
               </div>
             ) : (
               <p className="text-xs text-slate-500">No localization update yet</p>

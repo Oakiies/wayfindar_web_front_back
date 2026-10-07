@@ -8,11 +8,14 @@ import VideoTestPanel from './components/VideoTestPanel';
 import {
   localizeLiveFrame,
   stopNavigationOnUnload,
+  buildApiUrl,
   type ArWorldPayload,
+  type TrackingSeed,
 } from './services/navigationTestService';
 import { type MapPoint, type Store } from './types/navigation';
 import { useNavigationData } from './hooks/useNavigationData';
 import { useRoutePlanning } from './hooks/useRoutePlanning';
+import { toMapUnits } from './lib/mapFrame';
 import { buildSearchStores } from './lib/storeSearch';
 import {
   headingFromPath,
@@ -28,6 +31,7 @@ import {
   LOCALHOST_HOSTS,
   resolveCameraErrorMessage,
 } from './lib/camera';
+import { BrowserKltPnPTracker } from './lib/browserPoseTracker';
 
 type View = 'map' | 'search' | 'storeDetail' | 'routePlanning' | 'navigation';
 type LiveTransitionTarget = {
@@ -71,6 +75,10 @@ function App() {
     floorsById,
     selectedFloor,
     initialRouteTarget,
+    venues,
+    focusVenue,
+    focusError,
+    setFocusVenue,
   } = useNavigationData();
 
   const [currentView, setCurrentView] = useState<View>('map');
@@ -127,16 +135,31 @@ function App() {
   const liveNavigationSessionIdRef = useRef<number | null>(null);
   const cameraVideoRef = useRef<HTMLVideoElement | null>(null);
   const cameraStreamRef = useRef<MediaStream | null>(null);
+  const cameraStartRequestRef = useRef(0);
   const liveCameraCaptureCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const liveCameraLoopTimerRef = useRef<number | null>(null);
   const liveCameraRequestAbortRef = useRef<AbortController | null>(null);
   const liveCameraBusyRef = useRef(false);
+  const liveFrameSequenceRef = useRef(0);
+  const lastTrackingSeedFrameRef = useRef<string | null>(null);
+  const floorConfirmationRef = useRef<{
+    samples: number;
+    counts: Map<string, number>;
+    confirmedFloor: string | null;
+  }>({ samples: 0, counts: new Map(), confirmedFloor: null });
+  const browserTrackerRef = useRef<BrowserKltPnPTracker | null>(null);
+  const browserTrackingTimerRef = useRef<number | null>(null);
+  const liveNavigationArWorldRef = useRef<ArWorldPayload | null>(null);
   const lastLocalizedPositionRef = useRef<MapPoint | null>(null);
   const liveCameraContextRef = useRef<{ floorId: string; destination: string; destinationFloor: string }>({
     floorId: '',
     destination: '',
     destinationFloor: '',
   });
+
+  useEffect(() => {
+    liveNavigationArWorldRef.current = liveNavigationArWorld;
+  }, [liveNavigationArWorld]);
 
   const navGridDots = useMemo(() => Array.from({ length: 9 }, (_, index) => index), []);
   const [isCoarsePointer, setIsCoarsePointer] = useState(() => {
@@ -212,6 +235,7 @@ function App() {
     selectedFloor;
 
   const activeMapImageUrl = activeFloorForMap?.mapImageUrl ?? '';
+  const activeMapFrame = activeFloorForMap?.mapFrame ?? null;
   const activeFloorLabel = activeFloorForMap?.label ?? activeFloorIdForMap;
   const searchStores = useMemo(() => buildSearchStores(stores), [stores]);
 
@@ -381,6 +405,14 @@ function App() {
       liveCameraRequestAbortRef.current = null;
     }
     liveCameraBusyRef.current = false;
+    if (browserTrackingTimerRef.current !== null) {
+      window.clearTimeout(browserTrackingTimerRef.current);
+      browserTrackingTimerRef.current = null;
+    }
+    browserTrackerRef.current?.dispose();
+    browserTrackerRef.current = null;
+    lastTrackingSeedFrameRef.current = null;
+    floorConfirmationRef.current = { samples: 0, counts: new Map(), confirmedFloor: null };
   };
 
   const captureLiveCameraFrame = async (): Promise<Blob | null> => {
@@ -443,9 +475,37 @@ function App() {
       return;
     }
 
+    const requestId = ++cameraStartRequestRef.current;
     try {
       if (!insecureContext) {
         setCameraError(null);
+      }
+      // The API binds before its GPU models are ready. Wait here so opening the
+      // camera means frame zero starts a warm navigation session, rather than
+      // spending the user's first seconds loading models.
+      const readyDeadline = performance.now() + 45_000;
+      let backendReady = false;
+      while (performance.now() < readyDeadline && requestId === cameraStartRequestRef.current) {
+        try {
+          const response = await fetch(buildApiUrl('/healthz'), { cache: 'no-store' });
+          if (response.ok) {
+            const status = await response.json() as { ready?: boolean };
+            if (status.ready) {
+              backendReady = true;
+              break;
+            }
+          }
+        } catch {
+          // The server may still be binding; retry within the same deadline.
+        }
+        setCameraError('Preparing navigation…');
+        await new Promise((resolve) => window.setTimeout(resolve, 250));
+      }
+      if (requestId !== cameraStartRequestRef.current) {
+        return;
+      }
+      if (!backendReady) {
+        throw new Error('Navigation backend did not become ready in time');
       }
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -468,6 +528,7 @@ function App() {
   };
 
   const stopCamera = () => {
+    cameraStartRequestRef.current += 1;
     stopLiveCameraLoop();
 
     if (cameraStreamRef.current) {
@@ -554,6 +615,47 @@ function App() {
     }
 
     let cancelled = false;
+    const browserTracker = new BrowserKltPnPTracker();
+    browserTrackerRef.current = browserTracker;
+    void browserTracker.warmup();
+
+    const runBrowserTracking = async () => {
+      if (cancelled || browserTrackerRef.current !== browserTracker) return;
+      const video = cameraVideoRef.current;
+      if (video) {
+        try {
+          const estimate = await browserTracker.process(video);
+          if (estimate && !cancelled) {
+            const context = liveCameraContextRef.current;
+            if (estimate.mapPosition) {
+              applyLiveStreamUpdate({
+                current_floor: context.floorId || undefined,
+                position: estimate.mapPosition,
+                method: 'KLT + PnP (browser)',
+                tracking_mode: `klt_pnp_browser:${estimate.inliers}/${estimate.tracked}`,
+              });
+            }
+            if (liveNavigationArWorldRef.current) {
+              setLiveNavigationArWorld((previous) => previous
+                ? {
+                    ...previous,
+                    R: estimate.R,
+                    t: estimate.t,
+                  }
+                : previous);
+            }
+            setLiveNavigationMethod('KLT + PnP (browser)');
+            setLiveNavigationTrackingMode(`klt_pnp_browser:${estimate.inliers}/${estimate.tracked}`);
+          }
+        } catch (error) {
+          console.debug('Browser KLT/PnP tick skipped:', error);
+        }
+      }
+      if (!cancelled) {
+        browserTrackingTimerRef.current = window.setTimeout(runBrowserTracking, 33);
+      }
+    };
+    browserTrackingTimerRef.current = window.setTimeout(runBrowserTracking, 250);
 
     const tick = async () => {
       if (cancelled) {
@@ -582,12 +684,19 @@ function App() {
       let perfResponseMs: number | null = null;
 
       try {
+        const frameId = ++liveFrameSequenceRef.current;
+        const floorConfirmation = floorConfirmationRef.current;
         const response = await localizeLiveFrame({
           frameBlob,
-          floorId: context.floorId,
+          // During startup let the server infer the floor independently for
+          // each of the first three frames. After confirmation, pin the
+          // selected floor for normal localization.
+          floorId: floorConfirmation.confirmedFloor || '',
           destination: context.destination,
           destinationFloor: context.destinationFloor,
           autoFloor: true,
+          frameId,
+          captureTimeMs: performance.timeOrigin + performance.now(),
           signal: controller.signal,
           onPerfMetrics: (metrics) => {
             perfUploadMs = Number.isFinite(metrics.uploadMs) ? metrics.uploadMs : null;
@@ -652,8 +761,41 @@ function App() {
               .filter((point): point is [number, number] => point !== null)
           : undefined;
 
-        if (
+        let floorReady = Boolean(floorConfirmation.confirmedFloor);
+        if (!floorReady && response.success && response.floor_id) {
+          const floorId = String(response.floor_id);
+          floorConfirmation.samples += 1;
+          floorConfirmation.counts.set(
+            floorId,
+            (floorConfirmation.counts.get(floorId) || 0) + 1,
+          );
+          if (floorConfirmation.samples >= 3) {
+            const ranked = Array.from(floorConfirmation.counts.entries())
+              .sort((left, right) => right[1] - left[1]);
+            const [bestFloor, bestCount] = ranked[0] || ['', 0];
+            if (bestCount >= 2) {
+              floorConfirmation.confirmedFloor = bestFloor;
+              floorReady = true;
+              liveCameraContextRef.current.floorId = bestFloor;
+              setLiveNavigationFloorId(bestFloor);
+              setActiveRouteFloorId(bestFloor);
+              setSelectedFloorId(bestFloor);
+            } else {
+              // No majority: keep the latest observation as the beginning of
+              // a new three-frame window rather than accepting an arbitrary floor.
+              floorConfirmation.samples = 0;
+              floorConfirmation.counts.clear();
+            }
+          }
+        }
+
+        if (!floorReady) {
+          setLiveNavigationTrackingMode(`confirming_floor:${floorConfirmation.samples}/3`);
+          setLiveNavigationMethod('floor-confirmation');
+          setLiveNavigationArWorld(null);
+        } else if (
           response.success &&
+          response.floor_id === floorConfirmation.confirmedFloor &&
           response.position &&
           Number.isFinite(response.position.x) &&
           Number.isFinite(response.position.y)
@@ -674,7 +816,15 @@ function App() {
             transition_target: response.transition_target,
           });
           setLiveNavigationArWorld(response.ar_world ?? null);
-        } else if (response.floor_id) {
+          const seedFrameId = response.tracking_seed_frame_id || null;
+          if (
+            response.tracking_seed &&
+            seedFrameId !== lastTrackingSeedFrameRef.current
+          ) {
+            browserTracker.reset(response.tracking_seed as TrackingSeed);
+            lastTrackingSeedFrameRef.current = seedFrameId;
+          }
+        } else if (floorReady && response.floor_id === floorConfirmation.confirmedFloor) {
           setLiveNavigationFloorId(response.floor_id);
           setActiveRouteFloorId(response.floor_id);
           setSelectedFloorId(response.floor_id);
@@ -740,6 +890,11 @@ function App() {
 
   function applyLiveStreamUpdate(payload: LiveStreamPayload): void {
     const divisor = inferIncomingCoordinateDivisor(payload);
+    // Plans that are not 500x500 declare a map frame; their poses are scaled by
+    // it instead of by the per-payload divisor guess.
+    const payloadFloorId = payload.current_floor || liveNavigationFloorId || selectedFloorId;
+    const payloadFrame = floorsById.get(payloadFloorId)?.mapFrame ?? null;
+    const toMap = (x: number, y: number): MapPoint => toMapUnits(payloadFrame, { x, y }, divisor);
     let normalizedPosition: MapPoint | null = null;
     let convertedPath: MapPoint[] = [];
 
@@ -750,10 +905,7 @@ function App() {
     }
 
     if (payload.position && Number.isFinite(payload.position.x) && Number.isFinite(payload.position.y)) {
-      normalizedPosition = {
-        x: payload.position.x / divisor,
-        y: payload.position.y / divisor,
-      };
+      normalizedPosition = toMap(payload.position.x, payload.position.y);
       setLiveNavigationPosition(normalizedPosition);
     }
 
@@ -768,7 +920,7 @@ function App() {
           if (!Number.isFinite(x) || !Number.isFinite(y)) {
             return null;
           }
-          return { x: x / divisor, y: y / divisor };
+          return toMap(x, y);
         })
         .filter((point): point is MapPoint => point !== null);
       setLiveNavigationRoutePath(convertedPath);
@@ -781,8 +933,7 @@ function App() {
     ) {
       setLiveNavigationTransitionTarget({
         node_id: payload.transition_target.node_id,
-        x: Number(payload.transition_target.x) / divisor,
-        y: Number(payload.transition_target.y) / divisor,
+        ...toMap(Number(payload.transition_target.x), Number(payload.transition_target.y)),
         type: payload.transition_target.type,
         name: payload.transition_target.name,
         to_floor: payload.transition_target.to_floor,
@@ -921,6 +1072,7 @@ function App() {
               routeMeta={routeMeta}
               destination={destination}
               mapImageUrl={activeMapImageUrl}
+              mapFrame={activeMapFrame}
               routePath={effectiveNavigationRoutePath}
               originPoint={navigationOriginPoint}
               destinationPoint={routeDestinationPoint}
@@ -952,6 +1104,7 @@ function App() {
               routeTime={routeTime}
               routeMeta={routeMeta}
               mapImageUrl={activeMapImageUrl}
+              mapFrame={activeMapFrame}
               activeFloorLabel={activeFloorLabel}
               routePath={routePath}
               originPoint={routeOriginPoint}
@@ -966,6 +1119,7 @@ function App() {
             <StoreDetailView
               selectedStore={selectedStore}
               mapImageUrl={selectedStoreMapImage}
+              mapFrame={floorsById.get(selectedStore.floorId)?.mapFrame ?? null}
               openSearch={() => openSearch()}
               resetToMap={resetToMap}
               handleStartRoute={handleStartRoute}
@@ -992,10 +1146,19 @@ function App() {
               floors={floors}
               selectedFloorId={selectedFloorId}
               mapImageUrl={activeMapImageUrl}
+              mapFrame={activeMapFrame}
               navGridDots={navGridDots}
               openSearch={() => openSearch()}
               onSelectFloor={setSelectedFloorId}
               onOpenVideoTest={() => setShowVideoTestPanel(true)}
+              focusLabel={
+                venues.length > 0
+                  ? dataset.floors.find((floor) => floor.venue === (focusVenue ?? venues[0]))?.label ?? null
+                  : null
+              }
+              focusActive={focusVenue !== null}
+              onToggleFocus={() => void setFocusVenue(focusVenue ? null : venues[0] ?? null)}
+              focusError={focusError}
             />
           )}
 
@@ -1003,6 +1166,7 @@ function App() {
             open={showVideoTestPanel}
             stores={stores}
             selectedFloorId={selectedFloorId}
+            floorsById={floorsById}
             onNavigationStart={handleVideoNavigationStart}
             onNavigationUpdate={handleVideoNavigationUpdate}
             onNavigationStop={handleVideoNavigationStop}

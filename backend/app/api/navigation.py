@@ -67,8 +67,22 @@ def _session_event(event: dict, session_id: int) -> dict:
 def start_navigation(payload: dict = Body(default={})):
     data = payload or {}
 
+    # The HTTP server binds before heavy GPU/model initialization finishes.
+    # Refuse to start a session until /healthz says ready so frame zero never
+    # pays model-loading cost or races a partially initialized localizer.
+    if state.localizer is None or state.graph is None:
+        return JSONResponse(
+            {'success': False, 'error': 'Navigation backend is still preparing',
+             'ready': False, 'retry_after_ms': 250},
+            status_code=503,
+        )
+
     video_filename = data.get('video_filename')
     destination = data.get('destination')
+    # Global localization is a keyframe operation. Native video frames are
+    # propagated by the KLT/PnP tracker in video_processor between these
+    # requests, matching the real camera cadence without uploading 30 FPS to
+    # the backend.
     interval = float(data.get('interval') or 1.5)
     debug_mode = bool(data.get('debug_mode', False))
     requested_start_floor = data.get('start_floor') or data.get('floor_id')
@@ -168,7 +182,7 @@ def stop_navigation(payload: dict = Body(default={})):
         if worker is not None and worker.is_alive():
             worker.join(timeout=0.5)
         still_stopping = worker is not None and worker.is_alive()
-        if not still_stopping:
+        if not still_stopping and session.tracking_diagnostics is None:
             state.sessions.pop(session.session_id, None)
         return {'success': True, 'stopping': still_stopping}
     return {'success': True, 'stopping': False}
@@ -228,6 +242,7 @@ def navigation_state(session_id: str | None = Query(None)):
         'retrieval_mode': session.retrieval_mode,
         'debug_mode': session.debug_mode,
         'reached_dest': session.reached_dest,
+        'tracking_diagnostics': session.tracking_diagnostics,
     }
 
 
@@ -300,5 +315,5 @@ def export_trajectory(session_id: str | None = Query(None)):
         'current_floor': session.current_floor,
         'destination_floor': session.destination_floor,
         'path_segments': session.path_segments,
-        'history': session.history,
+        'history': list(session.history),
     }

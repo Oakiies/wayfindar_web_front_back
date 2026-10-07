@@ -32,10 +32,13 @@ def find_path(graph, start_node, end_node):
 
 def find_best_start_node(graph, node_data, x, y, dest_node, top_k=3):
     """
-    Find the best starting node by minimizing:
-    Cost = Distance(User, Node) + ShortestPath(Node, Destination)
-    
-    Checks the top_k geometrically nearest nodes.
+    Find the nearest graph node that has a route to the destination.
+
+    The user must follow the walkable graph from their snapped start node.
+    Minimizing Euclidean snap distance plus the remaining graph distance can
+    choose a much farther node and implicitly create a straight off-graph
+    shortcut through shops or walls. Check nearby nodes in distance order and
+    take the first one that is connected to the destination.
     """
     # 1. Get all nodes with distances
     candidates = []
@@ -49,29 +52,15 @@ def find_best_start_node(graph, node_data, x, y, dest_node, top_k=3):
     candidates.sort(key=lambda x: x[1])
     top_candidates = candidates[:top_k]
     
-    best_node = None
-    min_total_cost = float('inf')
-    best_path = None
-    
-    # 3. Evaluate total cost for each candidate
-    for node_id, user_dist in top_candidates:
+    # 3. Return the nearest candidate that is connected to the destination.
+    for node_id, _user_dist in top_candidates:
         try:
-            # Get path length from this node to destination
-            path_len = nx.shortest_path_length(graph, source=node_id, target=dest_node, weight='weight')
-            
-            # Total cost
-            total_cost = user_dist + path_len
-            
-            if total_cost < min_total_cost:
-                min_total_cost = total_cost
-                best_node = node_id
-                # Pre-calculate path to avoid re-doing it later
-                best_path = nx.shortest_path(graph, source=node_id, target=dest_node, weight='weight')
-                
+            best_path = nx.shortest_path(graph, source=node_id, target=dest_node, weight='weight')
+            return node_id, best_path
         except nx.NetworkXNoPath:
             continue
-            
-    return best_node, best_path
+
+    return None, None
 
 def get_node_by_name(node_data, name_query, floor_id=None, exact=False):
     """

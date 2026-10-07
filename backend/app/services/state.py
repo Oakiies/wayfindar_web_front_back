@@ -33,6 +33,10 @@ class AppState:
         self.default_floor_id: str = config.DEFAULT_FLOOR_ID
         self.current_floor_id: str = config.DEFAULT_FLOOR_ID
 
+        # Venue the user has focused for testing (building.json floor["venue"]).
+        # None = every enabled floor is a candidate. Set via POST /api/focus.
+        self.focus_venue: str | None = None
+
         # Active retrieval mode — mutable at runtime via switch_retrieval_mode()
         self.retrieval_mode: str = config.APP_RETRIEVAL_MODE
 

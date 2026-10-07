@@ -1,5 +1,35 @@
 # UI refresh (POC)
 
+## 2026-09-13 — Accent + button shape from Apple's DESIGN.md
+
+Source: [Apple DESIGN.md](https://getdesign.md/apple/design-md), via
+[awesome-design-md](https://github.com/VoltAgent/awesome-design-md). Preview:
+`public/apple-theme-preview.html`.
+
+Three token-level changes in `src/index.css`, following Apple's stated
+principles ("one accent colour drives all interactivity", "exactly one
+drop-shadow exists", "pill-shaped primary CTAs; secondary ghost variants"):
+
+- `--color-accent` `#0d6efd` → `#0066cc` (Action Blue), `--color-accent-soft`
+  updated to match. `MapCanvas.tsx`'s `ROUTE_COLOR` / `POSE_COLOR` are
+  hardcoded hex (canvas 2D can't read CSS custom properties) and were updated
+  by hand to stay in sync.
+- `.btn-primary` / `.btn-secondary` go pill-shaped (`border-radius: 999px`);
+  secondary switches from a filled surface to a ghost outline.
+- `--shadow-card` / `--shadow-float` lightened — Apple's hierarchy comes from
+  surface-colour transitions and backdrop blur, not shadow depth.
+- `--font-sans` now leads with `-apple-system, BlinkMacSystemFont` so Apple
+  devices render actual SF Pro; Inter stays the loaded fallback everywhere
+  else.
+
+Not touched: card/sheet radii (`--radius-sm|lg|xl`), `.glass`/`.glass-dark`,
+Apple's 18px product-grid card radius (no matching surface in this app yet).
+
+## 2026-09-11 — Live-causal tracker status
+
+- Video navigation now uses one causal KLT/PnP pipeline for every floor and destination; replay ignores future pose samples and keeps the 0.15s live pose-age gate.
+- Test Localize exposes user-facing tracking state and the backend AR visibility reason, separating tracking loss from map/navigation state.
+
 A visual pass over the five app screens. **No navigation, routing, camera or AR
 logic was touched** — every prop, handler and state machine is unchanged. What
 changed is the styling layer, plus three small usability fixes noted below.
@@ -365,3 +395,254 @@ in logic this pass deliberately left alone.
   is clear on small screens.
 - Added `/?test=localizer` deep-link support to open the video test panel
   immediately, plus a shortcut from the standalone calibration viewer.
+
+
+## 2026-09-08 ? Test Localize replay camera registration
+
+- VideoTestPanel disables camera easing with `smoothCameraPose={false}` so the AR camera follows the selected video pose immediately.
+- Timeline selection no longer looks 0.05 seconds into the future. World AR is hidden when the selected pose is older than 0.15 seconds; map/text remain available.
+- Backend replay now uses accepted frame poses without EMA and clears world AR on missing poses.
+- Tradeoff: PnP noise and gaps become visible; this removes artificial lag but does not establish camera calibration accuracy.
+- Validation: TypeScript and targeted ESLint passed; six backend regression tests passed. Full lint has existing errors in MapCanvas/useRoutePlanning. Browser/full-video validation remains pending.
+- Details: `../backend/poc_cross_camera/out/IMG_6955_REPLAY_REGISTRATION_FIX.md`.
+
+
+## 2026-09-08 ? M21 replay at the confirmed 1.5-second interval
+
+- Supersedes the freshness-only behavior above: default interval is 1.5 seconds as confirmed by the user.
+- Buffered replay interpolates world camera centres and rotations between valid adjacent anchors, up to a 1.65-second gap. Geometry and navigation text remain tied to the current event.
+- No interpolation across held/missing poses, floor changes, or long gaps; world AR is hidden after 0.15 seconds when no valid bracket is available. This is an estimate for recorded replay, not live visual tracking.
+- Four frontend pose tests, TypeScript and targeted lint passed. Fresh 0?60s production navigation yielded 35 updates (32 PnP, 3 holds); destination m21 resolved to M21_A.
+- Offline review: straight corridor guidance improves, but distant geometry around 31?33s still points toward a wall. Spatial alignment is not fully validated. No claim of a complete AR accuracy fix.
+- Evidence: `../backend/poc_cross_camera/out/replay_registration_1p5s/M21_1P5S_REVIEW.md`.
+
+
+## 2026-09-08 ? Pin replay route stations in world coordinates
+
+- Video replay now calls the AR builder with `pin_route=True`, eliminating per-fix lateral translation of the entire route to follow the camera.
+- Keeps the confirmed 1.5-second sampling interval and camera interpolation. Legacy live/PoC defaults remain compatible.
+- Ten backend regression tests passed. Cached accepted poses reveal up to 20.6164 map pixels of artificial world translation between updates in the old recentering policy; the pinned policy removes that term.
+- This is not a claim of zero screen-space drift: PnP noise, sparse camera interpolation, and map/floor alignment remain separate limitations.
+- Evidence: `../backend/poc_cross_camera/out/replay_registration_1p5s/world_pinned/STABILITY_FIX.md`.
+
+
+## 2026-09-08 ? Honest replay status and recovery guidance
+
+- Labels the replay AR mode as experimental and its route as an estimated preview.
+- Missing world AR now takes precedence over stale TURN/GO STRAIGHT text; the card directs users to the map and removes turn emphasis while the pose is unavailable.
+- Arrival copy describes the destination area and asks users to verify the room sign.
+- Status uses polite live announcements. No per-frame tracker is claimed or introduced by this copy change.
+- Architecture/UX review: `../backend/poc_cross_camera/out/replay_registration_1p5s/AR_UPDATE_APPROACH_REVIEW.md`.
+
+
+## 2026-09-09 — Route-aware AR for shallow corridor bends
+
+- Compared the replay camera view against the floor-1 node graph and top-down
+  user position for every frame from 24–50 seconds (782/782 frames).
+- The selected route follows `Intersection 1 → M23_B`; its largest deflection
+  is 22.96° and navigation reports `GO STRAIGHT`, so this is a continuous
+  corridor bend rather than a discrete turn.
+- Backend AR guidance now classifies the bend from the user's on-route position
+  and sends the continuous floor ribbon without repeated turn carets.
+- The Three.js renderer treats an explicit `carets: []` as authoritative and
+  falls back to legacy `chevrons` only when the `carets` field is absent.
+- Evidence: `../backend/poc_cross_camera/out/ar_reasonableness_poc/round_02_exhaustive_graph/RESULT.md`.
+
+
+## 2026-09-09 — Reject screen-fixed KLT as world AR
+
+- Marked the V2 screen-space KLT/homography result as rejected: optical-flow
+  acceptance does not establish floor registration or depth approach.
+- Added a replay comparison that keeps route geometry fixed in world
+  coordinates and reprojects it from the buffered camera pose each frame.
+- World AR is hidden when no bounded pose is available; it is never held as a
+  frozen polygon over a different camera frame.
+- This validates recorded replay behavior only. Live camera AR still requires
+  target-frame tracked-landmark PnP rather than future-pose interpolation.
+- Evidence: `../backend/poc_cross_camera/out/ar_reasonableness_poc/round_03_world_approach/RESULT.md`.
+
+
+## 2026-09-09 — Bridge plausible replay pose gaps without holding AR
+
+- Replay camera lookup now skips `HOLD_LAST_FIX` events when finding the two
+  valid camera anchors around the current video time. Map position and
+  navigation text still follow the current timeline event.
+- A buffered gap up to 3.10 seconds is interpolated only on the same floor and
+  only when implied motion stays below 3 m/s and 45 degrees/s. Otherwise world
+  AR is hidden.
+- This removes the disappearance in the 37.5–39.0 second recorded replay gap
+  without freezing a polygon on the image.
+- A centered pose smoother was evaluated but not promoted: median jerk changed
+  only 47.951 -> 47.763 px/frame² while p95 worsened from 28000.702 to
+  41858.641 px/frame².
+- Target-frame tracked-landmark PnP recovered 51/63 gap frames versus 2/63 for
+  the old buffered policy. It remains a PoC because 12 frames still fail the
+  safety gates.
+- Validation: five frontend pose tests, TypeScript, targeted ESLint, production
+  build, and 17 backend regression tests passed.
+- Evidence: `../backend/poc_cross_camera/out/ar_reasonableness_poc/round_04_pose_stability/RESULT.md`
+  and `../backend/poc_cross_camera/out/ar_reasonableness_poc/round_05_gap_tracked_pnp/RESULT.md`.
+
+
+## 2026-09-09 — VideoTestPanel default frame interval lowered 1.5s -> 0.5s
+
+- `intervalSeconds` default in `VideoTestPanel.tsx` now matches the backend's
+  own new default (`app/api/navigation.py`), 0.5s instead of 1.5s. The input
+  is still user-editable; this only changes what the panel opens with.
+- Root cause traced on a fresh test walk (`IMG_6955.MOV` -> destination M21,
+  floor1): at 1.5s a 1-2s human turn got 0-1 fresh localizations, which reads
+  as AR "freezing" independent of any route/geometry issue. Measured
+  `localize()` cost on this deployment is ~0.17s median / 0.20s p90, so 0.5s
+  keeps real headroom.
+- Diagnosis and raw CSVs: `../backend/poc_ar_arrow/out/DIAGNOSIS_ar_m21_walk.md`.
+
+## 2026-09-10 — Camera waits for backend readiness
+
+- Live camera startup now polls `/healthz` before requesting the camera, so the
+  first captured frame cannot race model/keyframe initialization.
+- The live-localize and replay-start endpoints return HTTP 503 with a 250 ms
+  retry hint while the localizer is still preparing.
+- The readiness wait is cancelable when camera/navigation view is closed and
+  has a 45 second failure deadline.
+- The causal IMG_1895 replay in `../backend/new_ar/causal_0_60/` prepares models,
+  reference-map ground anchors, and GPU kernels before camera time zero. It
+  localized at source t=0.567 s (available wall t=0.724 s) and confirmed camera
+  focal calibration at wall t=3.213 s while continuing to navigate.
+
+## 2026-09-10 — Continuous video replay between backend keyframes
+
+- VideoTestPanel now opens with a 1.5s backend keyframe interval, matching the
+  intended live-camera request cadence.
+- The backend reads native video frames and propagates the latest 2D–3D map
+  correspondences with KLT optical flow plus PnP between global localizations.
+- The interval control is labeled as a backend keyframe interval; the UI status
+  explains that KLT/PnP fills native video frames between requests.
+
+## 2026-09-10 — Test Localize uses the shared new_ar reference scene
+
+- Floor 1 → M21/B now receives the same ground anchors, clipped caret geometry,
+  camera payload, and online calibration state used by the causal `new_ar`
+  renderer. This removes the previous PoC geometry branch from the parity path.
+- The arrival state keeps the final approach arrows for this reference scene, so
+  the last seconds match the reference clip instead of clearing the route early.
+
+## 2026-09-10 — Transient localization misses are shown once
+
+- Per-frame `Localization failed` events during initial visual search or a
+  keyframe reseed no longer flood the Test Localize log. The panel shows one
+  `Finding position` message and keeps the session alive; only errors without a
+  frame remain fatal.
+
+## 2026-09-10 — Causal replay status and pose display
+
+- Test Localize now shows the frame currently presented in the video separately
+  from the latest frame processed by the backend, so backend progress cannot be
+  mistaken for the on-screen video time.
+- AR pose selection uses only samples at or before the visible video timestamp;
+  it no longer interpolates from a future pose.
+- Replay startup/reconnect buffering is now 0.15/0.5 seconds, keeping the
+  displayed video and backend processing on the same live-like timeline.
+- The replay no longer pauses when the backend briefly falls behind. Video
+  playback continues like a live camera while AR holds the latest causal pose
+  until a newer update arrives.
+
+## 2026-09-10 — High-FPS replay keeps pace with AR
+
+- The backend now processes source clips above 30 FPS as a continuous 30 FPS
+  tracking stream. The video remains at its native presentation rate while
+  the overlay receives timestamped causal poses between 1.5s global keyframes.
+- Floor5 → Fire Exit 1 uses the same prepared route as the AR scene, so the map
+  position, route line, and world-registered chevrons start on the same
+  corridor.
+- Replay playback now always starts at `0.0s` after the backend has produced a
+  small readiness buffer; it no longer seeks past the opening frames to the
+  first localization timestamp.
+- When a world-registered polygon is temporarily unavailable, the replay now
+  shows the route cue from the current causal map pose. World AR takes over
+  again automatically as soon as the next valid payload arrives, so a short
+  visibility/reseed gap no longer looks like a permanent AR failure.
+- The fallback is also allowed when the backend returns an empty world payload,
+  preventing an empty `ar_world` object from suppressing both render paths.
+## 2026-09-11 — AR visibility rework diagnostics
+
+- World AR now sends only geometry that projects into the current camera frame; off-screen route geometry no longer suppresses the screen guidance fallback.
+- Video navigation shows actionable messages for `route_behind_camera` and `tracking_lost`, and labels the backend state as AR payload readiness rather than claiming browser pixels were rendered.
+## 2026-09-11 — Remove screen-space AR fallback
+
+- Disabled the stylized map-based fallback chevrons in live camera and video replay AR.
+- The overlay now renders only world-registered geometry from `arWorld`; tracking/payload gaps leave the canvas clear.
+- Applied the strict setting to live navigation, video replay, and AR Fusion entry points.
+- Kept backend reason/status text so `tracking_lost`, `no_ribbon`, off-screen, and behind-camera states remain diagnosable.
+
+## 2026-10-01 — Label image navigation buttons
+
+- Made the previous/next image controls in the Label page toolbar visibly labeled as `ย้อนกลับ` and `ไปข้างหน้า`, with accessible labels and tooltips.
+- Kept the shared-coordinate anchor above fanned markers and slightly increased fan spacing as zoom rises, so the original location stays visible instead of being covered.
+- Restyled the Label workspace closer to the legacy tool: a compact left image rail, `Stack` and `List` controls, an all-labels picker panel, and a horizontal metadata form with direction, heading, room, group, notes, Delete, Cancel, and Save actions.
+- Changed overlapped-point spreading to a triangular fan: two points go left/right, three points form a triangle, and larger stacks fill triangular rows around the original coordinate.
+- Kept saved and draft markers at a stable screen size while zooming, preventing enlarged pins from covering each other.
+- Increased the marker screen scale slightly after feedback, while shrinking the shared-coordinate anchor to a small zoom-stable ring.
+- Increased the triangular fan radius slightly so overlapped markers have a bit more breathing room.
+- Increased displayed marker size by 2px and kept the connector line in the same marker layer, while preserving the smaller zoom-stable original-coordinate anchor.
+- Added an optional `แม่เหล็ก` snap mode: clicks and drags within 20 screen pixels of another label use its exact x/y, making intentional same-location stacks land on one coordinate.
+- Removed the visible `Stack` and `List` toolbar buttons; overlapping coordinate groups now show a zoom-stable `x2`, `x3`, etc. badge directly at the shared point.
+- Moved overlap connector lines into a shared floor-plan layer and calculate them from the exact anchor coordinate to each fan point, keeping the circles and lines aligned in one 2D plane.
+- Removed the unused Stack/List toolbar controls and their disconnected all-labels overlay from the Label page.
+- Removed the direction selector and heading-degree input from the Label form; labels now only require the map position plus the remaining metadata.
+- Changed image previous/next controls to icon-only arrow buttons, highlighted the active node with an error-colour ring and warning-orange marker, and used the same orange selection state for multi-select align.
+- Moved the align/distribute controls from the page header into the floor-plan toolbar at the bottom.
+- Tightened the selected-node red highlight to a small circle directly around the orange point, without ring offset.
+- Removed the image position counter from the bottom toolbar.
+- Placing a point near an existing label now snaps to that label automatically and turns on the `แม่เหล็ก` state.
+- Kept the previous/next arrow controls visible at the left of the bottom toolbar, with stronger contrast and a scroll-safe toolbar layout.
+- Removed the heading arrow above the selected node and its drag interaction; selected nodes now show only the small orange point with red circle.
+- Reworked the selection highlight as a true small circular border around the marker itself instead of a wrapper ring.
+- Turning on `แม่เหล็ก`, or auto-snapping a new point to an existing label, now also turns off visual point spreading so co-located points visibly overlap.
+- Dragging an existing point near another label now auto-snaps to the nearby coordinate, updates the draft marker immediately, and enables the magnet state.
+- Raised the active node above overlap badges, hid the `x2` badge while editing a point, and collapsed fan spreading when selecting a stacked node so the orange point remains easy to identify.
+- Made selected align points use the same marker size and fan offset as normal points; selection now changes only the color and small highlight ring.
+- Corrected selection behavior so choosing a point while the fan is visible no longer collapses or repositions the other points; spreading changes only when the user toggles the tool.
+- Corrected overlap connector transforms so each line rotates around and stays centered on the marker anchor.
+- Reworked connector thickness and offset to place the line center directly through the marker center at every zoom level.
+- Attached each overlap connector to its marker's own center instead of drawing one separate anchor layer, keeping alignment stable while zooming.
+- Removed inline baseline/line-height space from marker wrappers so connector centers use the exact visual circle box at every zoom level.
+- Kept overlap spreading independent from magnet toggles and auto-snapping, cleared align selection on entry, and showed saved nodes as unselected until the user picks them.
+- Allowed marker dragging while Hand mode is active; the pointer now drags a node when started on a marker and pans the map when started on empty space, with auto-snap enabled for draft-node drags too.
+
+## 2026-10-01 — Diagnosis map zoom
+
+- Added zoom out, reset percentage, and zoom in controls to the Diagnosis map.
+- Added mouse-wheel zoom from 75% to 400% and an internal scroll area so enlarged label positions can be inspected without selecting an image.
+
+## 2026-10-05 — Venue focus button (Siam Discovery floor 3)
+
+- Added floor `floor_siamdis3` (`venue: "siamdis"` in `building.json`, map `siamdis_floor3.png`, graph `siamdis_floor3.json`). Its id starts with `floor` on purpose: `normalizeFloorId` turns a numeric `metadata.floor = 3` into `floor3`, which is the IT building's floor 3.
+- New `Focus <floor label>` pill under `Test Localizer` on the map view (only shown when some floor has a `venue`). Pressed state is the accent fill; it toggles back to all floors.
+- Focus filters the floor rail, store list and search to that venue, keeps the shown floor inside it, and POSTs `/api/focus` so the backend only ranks/loads floors of that venue (floor auto-detection and the cross-floor retry can no longer jump to the IT building, and a client still sending `floor1` is redirected to the focused floor).
+- Focus is remembered in `localStorage` (`wayfindar.focusVenue`) and re-sent to the backend after reload. Backend focus is process-global state, so it is meant for single-tester use.
+
+## 2026-10-06 — Floor plans that are not 500x500
+
+- Cause of the odd Siam Discovery positions: `MapCanvas` stretched every plan to a 500x500 square (`preserveAspectRatio="none"`) while graph nodes, rooms and live poses were divided by a per-payload guess (`round(max / 500)`). A 1430x1100 plan was both distorted and misplaced, and the divisor could differ between two messages for the same floor.
+- New `src/lib/mapFrame.ts`: a floor that declares `map_size: [w, h]` in `building.json` gets a frame — one uniform scale (500 / longer side, so headings are preserved) plus an offset that centres the plan in the 500-unit square. Floors without `map_size` keep the old behaviour (500x500, optional integer divisor) unchanged.
+- The frame is applied to graph nodes, backend rooms, live `position` / `path` / `transition_target` (by `current_floor`) and the Test Localizer preview (route, pose, destination). `MapCanvas` takes `mapFrame` and draws the plan at its true aspect ratio with a blank band where the square is not covered.
+- `floor_siamdis3` declares `map_size: [1430, 1100]` (backend + frontend `building.json`; `/api/floors` returns it as `map_size`). Restart the backend to pick up the config change.
+- Not changed: `ArFusionPoc.tsx` and `ARFloorThreeOverlay.tsx` keep their own 500-unit assumptions.
+
+### Follow window for large plans
+
+- Instead of shrinking a large plan to fit 500x500, `MapCanvas` takes `followPose`: it shows a window of 500 source pixels on a side at the plan's true scale and slides it after the pose. The window stays still until the pose is within 35% of its half-extent from an edge, then glides (eased per frame) just far enough to bring the pose back inside; the first fix opens centred on the user.
+- The window is clamped to the plan's frame, so it never scrolls into the blank band. Dragging or zooming pauses following until the pose is lost and found again. Plans that already fit in 500 map units are shown whole, so this is a no-op for floors 1-6.
+- Enabled in `NavigationView` (both maps) and the Test Localizer preview.
+
+## 2026-10-06 � Siam Discovery Floor 2/3 map refresh
+
+- Added Siam Discovery Floor 2 using the supplied floor plan, graph, and localization data. Both Siam Discovery floor entries now declare their source image dimensions.
+- Replaced the Siam Discovery Floor 3 plan and graph with the supplied v4 assets. Installed the new Floor 3 affine alignment matrix from D:\align\result_siam_dis_floor3_2\H_matrix_offset_affine.npy under the runtime matrix filename.
+- Backend and frontend system data now carry matching Siam Discovery maps, graphs, and floor configuration.
+
+## 2026-10-07 - Match world AR projection to the displayed video
+
+- World AR scales the backend calibration intrinsics from `ar_world.imgWH` to the video native pixel size before laying out the Three.js camera. This keeps a 1920x1080 clip aligned when localization uses calibration size 1914x1102.
+- Recalculates the display intrinsics when video metadata arrives or its native dimensions change, using the same fit mode as the video element.
+- Kept the Floor 3 affine matrix: the alignment preview uses the supplied v4 floor plan, and a test frame localized at the matching start point.

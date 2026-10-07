@@ -2,6 +2,9 @@
 from __future__ import annotations
 import math
 import time
+import traceback
+from collections import deque
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import cv2
@@ -11,12 +14,10 @@ import app.config as config
 from app.services.state import state
 from app.services.session import NavigationSession
 from app.services.floor_service import set_active_floor
-from app.services.localizer_service import get_or_create_comparison_localizer
+from app.services.localizer_service import get_or_create_localizer
 from app.services.floor_detection import (
     infer_start_floor_from_video,
     rank_floor_candidates_for_frame,
-    build_floor_hypothesis_candidates,
-    evaluate_floor_hypotheses,
 )
 from app.services.nav_service import resolve_destination_node, compute_navigation_route
 from app.services import ar_service
@@ -32,6 +33,444 @@ import app.core.localization as localization_core
 import app.localization_config as lc
 
 MAX_DEBUG_FRAMES = 200
+# Trigger an immediate production relocalization after consecutive rejected
+# tracking updates. The existing cadence remains the retry path if it misses.
+TRACKING_LOSS_RELOCALIZE_FRAMES = 3
+
+
+def _track_step(previous_gray, current_gray, points_2d, points_3d, point_ids, max_error=1.5):
+    """Forward/backward Lucas-Kanade tracking for a 2D–3D seed set."""
+    if len(points_2d) < 4:
+        return points_2d[:0], points_3d[:0], point_ids[:0]
+    if previous_gray is None or current_gray is None or previous_gray.shape != current_gray.shape:
+        return points_2d[:0], points_3d[:0], point_ids[:0]
+    source = np.asarray(points_2d, np.float32).reshape(-1, 1, 2)
+    target, status_forward, _ = cv2.calcOpticalFlowPyrLK(
+        previous_gray, current_gray, source, None, winSize=(21, 21), maxLevel=3,
+        criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 30, 0.01),
+    )
+    if target is None or status_forward is None:
+        return points_2d[:0], points_3d[:0], point_ids[:0]
+    backward, status_backward, _ = cv2.calcOpticalFlowPyrLK(
+        current_gray, previous_gray, target, None, winSize=(21, 21), maxLevel=3,
+        criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 30, 0.01),
+    )
+    if backward is None or status_backward is None:
+        return points_2d[:0], points_3d[:0], point_ids[:0]
+    target = target.reshape(-1, 2)
+    backward = backward.reshape(-1, 2)
+    source_flat = source.reshape(-1, 2)
+    h, w = current_gray.shape[:2]
+    error = np.linalg.norm(backward - source_flat, axis=1)
+    keep = (
+        (status_forward.reshape(-1) > 0) & (status_backward.reshape(-1) > 0) &
+        np.isfinite(target).all(axis=1) & (error <= max_error) &
+        (target[:, 0] >= 0) & (target[:, 0] < w) &
+        (target[:, 1] >= 0) & (target[:, 1] < h)
+    )
+    return target[keep], np.asarray(points_3d)[keep], np.asarray(point_ids)[keep]
+
+
+class _ContinuousPoseTracker:
+    """Propagate a localized 2D-3D seed through native video frames.
+
+    Global retrieval/matching is intentionally performed only at the caller's
+    cadence.  Between those requests, Lucas-Kanade KLT tracks the seed
+    landmarks and PnP reconstructs a camera pose for the current frame.  This
+    is the same division used by the causal replay pipeline and keeps AR
+    updates at the source FPS without uploading/locating every frame.
+    """
+
+    def __init__(self, localizer, floor_id: str):
+        self.track_step = _track_step
+        self.localizer = localizer
+        self.floor_id = floor_id
+        self.previous_gray = None
+        self.points_2d = np.empty((0, 2), np.float32)
+        self.points_3d = np.empty((0, 3), np.float32)
+        self.point_ids = np.empty((0,), np.int64)
+        self._last_tracks_before = 0
+        self._last_tracks_after = 0
+
+    def reset(self, localizer=None, floor_id: str | None = None):
+        if localizer is not None:
+            self.localizer = localizer
+        if floor_id is not None:
+            self.floor_id = floor_id
+        self.previous_gray = None
+        self.points_2d = np.empty((0, 2), np.float32)
+        self.points_3d = np.empty((0, 3), np.float32)
+        self.point_ids = np.empty((0,), np.int64)
+
+    def _gray(self, frame):
+        K = self.localizer.camera_self_calibrator.active_K()
+        size = localization_core.get_reference_image_size_from_intrinsics(K)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        return localization_core.resize_query_image(gray, size) if size else gray
+
+    def _tracked_result(self):
+        if len(self.points_2d) < 4:
+            return None, None
+        K = self.localizer.camera_self_calibrator.active_K()
+        ok, R, t, inliers = localization_core.solve_pnp_ransac(
+            self.points_2d, self.points_3d, K, reproj_threshold=8.0,
+            min_inliers=4,
+        )
+        if not ok or inliers is None:
+            return None, None
+        ratio, error = localization_core.compute_pnp_quality(
+            self.points_2d, self.points_3d, inliers, R, t, K,
+        )
+        params = lc.LOCALIZATION_PARAMS
+        accepted = (
+            len(inliers) >= int(params['min_inliers']) and
+            ratio >= float(params['min_inlier_ratio']) and
+            math.isfinite(error) and
+            error <= float(params['max_median_reproj_error'])
+        )
+        pose = localization_core.get_6dof_pose(R, t)
+        pose['theta'] = localization_core.transform_yaw(
+            localization_core.get_yaw(R), self.localizer.H_matrix,
+        )
+        xy = localization_core.project_to_floor_plan(
+            pose.get('position'), self.localizer.H_matrix, self.localizer.floor_config,
+        )
+        if xy is None or not np.isfinite(xy).all():
+            accepted = False
+            xy = None
+        result = {
+            'success': bool(accepted),
+            'pose': pose if accepted else None,
+            'num_inliers': int(len(inliers)),
+            'num_matches': int(len(self.points_2d)),
+            'inlier_ratio': float(ratio),
+            'median_reproj_error': float(error),
+            'method': 'KLT-PnP',
+            'matching_mode': self.localizer.matching_mode,
+            'floor_id': self.floor_id,
+            '_inlier_indices': np.asarray(inliers).reshape(-1).astype(np.int32),
+            'tracks_before': int(self._last_tracks_before),
+            'tracks_after': int(self._last_tracks_after),
+            'pnp_inliers': int(len(inliers)),
+            'pnp_inlier_ratio': float(ratio),
+            'pnp_reproj_error': float(error),
+        }
+        return result, tuple(float(value) for value in xy) if xy is not None else None
+
+    def update(self, frame, seed_result=None, seed_xy=None):
+        gray = self._gray(frame)
+        seed_ok = bool(seed_result and seed_result.get('success') and seed_xy is not None)
+        if seed_ok:
+            points_2d = seed_result.get('_tracking_points_2d')
+            points_3d = seed_result.get('_tracking_points_3d')
+            if points_2d is not None and points_3d is not None and len(points_2d) >= 4:
+                self.points_2d = np.asarray(points_2d, dtype=np.float32).reshape(-1, 2)
+                self.points_3d = np.asarray(points_3d, dtype=np.float32).reshape(-1, 3)
+                self.point_ids = np.arange(len(self.points_2d), dtype=np.int64)
+            else:
+                self.points_2d = np.empty((0, 2), np.float32)
+                self.points_3d = np.empty((0, 3), np.float32)
+            self.previous_gray = gray
+            return seed_result, seed_xy
+
+        if self.previous_gray is not None and len(self.points_2d) >= 4:
+            self.points_2d, self.points_3d, self.point_ids = self.track_step(
+                self.previous_gray, gray, self.points_2d, self.points_3d,
+                self.point_ids, 1.5,
+            )
+        self.previous_gray = gray
+        return self._tracked_result()
+
+
+class _CausalPoseTracker(_ContinuousPoseTracker):
+    """Causal tracker used by every video destination and floor.
+
+    Global localization runs in one background worker at the requested tick.
+    The foreground loop only consumes completed results after tracking their
+    source landmarks through frames that have already arrived. No future frame
+    is used and no worker mutates the shared Localizer/CameraSelfCalibrator.
+    """
+
+    def __init__(self, localizer, floor_id: str):
+        super().__init__(localizer, floor_id)
+        from poc_cross_camera.run_temporal_landmark_propagation import (
+            dedupe_correspondences,
+        )
+        self._dedupe = dedupe_correspondences
+        self._history = deque(maxlen=180)
+        self._worker = ThreadPoolExecutor(max_workers=1, thread_name_prefix='causal-localize')
+        self._pending = None
+        self._pending_source = None
+        self._pending_generation = 0
+        self._generation = 0
+        self._closed = False
+        self._track_source_frame = None
+        self._track_source_timestamp = None
+        self._last_completed_work_s = None
+        self._last_completed_source_wall_time = None
+        self._floor_reset_this_step = False
+        self._tracking_failure_streak = 0
+        self._loss_relocalize_attempted = False
+        self.diagnostics = {
+            'localization_submitted': 0,
+            'localization_completed': 0,
+            'localization_rejected_stale': 0,
+            'localization_rejected_session': 0,
+            'localization_errors': 0,
+            'track_dropouts': 0,
+            'seed_rejections': {},
+            'floor_resets': 0,
+        }
+
+    def close(self):
+        self._closed = True
+        self._generation += 1
+        pending = self._pending
+        self._pending = None
+        if pending is not None:
+            pending.cancel()
+        self._worker.shutdown(wait=False, cancel_futures=True)
+
+    def reset(self, localizer=None, floor_id: str | None = None):
+        """Invalidate every in-flight result before changing floor/session."""
+        self._generation += 1
+        pending = self._pending
+        self._pending = None
+        self._pending_source = None
+        self._pending_generation = self._generation
+        if pending is not None:
+            pending.cancel()
+        super().reset(localizer, floor_id)
+        self._history.clear()
+        self._track_source_frame = None
+        self._track_source_timestamp = None
+        self._floor_reset_this_step = False
+        self._tracking_failure_streak = 0
+        self._loss_relocalize_attempted = False
+
+    def _seed(self, frame, frame_index, timestamp, K, generation,
+              submitted_wall_time_s=None, allow_floor_handoff=False):
+        started = time.perf_counter()
+        # Use the production Localizer pipeline with a private K snapshot. The
+        # callback is intentionally disabled here; calibration is committed by
+        # the foreground session after this result passes generation/history
+        # checks, so a late worker cannot mutate a new session.
+        result, xy = self.localizer.localize(
+            frame,
+            return_correspondences=True,
+            camera_K=np.asarray(K, dtype=np.float64).copy(),
+            calibration_callback=lambda *_args: False,
+        )
+        result_floor_id = getattr(self, 'floor_id', None) or getattr(self.localizer, 'floor_id', None)
+        handoff_reason = None
+        if allow_floor_handoff and not (isinstance(result, dict) and result.get('success')):
+            # A lost visual track is the only time we spend the extra global
+            # descriptor pass. It sees this frame only, then validates the
+            # best alternative floor with the same production localizer.
+            rankings = rank_floor_candidates_for_frame(frame)
+            for candidate in rankings[:3]:
+                candidate_floor = candidate.get('floor_id')
+                if not candidate_floor or candidate_floor == self.floor_id:
+                    continue
+                candidate_localizer = get_or_create_localizer(candidate_floor)
+                candidate_result, candidate_xy = candidate_localizer.localize(
+                    frame,
+                    return_correspondences=True,
+                    camera_K=candidate_localizer.camera_self_calibrator.active_K().copy(),
+                    calibration_callback=lambda *_args: False,
+                )
+                if isinstance(candidate_result, dict) and candidate_result.get('success'):
+                    result, xy = candidate_result, candidate_xy
+                    result_floor_id = candidate_floor
+                    handoff_reason = 'current_floor_miss'
+                    break
+        return {
+            'frame': int(frame_index), 'timestamp': float(timestamp),
+            'result': result, 'xy': xy, 'generation': int(generation),
+            'floor_id': result_floor_id,
+            'handoff_reason': handoff_reason,
+            'submitted_wall_time_s': float(submitted_wall_time_s or time.time()),
+            'work_s': time.perf_counter() - started,
+        }
+
+    def _merge_completed_seed(self, current_frame_index):
+        if self._pending is None or not self._pending.done():
+            return False
+        try:
+            result = self._pending.result()
+        except Exception:
+            self._pending = None
+            self.diagnostics['localization_errors'] += 1
+            self.diagnostics['seed_rejections']['worker_exception'] = self.diagnostics['seed_rejections'].get('worker_exception', 0) + 1
+            return False
+        self._pending = None
+        self.diagnostics['localization_completed'] += 1
+        self._last_completed_work_s = float(result.get('work_s', 0.0) or 0.0)
+        if self._closed or result.get('generation') != self._generation:
+            self.diagnostics['localization_rejected_session'] += 1
+            return False
+        source_frame = int(result['frame'])
+        history_indices = [idx for idx, _gray in self._history]
+        if not history_indices or source_frame < history_indices[0] \
+                or source_frame > current_frame_index \
+                or source_frame not in history_indices:
+            self.diagnostics['localization_rejected_stale'] += 1
+            self.diagnostics['seed_rejections']['history_or_future'] = self.diagnostics['seed_rejections'].get('history_or_future', 0) + 1
+            return False
+        localization_result = result.get('result') or {}
+        if not localization_result.get('success'):
+            reason = localization_result.get('rejection_reason', 'localization_miss')
+            self.diagnostics['seed_rejections'][reason] = self.diagnostics['seed_rejections'].get(reason, 0) + 1
+            return False
+        result_floor_id = result.get('floor_id') or self.floor_id
+        if result_floor_id != self.floor_id:
+            set_active_floor(result_floor_id)
+            self.localizer = state.localizer
+            self.localizer.reset_camera_calibration()
+            self.floor_id = result_floor_id
+            self.previous_gray = self._history[-1][1] if self._history else self.previous_gray
+            self.points_2d = np.empty((0, 2), np.float32)
+            self.points_3d = np.empty((0, 3), np.float32)
+            self.point_ids = np.empty((0,), np.int64)
+            self.diagnostics['floor_resets'] += 1
+            self._floor_reset_this_step = True
+        p2 = np.asarray(localization_result.get('_tracking_points_2d'), np.float32)
+        p3 = np.asarray(localization_result.get('_tracking_points_3d'), np.float32)
+        ids = np.asarray(localization_result.get('_tracking_mp_ids'), np.int64)
+        if len(p2) < 4 or len(p2) != len(p3) or len(ids) != len(p2) or np.any(ids <= 0):
+            self.diagnostics['seed_rejections']['invalid_correspondences'] = self.diagnostics['seed_rejections'].get('invalid_correspondences', 0) + 1
+            return False
+
+        self.localizer.camera_self_calibrator.submit(
+            p2, p3, frame_token=('causal', result['frame']),
+        )
+        source_pose = self._solve_points(p2, p3)
+        if source_pose is None or not source_pose[0].get('success'):
+            self.diagnostics['seed_rejections']['source_pnp'] = self.diagnostics['seed_rejections'].get('source_pnp', 0) + 1
+            return False
+        keep = source_pose[0].get('_inlier_indices')
+        if keep is not None:
+            p2, p3, ids = p2[keep], p3[keep], ids[keep]
+
+        past = [(idx, gray) for idx, gray in self._history if idx >= source_frame]
+        if not past or past[0][0] != source_frame:
+            self.diagnostics['localization_rejected_stale'] += 1
+            return False
+        for (_idx_a, gray_a), (_idx_b, gray_b) in zip(past, past[1:]):
+            p2, p3, ids = self.track_step(gray_a, gray_b, p2, p3, ids, 1.0)
+            if len(p2) < 4:
+                self.diagnostics['seed_rejections']['catchup_tracks'] = self.diagnostics['seed_rejections'].get('catchup_tracks', 0) + 1
+                return False
+
+        items = [
+            {'point_2d': a, 'point_3d': b, 'mp_id': int(c), 'track_error': 0.0}
+            for a, b, c in zip(p2, p3, ids)
+        ]
+        items.extend(
+            {'point_2d': a, 'point_3d': b, 'mp_id': int(c), 'track_error': 1.0}
+            for a, b, c in zip(self.points_2d, self.points_3d, self.point_ids)
+        )
+        combined = self._dedupe(items)
+        self.points_2d = combined['points_2d']
+        self.points_3d = combined['points_3d']
+        self.point_ids = combined['mp_ids']
+        self._track_source_frame = source_frame
+        self._track_source_timestamp = float(result['timestamp'])
+        self._last_completed_source_wall_time = float(result.get('submitted_wall_time_s', time.time()))
+        return True
+
+    def _solve_points(self, points_2d, points_3d):
+        saved_2d, saved_3d = self.points_2d, self.points_3d
+        try:
+            self.points_2d, self.points_3d = points_2d, points_3d
+            return self._tracked_result()
+        finally:
+            self.points_2d, self.points_3d = saved_2d, saved_3d
+
+    def step(self, frame, frame_index, timestamp, should_localize):
+        if self._closed:
+            return None, None
+        gray = self._gray(frame)
+        self._last_tracks_before = int(len(self.points_2d))
+        if self.previous_gray is not None and len(self.points_2d) >= 4:
+            self.points_2d, self.points_3d, self.point_ids = self.track_step(
+                self.previous_gray, gray, self.points_2d, self.points_3d,
+                self.point_ids, 1.0,
+            )
+        self._last_tracks_after = int(len(self.points_2d))
+        self.previous_gray = gray
+        self._history.append((int(frame_index), gray))
+        refreshed = self._merge_completed_seed(frame_index)
+        if self._floor_reset_this_step:
+            # Each floor can have a different calibrated reference-image size.
+            # Rebuild the current grayscale frame under the new floor's K and
+            # discard pre-handoff history before the next LK call.
+            gray = self._gray(frame)
+            self.previous_gray = gray
+            self._history.clear()
+            self._history.append((int(frame_index), gray))
+            self._floor_reset_this_step = False
+        result, xy = self._tracked_result()
+        if isinstance(result, dict) and result.get('success'):
+            self._tracking_failure_streak = 0
+            self._loss_relocalize_attempted = False
+            result['method'] = 'PnP' if refreshed else 'KLT-PnP'
+            result['causal_source_frame'] = self._track_source_frame
+            result['causal_source_timestamp'] = self._track_source_timestamp
+            result['current_tracking_frame'] = int(frame_index)
+            result['tracking_status'] = 'tracked'
+            result['async_localize_time'] = self._last_completed_work_s
+            result['pose_age_s'] = 0.0
+            result['source_to_current_video_s'] = (
+                float(timestamp) - float(self._track_source_timestamp)
+                if self._track_source_timestamp is not None else None
+            )
+            result['source_to_emit_wall_s'] = (
+                time.time() - float(self._last_completed_source_wall_time)
+                if self._last_completed_source_wall_time is not None else None
+            )
+        else:
+            self._tracking_failure_streak += 1
+            self.diagnostics['track_dropouts'] += 1
+            result = {
+                'success': False,
+                'method': 'KLT-PnP',
+                'num_matches': int(len(self.points_2d)),
+                'num_inliers': 0,
+                'tracking_status': (
+                    'tracking_lost' if len(self.points_2d) < 4 else 'pose_rejected'
+                ),
+                'causal_source_frame': self._track_source_frame,
+                'causal_source_timestamp': self._track_source_timestamp,
+                'current_tracking_frame': int(frame_index),
+                'async_localize_time': self._last_completed_work_s,
+                'pose_age_s': None,
+                'source_to_current_video_s': (
+                    float(timestamp) - float(self._track_source_timestamp)
+                    if self._track_source_timestamp is not None else None
+                ),
+                'source_to_emit_wall_s': (
+                    time.time() - float(self._last_completed_source_wall_time)
+                    if self._last_completed_source_wall_time is not None else None
+                ),
+            }
+
+        force_relocalize = (
+            self._tracking_failure_streak >= TRACKING_LOSS_RELOCALIZE_FRAMES
+            and not self._loss_relocalize_attempted
+        )
+        if self._pending is None and (should_localize or force_relocalize):
+            K = self.localizer.camera_self_calibrator.active_K()
+            self._pending_source = int(frame_index)
+            self._pending_generation = self._generation
+            self._pending = self._worker.submit(
+                self._seed, frame.copy(), frame_index, timestamp, K,
+                self._pending_generation, time.time(), len(self.points_2d) < 4,
+            )
+            self.diagnostics['localization_submitted'] += 1
+            if self._tracking_failure_streak:
+                self._loss_relocalize_attempted = True
+        return result, xy
 
 # Central AR debug log — any server process running this code appends here, so
 # it can be inspected regardless of where stdout is redirected.
@@ -47,8 +486,69 @@ def _ar_debug(line: str, reset: bool = False) -> None:
         pass
 
 
+def _get_pose_stabilizer(session, localizer_ref, floor_id, interval_seconds):
+    """Per-session PoseStabilizer (EMA on raw PnP R/t), rebuilt on floor change.
+
+    ``session.ar_pose_stabilizer`` was scaffolded for this in session.py but
+    left unwired: every live/replay frame projected with the raw PnP pose,
+    which is the measured cause of the "wobble" in
+    poc_ar_arrow/out/DIAGNOSIS_ar_m21_walk.md (2-10 deg of unfiltered
+    frame-to-frame rotation, occasional 100+ deg outliers). A naive constant-
+    alpha EMA was tried and reverted before for lagging a real turn — but
+    build_ar_world_v2 already has the fix for exactly that: if the stabilized
+    pose yields zero visible carets, it retries once with the raw pose
+    (ar_arrow_v2.py, "if not carets and stabilizer is not None"), so a lagged
+    turn falls back to what ships today instead of freezing. turn_alpha/
+    turn_follow_deg make it snap to a real turn once the measured rotation
+    passes the noise floor; expected_interval_s scales the jump/turn gates to
+    match how sparse this session's samples actually are.
+    """
+    if session.ar_pose_stabilizer is None or session.ar_pose_stabilizer_floor != floor_id:
+        # Lazy, function-local import: matches ar_service.build_ar_world_poc's
+        # own import of poc_ar_arrow, keeping app/ free of a module-level
+        # dependency on the sibling PoC package.
+        from poc_ar_arrow.ar_arrow_v2 import PoseStabilizer
+        proj = ar_service.get_projector(floor_id, localizer_ref)
+        metres_per_unit = proj.metres_per_unit if proj is not None else 1.0
+        session.ar_pose_stabilizer = PoseStabilizer(
+            alpha=0.24, max_jump_m=1.0, max_turn_deg=22.0,
+            turn_follow_deg=6.0, turn_alpha=0.50,
+            expected_interval_s=interval_seconds, metres_per_unit=metres_per_unit,
+        )
+        session.ar_pose_stabilizer_floor = floor_id
+    return session.ar_pose_stabilizer
+
+
+def _get_route_progress_tracker(session, path_coords):
+    """Per-session RouteProgressTracker, reset when the route itself changes.
+
+    Fixes a reported symptom: AR guidance sometimes kept showing a turn (or
+    a station) the walker had already physically passed, as if it was not
+    considering where they actually are. Root cause: chevron_anchors decides
+    which stations are "ahead" from the raw camera-floor position each frame
+    (needed so stations don't lag behind the real camera - see
+    _get_pose_stabilizer above for why raw, not smoothed, pose is used here
+    too), and that raw position was independently measured jumping several
+    METRES between consecutive updates in places (DIAGNOSIS_ar_m21_walk.md).
+    A single such jump backward along the route un-passes whatever the
+    walker just walked through. See poc_ar_arrow/ar_arrow_v2.py's
+    RouteProgressTracker for the actual fix (a monotonic ratchet on route
+    arc-length); this only owns *when* to build a fresh one.
+
+    `path_coords` is the identity `_sticky_route` already reuses/replaces
+    per-route (new list object on reroute, same object while unchanged), so
+    comparing identity is enough to detect "this is a different route" and
+    reset the ratchet - an old route's arc-length has no meaning on a new one.
+    """
+    if session.ar_route_progress is None or session.ar_route_progress_path is not path_coords:
+        from poc_ar_arrow.ar_arrow_v2 import RouteProgressTracker
+        session.ar_route_progress = RouteProgressTracker()
+        session.ar_route_progress_path = path_coords
+    return session.ar_route_progress
+
+
 def _ar_world(session, localizer_ref, floor_id, pose, x, y, path_coords, num_inliers,
-              image_size=None, reproj_error=None):
+              image_size=None, reproj_error=None, interval_seconds=1.5, timestamp=None):
     """Build the pixel-registered AR payload from the validated arrow PoC.
 
     Returns None whenever the frame should not carry world-registered geometry
@@ -57,28 +557,29 @@ def _ar_world(session, localizer_ref, floor_id, pose, x, y, path_coords, num_inl
     clients hide the AR layer, matching render_poc.py.
     """
     try:
-        if getattr(session, 'ar_pose_stabilizer_floor', None) != floor_id:
-            from poc_ar_arrow.ar_arrow_v2 import PoseStabilizer
-
-            projector = ar_service.get_projector(floor_id, localizer_ref)
-            if projector is None:
-                return None
-            session.ar_pose_stabilizer = PoseStabilizer(
-                alpha=0.24,
-                max_jump_m=1.0,
-                max_turn_deg=22.0,
-                turn_follow_deg=6.0,
-                turn_alpha=0.50,
-                metres_per_unit=projector.metres_per_unit,
-            )
-            session.ar_pose_stabilizer_floor = floor_id
-
-        return ar_service.build_ar_world_poc(
+        # Pin route stations in world space: recentering them on each camera
+        # fix makes the floor markings slide even with a perfect camera pose.
+        # The camera pose itself IS filtered (see _get_pose_stabilizer) - the
+        # stabilizer's own retry-with-raw-pose fallback covers the case a
+        # smoothed pose would otherwise lag a real turn. `timestamp` lets the
+        # stabilizer tell a real tracking dropout from ordinary sampling and
+        # reacquire immediately instead of gating the pose that follows one
+        # (see PoseStabilizer.reacquire_gap_s) - without it a dropout longer
+        # than ~1.5s held a stale pre-dropout rotation over post-dropout video
+        # for a few more updates, which read as the AR "tilting"/floating out
+        # of sync exactly when tracking resumed.
+        stabilizer = _get_pose_stabilizer(session, localizer_ref, floor_id, interval_seconds)
+        progress_tracker = _get_route_progress_tracker(session, path_coords)
+        payload, reason = ar_service.build_ar_world_poc_debug(
             localizer_ref, floor_id, pose, x, y, path_coords, num_inliers,
-            image_size, reproj_error, session.ar_pose_stabilizer
+            image_size, reproj_error, stabilizer, pin_route=True, timestamp=timestamp,
+            progress_tracker=progress_tracker,
         )
+        session.last_ar_world_reason = reason
+        return payload
     except Exception as exc:  # noqa: BLE001 - AR must never break the processing loop
         _ar_debug(f"[AR] poc_v2_error floor={floor_id}: {type(exc).__name__}: {exc}")
+        session.last_ar_world_reason = f'exception:{type(exc).__name__}'
         return None
 
 
@@ -90,12 +591,64 @@ def _ar_image_size(localizer_ref, frame):
     return reference_size or (int(frame.shape[1]), int(frame.shape[0]))
 
 
-# Match the live localization endpoint and offline PoC: keep the last valid
-# world payload while a new visual fix is being reacquired. `heldAge` is sent
-# with the payload so the frontend can fade confidence instead of clearing all
-# carets on a single failed request. A four-frame cutoff made the AR blink at
-# exactly the turn where the matcher is most likely to drop a frame.
-AR_HOLD_MAX_SECONDS = 3.0
+def _ar_geometry_metrics(payload: dict | None) -> dict:
+    """Measure serialized geometry against the payload's own camera projection.
+
+    This is an offline/backend projection check, not a claim about pixels the
+    browser renderer painted. Keeping it separate from ``ar_world_status``
+    prevents a non-null JSON payload from being mislabeled as user-visible AR.
+    """
+    counts = {
+        'carets': 0, 'ribbon_quads': 0, 'ribbon_edges': 0,
+        'on_screen_carets': 0, 'on_screen_ribbon_quads': 0,
+        'on_screen_ribbon_edges': 0, 'destination_marker': 0,
+    }
+    if not isinstance(payload, dict):
+        return {'payload_ready': False, 'geometry_counts': counts, 'projected_geometry': False}
+    counts['carets'] = len(payload.get('carets') or payload.get('chevrons') or [])
+    counts['ribbon_quads'] = len(payload.get('ribbon_quads') or [])
+    counts['ribbon_edges'] = len(payload.get('ribbon_edges') or [])
+    counts['destination_marker'] = int(bool(payload.get('destination_marker')))
+    try:
+        K = np.asarray(payload['K'], dtype=float).reshape(3, 3) if len(payload['K']) == 9 else np.array([
+            [payload['K'][0], 0.0, payload['K'][2]],
+            [0.0, payload['K'][1], payload['K'][3]],
+            [0.0, 0.0, 1.0],
+        ], dtype=float)
+        R = np.asarray(payload['R'], dtype=float).reshape(3, 3)
+        t = np.asarray(payload['t'], dtype=float).reshape(3)
+        image_size = payload.get('imgWH') or [0, 0]
+        img_w, img_h = int(image_size[0]), int(image_size[1])
+        if img_w <= 0 or img_h <= 0:
+            raise ValueError('invalid image size')
+        rvec, _ = cv2.Rodrigues(R)
+
+        def projected(points):
+            values = np.asarray(points, dtype=float).reshape(-1, 3)
+            uv, _ = cv2.projectPoints(values, rvec, t, K, np.zeros(4))
+            uv = uv.reshape(-1, 2)
+            finite = np.isfinite(uv).all(axis=1)
+            inside = ((uv[:, 0] >= 0) & (uv[:, 0] < img_w) &
+                      (uv[:, 1] >= 0) & (uv[:, 1] < img_h))
+            return bool(finite.any() and inside.any())
+
+        for polygon in payload.get('carets') or payload.get('chevrons') or []:
+            counts['on_screen_carets'] += int(projected(polygon))
+        for item in payload.get('ribbon_quads') or []:
+            counts['on_screen_ribbon_quads'] += int(projected(item[0] if isinstance(item, (list, tuple)) and len(item) == 2 else item))
+        for edge in payload.get('ribbon_edges') or []:
+            counts['on_screen_ribbon_edges'] += int(projected(edge))
+    except (KeyError, TypeError, ValueError, IndexError, cv2.error):
+        return {'payload_ready': True, 'geometry_counts': counts, 'projected_geometry': False}
+    return {
+        'payload_ready': True,
+        'geometry_counts': counts,
+        'projected_geometry': bool(
+            counts['on_screen_carets'] or counts['on_screen_ribbon_quads'] or
+            counts['on_screen_ribbon_edges']
+        ),
+    }
+
 
 # A visual matcher can occasionally return a geometrically plausible PnP
 # solution at a completely different map location.  The EKF already rejects
@@ -127,36 +680,26 @@ def _is_implausible_visual_jump(last_fix, raw_x, raw_y, timestamp):
 
 
 def _ar_world_or_hold(session, timestamp, fresh):
-    """`fresh` if there is one, else the previous frame while it is still young.
+    """Replay has no motion estimate with which to reproject a missing pose.
 
-    "Young" is measured against the gap between updates this session is actually
-    running at, learned from the timestamps rather than assumed. The held
-    payload carries its age so the overlay fades as the hold stretches instead
-    of presenting stale geometry as confidently as a live fix.
+    Keep the call signature for existing callers, but never draw a previous
+    camera over a different video frame. Map/navigation may still hold a fix.
     """
-    ts = float(timestamp)
-    prev_ts = getattr(session, 'ar_last_ts', None)
-    if prev_ts is not None:
-        step = ts - prev_ts
-        if 0.01 < step < 10.0:
-            known = getattr(session, 'ar_step_s', None)
-            session.ar_step_s = step if known is None else (known * 0.7 + step * 0.3)
-    session.ar_last_ts = ts
+    session.ar_hold = None
+    return fresh
 
-    if fresh is not None:
-        session.ar_hold = {'payload': fresh, 'ts': ts}
-        return fresh
 
-    held = getattr(session, 'ar_hold', None)
-    if not held:
-        return None
-    budget = AR_HOLD_MAX_SECONDS
-    age = ts - held['ts']
-    if age > budget:
-        session.ar_hold = None
-        return None
-    out = dict(held['payload'])
-    out['heldAge'] = round(min(1.0, age / budget), 3)
+def _ar_arrival_only(payload):
+    """Remove stale route geometry after arrival while keeping camera/marker data."""
+    if not isinstance(payload, dict):
+        return payload
+    out = dict(payload)
+    out['carets'] = []
+    out['chevrons'] = []
+    out['alphas'] = []
+    out['ribbon_quads'] = []
+    out['ribbon_edges'] = []
+    out['arState'] = 'arrived'
     return out
 
 
@@ -198,6 +741,35 @@ def _sticky_turn(session, x, y, nt):
         session.active_turn = {'at': nt['at'], 'dir': nt['dir'],
                                'angle': nt.get('angle', 0.0), 'min_dist': float(nt['dist'])}
     return nt
+
+
+# A low-but-passable inlier count (10-20) reads as noise, not signal, when the
+# walker is on a straight stretch: measured on the M21 walk, the raw PnP
+# position in this band swung 2.5-9.7 m between consecutive 0.5s samples
+# (poc_ar_arrow/out/DIAGNOSIS_ar_m21_walk.md) - the EKF's own confidence
+# buckets already cut that by 3-10x, but treating 10-20 inliers as "normal"
+# trust (R_scale 0.5-1.0) still let visible sideways drift through. The same
+# band is also what a real corner delivers (motion blur drops inlier count
+# during the turn itself), where the fast response is exactly what is needed
+# - so the extra damping below applies only when `_sticky_turn` says no turn
+# is currently being executed, using last frame's turn state (this frame's
+# isn't known yet: route/turn lookup needs the smoothed position this call
+# produces). One frame of lag on that signal does not matter at this update
+# rate.
+STRAIGHT_LOW_CONF_THRESHOLD = 20
+# Capped below 5 so the EKF's own confidence buckets (smoothing.py) always
+# land this in their heaviest damping tier (R_scale 4x, tightest n_sigma
+# outlier gate) rather than the 10-20 range's near-normal-trust tier, which
+# measurably only trimmed the M21 straight-stretch jerk a little (median
+# 1.60->1.47px) when capped at 8.
+STRAIGHT_LOW_CONF_CAP = 4
+
+
+def _smoother_confidence(session, num_inliers):
+    near_turn = getattr(session, 'active_turn', None) is not None
+    if near_turn or num_inliers >= STRAIGHT_LOW_CONF_THRESHOLD:
+        return num_inliers
+    return min(num_inliers, STRAIGHT_LOW_CONF_CAP)
 
 
 def _sticky_route(session, floor, x, y, dest, dest_floor, deviate_px=55.0):
@@ -415,6 +987,54 @@ def extract_frames_from_video(video_path, interval_seconds: float = 1.5):
     print(f"Extracted {extracted_count} frames from video")
 
 
+def iter_video_frames(video_path, interval_seconds: float = 1.5):
+    """Yield a live-rate frame stream and whether it is a localization tick.
+
+    KLT/PnP needs a continuous stream, but processing a 60 FPS phone clip at
+    60 FPS doubles the work without improving the rendered overlay: the
+    browser presents at roughly 30 FPS and interpolates the camera payload in
+    between updates.  Downsample only high-rate videos to 30 FPS while keeping
+    the original timestamps and frame numbers.  The expensive global localizer
+    is still requested only at ``interval_seconds`` boundaries.
+    """
+    cap = cv2.VideoCapture(str(video_path))
+    if not cap.isOpened():
+        raise ValueError(f"Cannot open video: {video_path}")
+    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+    # Real camera navigation is normally delivered at <=30 FPS.  A number of
+    # test clips are 59.94/60 FPS; processing every decoded frame there made
+    # the backend fall behind the native clock, so the replay outran AR.
+    sample_stride = max(1, int(round(float(fps) / 30.0)))
+    interval_seconds = max(0.05, float(interval_seconds))
+    frame_number = 0
+    next_localize_ts = 0.0
+    try:
+        while True:
+            read_start = time.time()
+            ret, frame = cap.read()
+            read_time = time.time() - read_start
+            if not ret:
+                break
+            native_frame_number = frame_number
+            frame_number += 1
+            if sample_stride > 1 and native_frame_number % sample_stride:
+                continue
+            timestamp_ms = cap.get(cv2.CAP_PROP_POS_MSEC)
+            timestamp = (
+                float(timestamp_ms) / 1000.0
+                if timestamp_ms is not None and timestamp_ms >= 0
+                else frame_number / fps
+            )
+            timestamp = max(0.0, timestamp)
+            should_localize = timestamp + 1e-6 >= next_localize_ts
+            if should_localize:
+                while next_localize_ts <= timestamp + 1e-6:
+                    next_localize_ts += interval_seconds
+            yield native_frame_number, frame, timestamp, read_time, should_localize
+    finally:
+        cap.release()
+
+
 def build_debug_localization_entry(slot_name: str, result, xy_map, localize_time: float, floor_id: str, localizer_ref=None) -> dict:
     debug_info = result.get('debug_info', {}) if isinstance(result, dict) else {}
     pose = result.get('pose', {}) if isinstance(result, dict) else {}
@@ -478,6 +1098,7 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
         reset=True,
     )
 
+    continuous_tracker = None
     try:
         is_valid_video, video_error, _ = validate_video_file(video_path)
         if not is_valid_video:
@@ -515,10 +1136,11 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
 
         selected_floor = set_active_floor(selected_floor)
         localizer_ref = state.localizer
-        seed_floor_candidates = build_floor_hypothesis_candidates(selected_floor, [], seed_floor_candidates, limit=2)
-        auto_floor_vote_streak = {}
-        auto_floor_rechecks = 0
-        selected_floor_probe_succeeded = False
+        localizer_ref.reset_camera_calibration()
+        # Every destination and floor uses the same causal tracker. Prepared
+        # scenes under new_ar are offline artifacts and are never read by this
+        # production path to select a route or a sample clip.
+        continuous_tracker = _CausalPoseTracker(localizer_ref, selected_floor)
         session.current_floor = selected_floor
         if not session.destination_floor:
             session.destination_floor = selected_floor
@@ -550,116 +1172,75 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
         })
 
         localizer_ref.debug_mode = session.debug_mode
-        comparison_localizer_ref = None
-        if session.debug_mode:
-            comparison_localizer_ref = get_or_create_comparison_localizer(selected_floor)
-            comparison_localizer_ref.debug_mode = True
-
         print("DEBUG: Starting frame extraction...")
-        for frame_idx, frame, timestamp, read_time in extract_frames_from_video(video_path, interval_seconds):
+        # Replay the uploaded video on its native timeline. This keeps the
+        # backend from racing far ahead of the frame visible in the browser and
+        # makes every tracker update causal for both reference and generic
+        # destinations.
+        replay_clock_started = time.perf_counter()
+        for frame_idx, frame, timestamp, read_time, should_localize in iter_video_frames(video_path, interval_seconds):
             if not session.active:
                 print("DEBUG: Navigation stopped")
                 break
 
+            wait_seconds = replay_clock_started + float(timestamp) - time.perf_counter()
+            if wait_seconds > 0:
+                time.sleep(wait_seconds)
+
             print(f"DEBUG: Processing frame {frame_idx}")
 
             loop_start = time.time()
-            prefetched_localization = None
+            # Localization is always submitted to the tracker's bounded
+            # background worker. This foreground loop only tracks landmarks
+            # through frames already received and consumes completed results.
+            result, xy = continuous_tracker.step(
+                frame, frame_idx, timestamp, should_localize,
+            )
+            localize_time = 0.0
 
-            if auto_floor_detection and auto_floor_rechecks < 3:
-                rankings = rank_floor_candidates_for_frame(frame)
-                hypothesis_candidates = build_floor_hypothesis_candidates(
-                    selected_floor, rankings, seed_floor_candidates, limit=2
-                )
-                if len(hypothesis_candidates) > 1:
-                    # Probe the already-selected floor first.  In the common
-                    # case this produces the first visual fix without loading
-                    # a second floor's full keyframe database.  Only evaluate
-                    # alternate floors when the selected floor cannot localize
-                    # this frame (for example, after a real floor transition).
-                    if selected_floor_probe_succeeded:
-                        # Keep the selected floor during EKF warm-up. A single
-                        # weak frame must not trigger loading another floor's
-                        # full database before the first stable update exists.
-                        best_hypothesis = None
-                        evaluated_hypotheses = {}
-                    else:
-                        probe_start = time.time()
-                        probe_result, probe_xy = localizer_ref.localize(frame)
-                        probe_time = time.time() - probe_start
-                        if (
-                            isinstance(probe_result, dict)
-                            and probe_result.get('success')
-                            and probe_xy is not None
-                        ):
-                            prefetched_localization = {
-                                'result': probe_result,
-                                'xy': probe_xy,
-                                'localize_time': probe_time,
-                            }
-                            selected_floor_probe_succeeded = True
-                            print(
-                                f"[OK] Selected-floor fast path: {selected_floor} localized "
-                                f"frame {frame_idx} without loading alternate floors"
-                            )
-                            best_hypothesis = None
-                            evaluated_hypotheses = {}
-                        else:
-                            best_hypothesis, evaluated_hypotheses = evaluate_floor_hypotheses(
-                                frame, rankings, hypothesis_candidates
-                            )
-                    if best_hypothesis is not None:
-                        preferred_floor = best_hypothesis['floor_id']
-                        preferred_score = best_hypothesis['hypothesis_score']
-                        current_hypothesis = evaluated_hypotheses.get(selected_floor)
-                        current_score = current_hypothesis['hypothesis_score'] if current_hypothesis else float('-inf')
-                        score_margin = preferred_score - current_score
+            tracker_floor = getattr(continuous_tracker, 'floor_id', selected_floor)
+            if tracker_floor != selected_floor:
+                previous_floor = selected_floor
+                selected_floor = tracker_floor
+                localizer_ref = continuous_tracker.localizer
+                session.current_floor = selected_floor
+                session.route_cache = None
+                session.active_turn = None
+                session.ar_route_progress = None
+                session.ar_route_progress_path = None
+                session.smoother = create_smoother(lc.SMOOTHER_CONFIG['position'])
+                q.put({
+                    'type': 'floor_transition',
+                    'frame': frame_idx,
+                    'timestamp': timestamp,
+                    'from_floor': previous_floor,
+                    'to_floor': selected_floor,
+                    'reason': 'visual_reacquire_current_frame',
+                    'tracking_mode': 'causal_klt_pnp',
+                })
 
-                        if preferred_floor != selected_floor and score_margin >= 15.0:
-                            auto_floor_vote_streak[preferred_floor] = auto_floor_vote_streak.get(preferred_floor, 0) + 1
-                            print(f"[WARN] Early top-2 check prefers {preferred_floor} over {selected_floor} (margin={score_margin:.2f}, streak={auto_floor_vote_streak[preferred_floor]})")
-                            if auto_floor_vote_streak[preferred_floor] >= 2:
-                                selected_floor = set_active_floor(preferred_floor)
-                                localizer_ref = state.localizer
-                                seed_floor_candidates = build_floor_hypothesis_candidates(selected_floor, rankings, seed_floor_candidates, limit=2)
-                                if session.debug_mode:
-                                    comparison_localizer_ref = get_or_create_comparison_localizer(selected_floor)
-                                    comparison_localizer_ref.debug_mode = True
-                                session.current_floor = selected_floor
-                                auto_floor_vote_streak = {}
-                                print(f"[OK] Auto-corrected start floor to {selected_floor}")
-                        else:
-                            auto_floor_vote_streak = {}
-
-                        prefetched_localization = evaluated_hypotheses.get(selected_floor)
-                auto_floor_rechecks += 1
-
-            if prefetched_localization is not None:
-                result = prefetched_localization['result']
-                xy = prefetched_localization['xy']
-                localize_time = prefetched_localization['localize_time']
-            else:
-                result, xy = localizer_ref.localize(frame)
-                localize_time = time.time() - loop_start
-
-            if isinstance(result, dict) and result.get('success') and xy is not None:
-                selected_floor_probe_succeeded = True
+            # Localizer implementations may return ``None`` on a hard miss.
+            # Normalize that outcome before the per-frame navigation logic so a
+            # failed keyframe cannot terminate the whole video session.
+            if not isinstance(result, dict):
+                result = {
+                    'success': False,
+                    'method': 'Unknown',
+                    'num_matches': 0,
+                    'num_inliers': 0,
+                }
+            async_localize_time = float(result.get('async_localize_time', 0.0) or 0.0)
 
             debug_comparisons = None
-            if session.debug_mode:
+            if session.debug_mode and should_localize:
+                # Do not run a second synchronous matcher for diagnostics. The
+                # worker result is the production measurement and already has
+                # source/current frame provenance.
                 debug_comparisons = {
                     'orb': build_debug_localization_entry(
-                        'orb', result, xy, localize_time, selected_floor, localizer_ref
+                        'production_async', result, xy, localize_time, selected_floor, localizer_ref
                     )
                 }
-                if comparison_localizer_ref is not None:
-                    comparison_start = time.time()
-                    comparison_result, comparison_xy = comparison_localizer_ref.localize(frame)
-                    comparison_time = time.time() - comparison_start
-                    debug_comparisons['superpoint'] = build_debug_localization_entry(
-                        'superpoint', comparison_result, comparison_xy, comparison_time,
-                        selected_floor, comparison_localizer_ref
-                    )
 
             # Do this after collecting debug data so the rejected match is
             # still visible in diagnostics, but before smoothing/route logic
@@ -708,7 +1289,10 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
                 # displacement as a yaw correction: at a corner it would turn
                 # the facing marker before the phone actually turns.
                 measured_heading = pnp_heading_deg
-                smooth_res = session.smoother.update(raw_x, raw_y, timestamp, num_inliers, measured_heading=measured_heading)
+                smooth_res = session.smoother.update(
+                    raw_x, raw_y, timestamp, _smoother_confidence(session, num_inliers),
+                    measured_heading=measured_heading,
+                )
                 if len(smooth_res) == 2:
                     x, y = smooth_res
                 else:
@@ -823,7 +1407,9 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
                         session, localizer_ref, selected_floor, result.get('pose'), x, y,
                         path_coords, num_inliers, image_size=_ar_image_size(localizer_ref, frame),
                         reproj_error=result.get('median_reproj_error'),
+                        interval_seconds=interval_seconds, timestamp=timestamp,
                     ))
+                    tracking_status = result.get('tracking_status', 'tracked')
 
                     # Arrival / overshoot handling for a user-friendly AR end-state.
                     ar_state, dist_to_dest = _compute_ar_endstate(
@@ -867,6 +1453,22 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
                         ar_world = dict(ar_world)
                         ar_world.pop('destination_marker', None)
 
+                    # Once the route reaches its destination, never carry the
+                    # previous turn/ribbon into the arrival state. Keep the
+                    # camera payload so a destination marker can still render,
+                    # but clear route geometry and the hold cache.
+                    if ar_state == 'arrived':
+                        session.ar_hold = None
+                        ar_world = _ar_arrival_only(ar_world)
+
+                    ar_metrics = _ar_geometry_metrics(ar_world)
+                    if ar_metrics['projected_geometry']:
+                        ar_world_status = 'payload_ready'
+                    elif ar_world is not None:
+                        ar_world_status = 'hidden:no_projected_geometry'
+                    else:
+                        ar_world_status = f"hidden:{getattr(session, 'last_ar_world_reason', 'unknown')}"
+
                     _maxlat = max((abs(l) for _f, l in ar_path), default=0.0)
                     _ar_debug(
                         f"[AR] f{frame_idx} VIS fl={selected_floor} pos=({x:.0f},{y:.0f}) "
@@ -888,8 +1490,28 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
                         'destination_coords': destination_coords,
                         'path_segments': route_info['segments'],
                         'next_transition': route_info['next_transition'],
-                        'method': result.get('method', 'unknown'),
-                        'tracking_mode': 'visual_fix', 'processing_time': frame_total_time
+                         'method': result.get('method', 'unknown'),
+                         'tracking_mode': 'causal_klt_pnp',
+                         'tracking_status': tracking_status,
+                         'causal_source_frame': result.get('causal_source_frame'),
+                         'current_tracking_frame': result.get('current_tracking_frame', frame_idx),
+                         'causal_source_timestamp': result.get('causal_source_timestamp'),
+                         'async_localize_time': async_localize_time,
+                         'pose_age_s': result.get('pose_age_s'),
+                         'source_to_current_video_s': result.get('source_to_current_video_s'),
+                         'source_to_emit_wall_s': result.get('source_to_emit_wall_s'),
+                         'tracks_before': result.get('tracks_before'),
+                         'tracks_after': result.get('tracks_after'),
+                         'pnp_inliers': result.get('pnp_inliers', result.get('num_inliers')),
+                         'pnp_inlier_ratio': result.get('pnp_inlier_ratio', result.get('inlier_ratio')),
+                         'pnp_reproj_error': result.get('pnp_reproj_error', result.get('median_reproj_error')),
+                         'ar_world': ar_world,
+                         'ar_world_status': ar_world_status,
+                         'ar_payload_ready': ar_metrics['payload_ready'],
+                         'ar_geometry_counts': ar_metrics['geometry_counts'],
+                         'ar_projected_geometry': ar_metrics['projected_geometry'],
+                        'camera_calibration': localizer_ref.camera_self_calibrator.snapshot(),
+                        'processing_time': frame_total_time
                     })
 
                     q.put({
@@ -914,11 +1536,29 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
                         'path': path_coords,
                         'path_segments': route_info['segments'],
                         'next_transition': route_info['next_transition'],
+                        'camera_calibration': localizer_ref.camera_self_calibrator.snapshot(),
                         'extract_time': read_time, 'localize_time': localize_time,
-                        'processing_time': frame_total_time,
-                        'method': result.get('method', 'unknown'),
-                        'tracking_mode': 'visual_fix',
-                        'history_length': len(session.history)
+                         'processing_time': frame_total_time,
+                         'method': result.get('method', 'unknown'),
+                         'tracking_mode': 'causal_klt_pnp',
+                         'tracking_status': tracking_status,
+                         'causal_source_frame': result.get('causal_source_frame'),
+                         'current_tracking_frame': result.get('current_tracking_frame', frame_idx),
+                         'causal_source_timestamp': result.get('causal_source_timestamp'),
+                         'async_localize_time': async_localize_time,
+                         'pose_age_s': result.get('pose_age_s'),
+                         'source_to_current_video_s': result.get('source_to_current_video_s'),
+                         'source_to_emit_wall_s': result.get('source_to_emit_wall_s'),
+                         'tracks_before': result.get('tracks_before'),
+                         'tracks_after': result.get('tracks_after'),
+                         'pnp_inliers': result.get('pnp_inliers', result.get('num_inliers')),
+                         'pnp_inlier_ratio': result.get('pnp_inlier_ratio', result.get('inlier_ratio')),
+                         'pnp_reproj_error': result.get('pnp_reproj_error', result.get('median_reproj_error')),
+                         'ar_world_status': ar_world_status,
+                         'ar_payload_ready': ar_metrics['payload_ready'],
+                         'ar_geometry_counts': ar_metrics['geometry_counts'],
+                         'ar_projected_geometry': ar_metrics['projected_geometry'],
+                         'history_length': len(session.history)
                     })
                 else:
                     q.put({'type': 'warning', 'message': f'ไม่พบเส้นทางไปยัง {session.destination}'})
@@ -969,11 +1609,12 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
                     ar_path = nav.local_path_ahead(held_x, held_y, path_coords) if path_coords else []
                     next_turn = _sticky_turn(session, held_x, held_y, nav.next_turn_info(held_x, held_y, path_coords)) if path_coords else None
                     # This frame produced no pose, so there is no camera to
-                    # register geometry against. Redraw the last AR frame for a
-                    # short while (see AR_HOLD_MAX_SECONDS) so brief dropouts do not
-                    # read as the overlay flickering; past that it fades and the
-                    # screen-fixed guidance carries on alone.
+                    # register geometry against. Clear world AR immediately;
+                    # a held map fix cannot reproject the moving video camera.
                     ar_world = _ar_world_or_hold(session, timestamp, None)
+                    ar_world_status = 'hidden:tracking_lost'
+                    ar_metrics = _ar_geometry_metrics(ar_world)
+                    tracking_status = result.get('tracking_status', 'tracking_lost')
                     # No reliable motion vector while holding ⇒ no overshoot test.
                     ar_state, dist_to_dest = _compute_ar_endstate(
                         held_x, held_y, destination_coords, 0.0, 0.0, 0.0
@@ -998,6 +1639,10 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
                         ar_world = dict(ar_world)
                         ar_world.pop('destination_marker', None)
 
+                    if ar_state == 'arrived':
+                        session.ar_hold = None
+                        ar_world = _ar_arrival_only(ar_world)
+
                     _maxlat = max((abs(l) for _f, l in ar_path), default=0.0)
                     _ar_debug(
                         f"[AR] f{frame_idx} HOLD fl={held_floor} pos=({held_x:.0f},{held_y:.0f}) "
@@ -1018,8 +1663,25 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
                         'destination_floor': session.destination_floor,
                         'destination_coords': destination_coords,
                         'path_segments': segments, 'next_transition': next_transition,
-                        'method': 'HOLD_LAST_FIX', 'tracking_mode': 'hold_last_fix',
-                        'hold_age': hold_age, 'processing_time': frame_total_time
+                         'ar_world': ar_world,
+                         'ar_world_status': ar_world_status,
+                         'ar_payload_ready': ar_metrics['payload_ready'],
+                         'ar_geometry_counts': ar_metrics['geometry_counts'],
+                         'ar_projected_geometry': ar_metrics['projected_geometry'],
+                         'method': 'HOLD_LAST_FIX', 'tracking_mode': 'causal_klt_pnp',
+                         'tracking_status': tracking_status,
+                         'causal_source_frame': result.get('causal_source_frame'),
+                         'current_tracking_frame': result.get('current_tracking_frame', frame_idx),
+                         'async_localize_time': async_localize_time,
+                         'pose_age_s': result.get('pose_age_s'),
+                         'source_to_current_video_s': result.get('source_to_current_video_s'),
+                         'source_to_emit_wall_s': result.get('source_to_emit_wall_s'),
+                         'tracks_before': result.get('tracks_before'),
+                         'tracks_after': result.get('tracks_after'),
+                         'pnp_inliers': result.get('pnp_inliers', result.get('num_inliers')),
+                         'pnp_inlier_ratio': result.get('pnp_inlier_ratio', result.get('inlier_ratio')),
+                         'pnp_reproj_error': result.get('pnp_reproj_error', result.get('median_reproj_error')),
+                         'hold_age': hold_age, 'processing_time': frame_total_time
                     })
 
                     q.put({
@@ -1044,10 +1706,27 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
                         'dist_to_dest': dist_to_dest,
                         'path': path_coords,
                         'path_segments': segments, 'next_transition': next_transition,
+                        'camera_calibration': localizer_ref.camera_self_calibrator.snapshot(),
                         'extract_time': read_time, 'localize_time': localize_time,
-                        'processing_time': frame_total_time,
-                        'method': 'HOLD_LAST_FIX', 'tracking_mode': 'hold_last_fix',
-                        'hold_age': hold_age,
+                         'processing_time': frame_total_time,
+                         'method': 'HOLD_LAST_FIX', 'tracking_mode': 'hold_last_fix',
+                         'tracking_status': tracking_status,
+                         'causal_source_frame': result.get('causal_source_frame'),
+                         'current_tracking_frame': result.get('current_tracking_frame', frame_idx),
+                         'async_localize_time': async_localize_time,
+                         'pose_age_s': result.get('pose_age_s'),
+                         'source_to_current_video_s': result.get('source_to_current_video_s'),
+                         'source_to_emit_wall_s': result.get('source_to_emit_wall_s'),
+                         'tracks_before': result.get('tracks_before'),
+                         'tracks_after': result.get('tracks_after'),
+                         'pnp_inliers': result.get('pnp_inliers', result.get('num_inliers')),
+                         'pnp_inlier_ratio': result.get('pnp_inlier_ratio', result.get('inlier_ratio')),
+                         'pnp_reproj_error': result.get('pnp_reproj_error', result.get('median_reproj_error')),
+                         'ar_world_status': ar_world_status,
+                         'ar_payload_ready': ar_metrics['payload_ready'],
+                         'ar_geometry_counts': ar_metrics['geometry_counts'],
+                         'ar_projected_geometry': ar_metrics['projected_geometry'],
+                         'hold_age': hold_age,
                         'history_length': len(session.history)
                     })
 
@@ -1061,7 +1740,6 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
                     print(f"Frame {frame_idx}: hold-last-fix age={hold_age:.1f}s streak={lost_streak}")
                     session.frame_count = frame_idx + 1
                     print(f"Frame {frame_idx}: Processed in {time.time() - loop_start:.4f}s")
-                    time.sleep(0.01)
                     continue
 
                 if session.debug_mode and 'debug_info' in result:
@@ -1090,27 +1768,37 @@ def process_navigation(session: NavigationSession, video_path, interval_seconds:
 
                 q.put({
                     'type': 'error', 'frame': frame_idx,
-                    'message': 'Localization failed', 'tracking_mode': 'lost'
+                    'message': 'Localization failed', 'tracking_mode': 'causal_klt_pnp',
+                    'tracking_status': result.get('tracking_status', 'tracking_lost'),
+                    'reason': result.get('rejection_reason', 'tracking_lost'),
+                    'ar_world_status': 'hidden:tracking_lost',
                 })
 
             session.frame_count = frame_idx + 1
             print(f"Frame {frame_idx}: Processed in {time.time() - loop_start:.4f}s")
-            time.sleep(0.01)
 
         total_time = time.time() - total_start_time
         avg_frame_time = sum(frame_times) / len(frame_times) if frame_times else 0
 
+        session.tracking_diagnostics = dict(getattr(continuous_tracker, 'diagnostics', {}) or {})
         q.put({
             'type': 'complete',
             'total_frames': session.frame_count,
             'total_time': total_time,
             'avg_frame_time': avg_frame_time,
-            'fps': len(frame_times) / total_time if total_time > 0 else 0
+            'fps': len(frame_times) / total_time if total_time > 0 else 0,
+            'tracking_diagnostics': getattr(continuous_tracker, 'diagnostics', {}),
+            'history_limit': session.history.maxlen,
         })
 
     except Exception as exc:
         _ar_debug(f"[SESSION_ERROR] {type(exc).__name__}: {exc}")
         print(f"[ERROR] Navigation session failed: {type(exc).__name__}: {exc}", flush=True)
+        print(traceback.format_exc(), flush=True)
         q.put({'type': 'error', 'message': f'Error: {str(exc)}'})
     finally:
+        if continuous_tracker is not None:
+            session.tracking_diagnostics = dict(getattr(continuous_tracker, 'diagnostics', {}) or {})
+        if continuous_tracker is not None and hasattr(continuous_tracker, 'close'):
+            continuous_tracker.close()
         session.active = False

@@ -9,6 +9,7 @@
   type RouteSegment,
   type Store,
 } from '../types/navigation';
+import { buildMapFrame, parseMapSize, toMapUnits, type MapFrame } from '../lib/mapFrame';
 import {
   API_BASE_URL,
   stripTrailingSlash,
@@ -22,6 +23,9 @@ interface BuildingFloorConfig {
   enabled?: boolean;
   map_image: string;
   graph_json?: string;
+  venue?: string;
+  /** [width, height] of the plan image in pixels; omit for legacy 500x500 plans. */
+  map_size?: [number, number];
 }
 
 interface BuildingConfig {
@@ -79,6 +83,8 @@ interface BackendFloorsResponse {
     id: string;
     label?: string;
     order?: number;
+    venue?: string | null;
+    map_size?: [number, number] | null;
   }>;
   default_floor?: string;
 }
@@ -392,7 +398,7 @@ function fetchJsonWithTimeout<T>(url: string, timeoutMs = FETCH_TIMEOUT_MS): Pro
   return fetchJsonWithTimeoutShared<T>(url, timeoutMs);
 }
 
-function parseFloorGraph(graphJson: GraphJson, fallbackFloorId: string): FloorGraph {
+function parseFloorGraph(graphJson: GraphJson, fallbackFloorId: string, mapFrame?: MapFrame | null): FloorGraph {
   const adjacency: Record<string, Array<{ to: string; weight: number }>> = {};
   const rawGraphNodes = graphJson.graph?.nodes ?? {};
   const rawNodes: GraphNode[] = [];
@@ -422,8 +428,7 @@ function parseFloorGraph(graphJson: GraphJson, fallbackFloorId: string): FloorGr
   for (const node of rawNodes) {
     nodes[node.id] = {
       ...node,
-      x: node.x / coordinateDivisor,
-      y: node.y / coordinateDivisor,
+      ...toMapUnits(mapFrame, node, coordinateDivisor),
     };
     adjacency[node.id] = [];
   }
@@ -533,7 +538,10 @@ function upsertGroupedStore(groupedStores: Map<string, GroupedStore>, node: Grap
   existing.nodeIds.push(node.id);
 }
 
-function normalizeGroupedStoreCoordinates(groupedStores: Map<string, GroupedStore>): void {
+function normalizeGroupedStoreCoordinates(
+  groupedStores: Map<string, GroupedStore>,
+  frameByFloor: Map<string, MapFrame | null | undefined>,
+): void {
   const maxCoordinateByFloor = new Map<string, number>();
 
   for (const grouped of groupedStores.values()) {
@@ -550,6 +558,13 @@ function normalizeGroupedStoreCoordinates(groupedStores: Map<string, GroupedStor
   }
 
   for (const grouped of groupedStores.values()) {
+    const frame = frameByFloor.get(grouped.floorId);
+    if (frame) {
+      // xSum/ySum hold `count` summed samples, so the centring offset scales with count.
+      grouped.xSum = grouped.xSum * frame.scale + frame.offsetX * grouped.count;
+      grouped.ySum = grouped.ySum * frame.scale + frame.offsetY * grouped.count;
+      continue;
+    }
     const divisor = divisorByFloor.get(grouped.floorId) ?? 1;
     if (divisor <= 1) {
       continue;
@@ -573,6 +588,8 @@ async function loadLocalDataset(): Promise<NavigationDataset> {
     order: toFiniteNumber(floor.order, 0),
     mapImageUrl: `${SYSTEM_DATA_ROOT}/${floor.map_image}`,
     graphJsonUrl: floor.graph_json ? `${SYSTEM_DATA_ROOT}/${floor.graph_json}` : '',
+    venue: floor.venue,
+    mapFrame: buildMapFrame(parseMapSize(floor.map_size)),
   }));
 
   const floorLabelById = new Map(floors.map((floor) => [floor.id, floor.label]));
@@ -608,7 +625,7 @@ async function loadLocalDataset(): Promise<NavigationDataset> {
     }
 
     const graphJson = await fetchJsonWithTimeout<GraphJson>(floor.graphJsonUrl);
-    const floorGraph = parseFloorGraph(graphJson, floor.id);
+    const floorGraph = parseFloorGraph(graphJson, floor.id, floor.mapFrame);
     floorGraphs[floor.id] = floorGraph;
 
     for (const node of Object.values(floorGraph.nodes)) {
@@ -654,6 +671,8 @@ async function loadBackendOverlay(localDataset: NavigationDataset, apiBaseUrl: s
       order: toFiniteNumber(backendFloor.order, localFloor?.order ?? 0),
       mapImageUrl: `${baseUrl}/api/map-image?floor_id=${encodeURIComponent(backendFloor.id)}`,
       graphJsonUrl: localFloor?.graphJsonUrl ?? '',
+      venue: backendFloor.venue ?? localFloor?.venue ?? undefined,
+      mapFrame: buildMapFrame(parseMapSize(backendFloor.map_size)) ?? localFloor?.mapFrame ?? null,
     });
   }
 
@@ -694,7 +713,7 @@ async function loadBackendOverlay(localDataset: NavigationDataset, apiBaseUrl: s
     existing.count += 1;
   }
 
-  normalizeGroupedStoreCoordinates(groupedStores);
+  normalizeGroupedStoreCoordinates(groupedStores, new Map(floors.map((floor) => [floor.id, floor.mapFrame])));
   const stores = groupedStoresToList(groupedStores, floorLabelById, floorOrderById);
 
   const defaultFloorId = floors.some((floor) => floor.id === floorsResponse.default_floor)

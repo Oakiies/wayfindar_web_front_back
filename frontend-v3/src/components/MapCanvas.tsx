@@ -1,4 +1,5 @@
 import React from 'react';
+import { type MapFrame } from '../lib/mapFrame';
 import { type MapPoint } from '../types/navigation';
 
 export interface MapMarker {
@@ -41,6 +42,14 @@ interface MapCanvasProps {
   focus?: MapFocus | null;
   /** Enables wheel zoom, drag pan and pinch zoom. */
   interactive?: boolean;
+  /** Where a non-500x500 plan sits in map units; omit for a full-square plan. */
+  mapFrame?: MapFrame | null;
+  /**
+   * Shows a window of the plan at its true pixel scale (500 source px on a side)
+   * and slides it after `currentPose` once the pose nears the window's edge.
+   * A plan that already fits in 500 map units is shown whole, so this is a no-op there.
+   */
+  followPose?: boolean;
   className?: string;
 }
 
@@ -49,8 +58,8 @@ const MIN_ZOOM = 1;
 const MAX_ZOOM = 6;
 
 /** Flat palette — no gradients anywhere, so every layer reads at a glance. */
-const ROUTE_COLOR = '#0d6efd';
-const POSE_COLOR = '#0d6efd';
+const ROUTE_COLOR = '#0066cc';
+const POSE_COLOR = '#0066cc';
 const ORIGIN_COLOR = '#111315';
 const DESTINATION_COLOR = '#e5484d';
 
@@ -87,28 +96,54 @@ interface ViewBox {
 
 const FULL_VIEW: ViewBox = { cx: MAP_SIZE / 2, cy: MAP_SIZE / 2, size: MAP_SIZE };
 
+/** Follow mode: the window only moves once the pose is within this share of its half-extent from an edge. */
+const FOLLOW_EDGE_SHARE = 0.35;
+/** Share of the remaining distance covered per animation frame - small, so the window glides. */
+const FOLLOW_EASE = 0.12;
+const FOLLOW_SETTLE_UNITS = 0.04;
+
+interface Bounds {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+}
+
+const SQUARE_BOUNDS: Bounds = { x0: 0, y0: 0, x1: MAP_SIZE, y1: MAP_SIZE };
+
+function boundsFor(frame: MapFrame | null): Bounds {
+  return frame
+    ? { x0: frame.offsetX, y0: frame.offsetY, x1: frame.offsetX + frame.width, y1: frame.offsetY + frame.height }
+    : SQUARE_BOUNDS;
+}
+
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
+/** Like clamp, but centres the value when the window is larger than the range. */
+function clampCentered(value: number, min: number, max: number): number {
+  return min > max ? (min + max) / 2 : clamp(value, min, max);
+}
+
 /** Keeps the visible square inside the floor plan at every zoom level. */
-function clampView(view: ViewBox): ViewBox {
+function clampView(view: ViewBox, bounds: Bounds = SQUARE_BOUNDS): ViewBox {
   const size = clamp(view.size, MAP_SIZE / MAX_ZOOM, MAP_SIZE / MIN_ZOOM);
   const half = size / 2;
   return {
     size,
-    cx: clamp(view.cx, half, MAP_SIZE - half),
-    cy: clamp(view.cy, half, MAP_SIZE - half),
+    cx: clampCentered(view.cx, bounds.x0 + half, bounds.x1 - half),
+    cy: clampCentered(view.cy, bounds.y0 + half, bounds.y1 - half),
   };
 }
 
-function viewFromFocus(focus: MapFocus): ViewBox {
+function viewFromFocus(focus: MapFocus, bounds: Bounds = SQUARE_BOUNDS): ViewBox {
   const size = MAP_SIZE / clamp(focus.zoom ?? 2.5, MIN_ZOOM, MAX_ZOOM);
   return clampView({
     cx: focus.x,
     cy: focus.y + size * (focus.yBias ?? 0),
     size,
-  });
+  }, bounds);
 }
 
 /** Emits evenly spaced points along the true route length, not per vertex. */
@@ -184,10 +219,13 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
   currentPose = null,
   focus = null,
   interactive = false,
+  mapFrame = null,
+  followPose = false,
   className,
 }) => {
   const svgRef = React.useRef<SVGSVGElement | null>(null);
-  const [view, setView] = React.useState<ViewBox>(() => (focus ? viewFromFocus(focus) : FULL_VIEW));
+  const bounds = React.useMemo(() => boundsFor(mapFrame), [mapFrame]);
+  const [view, setView] = React.useState<ViewBox>(() => (focus ? viewFromFocus(focus, bounds) : FULL_VIEW));
 
   const focusX = focus?.x;
   const focusY = focus?.y;
@@ -198,8 +236,72 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
     if (focusX === undefined || focusY === undefined) {
       return;
     }
-    setView(viewFromFocus({ x: focusX, y: focusY, zoom: focusZoom, yBias: focusYBias }));
-  }, [focusX, focusY, focusZoom, focusYBias]);
+    setView(viewFromFocus({ x: focusX, y: focusY, zoom: focusZoom, yBias: focusYBias }, bounds));
+  }, [focusX, focusY, focusZoom, focusYBias, bounds]);
+
+  // Follow mode. The loop reads the latest view/pose from refs so it can run
+  // between renders; `setView` is the only state it touches.
+  const viewRef = React.useRef(view);
+  React.useEffect(() => {
+    viewRef.current = view;
+  }, [view]);
+  const followPausedRef = React.useRef(false);
+  const followStartedRef = React.useRef(false);
+  const poseX = currentPose?.x;
+  const poseY = currentPose?.y;
+
+  React.useEffect(() => {
+    if (!followPose || poseX === undefined || poseY === undefined) {
+      followStartedRef.current = false;
+      followPausedRef.current = false;
+      return;
+    }
+    if (followPausedRef.current) {
+      return;
+    }
+    const windowSize = clamp(MAP_SIZE * (mapFrame?.scale ?? 1), MAP_SIZE / MAX_ZOOM, MAP_SIZE / MIN_ZOOM);
+    let raf = 0;
+
+    const tick = () => {
+      if (followPausedRef.current) {
+        return;
+      }
+      const previous = viewRef.current;
+      let next: ViewBox;
+      if (!followStartedRef.current) {
+        // First fix: open on the user instead of sweeping across the plan.
+        followStartedRef.current = true;
+        next = clampView({ cx: poseX, cy: poseY, size: windowSize }, bounds);
+      } else {
+        const size = previous.size + (windowSize - previous.size) * FOLLOW_EASE;
+        const limit = (size / 2) * (1 - FOLLOW_EDGE_SHARE);
+        const dx = poseX - previous.cx;
+        const dy = poseY - previous.cy;
+        const targetX = Math.abs(dx) > limit ? poseX - Math.sign(dx) * limit : previous.cx;
+        const targetY = Math.abs(dy) > limit ? poseY - Math.sign(dy) * limit : previous.cy;
+        next = clampView(
+          {
+            size,
+            cx: previous.cx + (targetX - previous.cx) * FOLLOW_EASE,
+            cy: previous.cy + (targetY - previous.cy) * FOLLOW_EASE,
+          },
+          bounds,
+        );
+      }
+      const settled =
+        Math.abs(next.cx - previous.cx) < FOLLOW_SETTLE_UNITS &&
+        Math.abs(next.cy - previous.cy) < FOLLOW_SETTLE_UNITS &&
+        Math.abs(next.size - previous.size) < FOLLOW_SETTLE_UNITS;
+      if (!settled) {
+        viewRef.current = next;
+        setView(next);
+        raf = requestAnimationFrame(tick);
+      }
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [followPose, poseX, poseY, mapFrame, bounds]);
 
   /**
    * Side of the drawn square, in CSS pixels. `preserveAspectRatio="meet"` fits
@@ -266,8 +368,9 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
   /** Zooms by `factor` while keeping the map point under the cursor stationary. */
   const zoomAround = (clientX: number, clientY: number, factor: number) => {
     const anchor = toMapPoint(clientX, clientY);
+    followPausedRef.current = true;
     setView((previous) => {
-      const next = clampView({ ...previous, size: previous.size / factor });
+      const next = clampView({ ...previous, size: previous.size / factor }, bounds);
       if (!anchor) {
         return next;
       }
@@ -276,7 +379,7 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
         size: next.size,
         cx: anchor.x + (previous.cx - anchor.x) * ratio,
         cy: anchor.y + (previous.cy - anchor.y) * ratio,
-      });
+      }, bounds);
     });
   };
 
@@ -335,7 +438,8 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
     const perPixel = mapUnitsPerClientPixel();
     const dx = (event.clientX - previous.x) * perPixel;
     const dy = (event.clientY - previous.y) * perPixel;
-    setView((current) => clampView({ ...current, cx: current.cx - dx, cy: current.cy - dy }));
+    followPausedRef.current = true;
+    setView((current) => clampView({ ...current, cx: current.cx - dx, cy: current.cy - dy }, bounds));
   };
 
   const endPointer = (event: React.PointerEvent<SVGSVGElement>) => {
@@ -364,10 +468,10 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
       {mapImageUrl ? (
         <image
           href={mapImageUrl}
-          x="0"
-          y="0"
-          width={MAP_SIZE}
-          height={MAP_SIZE}
+          x={mapFrame?.offsetX ?? 0}
+          y={mapFrame?.offsetY ?? 0}
+          width={mapFrame?.width ?? MAP_SIZE}
+          height={mapFrame?.height ?? MAP_SIZE}
           preserveAspectRatio="none"
         />
       ) : (

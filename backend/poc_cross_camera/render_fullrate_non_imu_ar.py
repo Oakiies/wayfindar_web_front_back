@@ -28,6 +28,7 @@ from run_non_imu_video_comparison import (
     track_homography,
     warp_polygons,
 )
+from video_naming import next_video_path
 
 
 def parse_args() -> argparse.Namespace:
@@ -204,7 +205,7 @@ def main() -> int:
     # slideshow.
     panel_size = (640, 360)
     output_size = (panel_size[0] * 2, panel_size[1] * 2)
-    output_path = out_dir / "non_imu_fullrate_ar_90s_comparison.mp4"
+    output_path = next_video_path(out_dir, "non_imu_fullrate_ar_90s_comparison")
     writer = open_writer(output_path, output_size, fps)
 
     previous_gray: np.ndarray | None = None

@@ -13,6 +13,7 @@ upstream, both needed by the existing frontend contract:
 """
 from __future__ import annotations
 import queue
+import time
 from collections import deque
 from dataclasses import dataclass, field
 
@@ -27,8 +28,14 @@ class ReplayQueue(queue.Queue):
     def __init__(self, maxsize: int = 0):
         super().__init__(maxsize)
         self.published: deque = deque(maxlen=REPLAY_BUFFER_SIZE)
+        self._event_seq = 0
 
     def put(self, item, *args, **kwargs):
+        if isinstance(item, dict):
+            item = dict(item)
+            self._event_seq += 1
+            item.setdefault('event_seq', self._event_seq)
+            item.setdefault('emit_wall_time_s', time.time())
         self.published.append(item)
         return super().put(item, *args, **kwargs)
 
@@ -62,14 +69,18 @@ class NavigationSession:
     reached_dest: bool = False
     active_turn: dict | None = None  # sticky turn locked to the corner being executed
     route_cache: dict | None = None  # resolved route, held until the user leaves it
-    ar_hold: dict | None = None      # last AR frame, redrawn briefly across dropouts
+    ar_hold: dict | None = None      # retained only for compatibility; stale AR is never rendered
     ar_last_ts: float | None = None  # timestamp of the last AR decision
     ar_step_s: float | None = None   # learned gap between updates, for the hold budget
+    last_ar_world_reason: str = 'not_evaluated'
     ar_pose_stabilizer: object = None  # poc_ar_arrow v2 pose filter
     ar_pose_stabilizer_floor: str | None = None
+    ar_route_progress: object = None   # poc_ar_arrow v2 RouteProgressTracker
+    ar_route_progress_path: object = None  # path_coords identity it was built for
     worker_thread: object = None       # processing thread, used to prevent overlapping runs
     frame_count: int = 0
-    history: list = field(default_factory=list)
+    # Export/debug history must not grow with a long camera session.
+    history: deque = field(default_factory=lambda: deque(maxlen=6000))
     debug_data: dict = field(default_factory=lambda: {
         'frames': [],
         'localization_history': [],
@@ -78,3 +89,4 @@ class NavigationSession:
     })
     smoother: object = None  # KalmanSmoother, initialized in process_navigation
     queue: ReplayQueue = field(default_factory=ReplayQueue)
+    tracking_diagnostics: dict | None = None

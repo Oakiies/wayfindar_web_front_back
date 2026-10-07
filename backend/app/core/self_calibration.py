@@ -1,10 +1,12 @@
 """Non-blocking, image-only camera self-calibration for live localization.
 
-The first localization is allowed to use the map K.  Good 2D-3D matches are
-sent to a one-worker background solver; a new focal is committed only after
-several consistent P4Pf estimates pass inlier and reprojection gates.  This
-keeps calibration out of the request's critical path and has no dependency on
-ARCore, ARKit, or device camera metadata.
+The first localization is allowed to use the map K. Good 2D-3D matches are
+sent to a one-worker background solver; the first valid result may be used as
+a provisional focal, then calibration locks only after several consistent
+P4Pf estimates pass inlier, reprojection, and dispersion gates. A bounded
+attempt/time budget prevents calibration from running for the whole walk.
+This keeps calibration out of the request's critical path and has no
+dependency on ARCore, ARKit, or device camera metadata.
 """
 
 from __future__ import annotations
@@ -12,6 +14,7 @@ from __future__ import annotations
 from concurrent.futures import Future, ThreadPoolExecutor
 from collections import deque
 import threading
+import time
 from typing import Callable
 
 import numpy as np
@@ -74,8 +77,11 @@ class CameraSelfCalibrator:
         min_estimates: int = 3,
         min_inliers: int = 10,
         max_reproj_error_px: float = 8.0,
-        max_dispersion: float = 0.12,
-        ransac_iterations: int = 200,
+        max_dispersion: float = 0.05,
+        ransac_iterations: int = 128,
+        max_attempts: int = 8,
+        max_calibration_seconds: float = 12.0,
+        min_submit_interval_s: float = 0.75,
     ) -> None:
         self._initial_K = np.asarray(initial_K, dtype=np.float64).copy()
         self._active_K = self._initial_K.copy()
@@ -85,10 +91,23 @@ class CameraSelfCalibrator:
         self._max_reproj = float(max_reproj_error_px)
         self._max_dispersion = float(max_dispersion)
         self._iterations = int(ransac_iterations)
+        self._max_attempts = max(1, int(max_attempts))
+        self._max_calibration_seconds = max(0.0, float(max_calibration_seconds))
+        self._min_submit_interval_s = max(0.0, float(min_submit_interval_s))
         self._lock = threading.RLock()
         self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="camera-calib")
+        # Start the budget on the first accepted candidate, not while the
+        # Localizer is still loading retrieval/matching models.
+        self._started_at: float | None = None
+        self._last_submit_at: float | None = None
+        self._attempts = 0
         self._pending = False
+        self._closed = False
+        self._locked = False
+        self._stop_reason: str | None = None
         self._committed = False
+        self._calibrated = False
+        self._commit_count = 0
         self._status = "provisional" if poselib is not None else "unavailable"
         self._estimates: list[dict] = []
         self._last_error: str | None = None
@@ -99,20 +118,45 @@ class CameraSelfCalibrator:
             return self._active_K.copy()
 
     def submit(self, points_2d, points_3d, frame_token=None) -> bool:
-        """Queue one candidate without blocking the localization request."""
+        """Queue one candidate without blocking the localization request.
+
+        Calibration is a bounded startup phase.  Once a stable consensus is
+        reached, or the time/attempt budget is exhausted, later frames keep
+        using the active K and are not sent to P4Pf anymore.
+        """
         if poselib is None or points_2d is None or points_3d is None:
             return False
         points_2d = np.asarray(points_2d, dtype=np.float64).copy()
         points_3d = np.asarray(points_3d, dtype=np.float64).copy()
-        if len(points_2d) < 4 or len(points_2d) != len(points_3d):
+        # A P4Pf run cannot become valid if the correspondence set is
+        # smaller than the inlier gate. Reject it before spending RANSAC time.
+        if len(points_2d) < max(4, self._min_inliers) or len(points_2d) != len(points_3d):
             return False
         with self._lock:
-            if self._committed or self._pending:
+            if self._closed or self._locked or self._pending:
+                return False
+            now = time.monotonic()
+            if self._started_at is None:
+                self._started_at = now
+            if self._max_calibration_seconds > 0.0 and now - self._started_at >= self._max_calibration_seconds:
+                self._locked = True
+                self._stop_reason = "time_budget"
+                self._status = "budget_exhausted"
+                return False
+            if self._attempts >= self._max_attempts:
+                self._locked = True
+                self._stop_reason = "attempt_budget"
+                self._status = "budget_exhausted"
+                return False
+            if (self._last_submit_at is not None
+                    and now - self._last_submit_at < self._min_submit_interval_s):
                 return False
             if frame_token is not None and frame_token in self._seen_tokens:
                 return False
             if frame_token is not None:
                 self._seen_tokens.append(frame_token)
+            self._last_submit_at = now
+            self._attempts += 1
             self._pending = True
             self._status = "estimating"
             cx, cy = float(self._initial_K[0, 2]), float(self._initial_K[1, 2])
@@ -132,25 +176,66 @@ class CameraSelfCalibrator:
                 self._last_error = f"{type(exc).__name__}: {exc}"
         commit_K = None
         with self._lock:
+            if self._closed:
+                return
             self._pending = False
-            if estimate is not None and estimate["inliers"] >= self._min_inliers:
+            width = float(self._initial_K[0, 2]) * 2.0
+            estimate_valid = (
+                estimate is not None
+                and estimate["inliers"] >= self._min_inliers
+                and estimate["median_reproj_error_px"] <= self._max_reproj
+                and 0.25 * width < estimate["focal_px"] < 3.0 * width
+            )
+            if estimate_valid:
                 self._estimates.append(estimate)
-            if len(self._estimates) >= self._min_estimates:
-                focal_values = np.array([item["focal_px"] for item in self._estimates], dtype=np.float64)
+            if self._estimates and not self._committed:
+                # The causal reference uses its first valid image estimate as
+                # a provisional focal immediately. Independent frames still
+                # have to agree before the state becomes calibrated.
+                provisional = float(self._estimates[0]["focal_px"])
+                commit_K = self._active_K.copy()
+                commit_K[0, 0] = provisional
+                commit_K[1, 1] = provisional
+                self._active_K = commit_K.copy()
+                self._committed = True
+                self._commit_count += 1
+                self._status = "provisional"
+            elif len(self._estimates) >= self._min_estimates:
+                # Use a bounded consensus over the recent estimates.  Once it
+                # passes, calibration is locked for this camera session: a
+                # walk should not keep spending P4Pf time or let later noisy
+                # frames move K around.
+                recent = self._estimates[-8:]
+                focal_values = np.array([item["focal_px"] for item in recent], dtype=np.float64)
                 median_focal = float(np.median(focal_values))
                 mad = float(np.median(np.abs(focal_values - median_focal)))
                 dispersion = mad / max(median_focal, 1e-9)
                 if dispersion <= self._max_dispersion:
+                    target_focal = median_focal
                     commit_K = self._active_K.copy()
-                    commit_K[0, 0] = median_focal
-                    commit_K[1, 1] = median_focal
+                    commit_K[0, 0] = target_focal
+                    commit_K[1, 1] = target_focal
                     self._active_K = commit_K.copy()
                     self._committed = True
+                    self._calibrated = True
+                    self._commit_count += 1
+                    self._locked = True
+                    self._stop_reason = "stable_consensus"
                     self._status = "calibrated"
                 else:
                     self._status = "provisional"
             elif self._status != "unavailable":
                 self._status = "provisional"
+
+            if (not self._locked and self._attempts >= self._max_attempts):
+                self._locked = True
+                self._stop_reason = "attempt_budget"
+                self._status = "budget_exhausted"
+            elif (not self._locked and self._max_calibration_seconds > 0.0
+                  and time.monotonic() - self._started_at >= self._max_calibration_seconds):
+                self._locked = True
+                self._stop_reason = "time_budget"
+                self._status = "budget_exhausted"
         if commit_K is not None and self._on_commit is not None:
             self._on_commit(commit_K)
 
@@ -161,12 +246,23 @@ class CameraSelfCalibrator:
             values = [float(item["focal_px"]) for item in self._estimates]
             return {
                 "status": self._status,
+                "locked": self._locked,
+                "stop_reason": self._stop_reason,
                 "committed": self._committed,
+                "calibration_version": self._commit_count,
+                "calibrated": self._calibrated,
                 "estimated_parameters": ["fx", "fy"],
                 "fixed_parameters": ["cx", "cy"],
                 "distortion_model": "not_estimated_in_fast_path",
                 "estimates": len(values),
+                "attempts": self._attempts,
                 "pending": self._pending,
+                "max_attempts": self._max_attempts,
+                "max_calibration_seconds": self._max_calibration_seconds,
+                "elapsed_calibration_seconds": (
+                    max(0.0, time.monotonic() - self._started_at)
+                    if self._started_at is not None else 0.0
+                ),
                 "focal_px": focal,
                 "focal_ratio_to_initial": focal / initial_focal if initial_focal else None,
                 "focal_mad_px": float(np.median(np.abs(np.asarray(values) - np.median(values)))) if values else None,
@@ -175,4 +271,6 @@ class CameraSelfCalibrator:
             }
 
     def close(self) -> None:
+        with self._lock:
+            self._closed = True
         self._executor.shutdown(wait=False, cancel_futures=True)

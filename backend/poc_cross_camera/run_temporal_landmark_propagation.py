@@ -379,6 +379,8 @@ def main() -> None:
     parser.add_argument("--graph-json", type=Path, default=DEFAULT_GRAPH)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--step-seconds", type=float, default=10.0)
+    parser.add_argument("--start-seconds", type=float, default=0.0)
+    parser.add_argument("--end-seconds", type=float, default=None)
     parser.add_argument("--max-frames", type=int, default=53)
     parser.add_argument("--top-k", type=int, default=20)
     parser.add_argument("--window-seconds", type=float, default=0.25)
@@ -403,7 +405,11 @@ def main() -> None:
     fps = float(cap.get(cv2.CAP_PROP_FPS))
     frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     step = max(1, int(round(args.step_seconds * fps)))
-    frame_indices = list(range(0, frame_count, step))[:args.max_frames]
+    start_frame = max(0, int(round(args.start_seconds * fps)))
+    end_frame = frame_count if args.end_seconds is None else min(
+        frame_count, int(round(max(args.start_seconds, args.end_seconds) * fps)) + 1
+    )
+    frame_indices = list(range(start_frame, end_frame, step))[:args.max_frames]
     offset_seconds = [float(value) for value in args.offsets.split(",") if value.strip()]
 
     rows = []

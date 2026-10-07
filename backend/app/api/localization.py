@@ -34,7 +34,11 @@ from app.utils.heading import normalize_heading_deg, calculate_direction, calcul
 # (app/services/video_processor.py). Reusing it here, unmodified, so the live
 # camera loop can serve the same geometry; this only ADDS an optional
 # `ar_world_v2` field to the response, nothing existing changes shape.
-from poc_ar_arrow.ar_arrow_v2 import build_ar_world_v2, PoseStabilizer
+from poc_ar_arrow.ar_arrow_v2 import (
+    build_ar_world_v2,
+    PoseStabilizer,
+    route_guidance_mode,
+)
 
 router = APIRouter()
 
@@ -120,6 +124,7 @@ def _get_ar_stabilizer(floor_id, localizer):
             max_turn_deg=22.0,
             turn_follow_deg=6.0,
             turn_alpha=0.50,
+            expected_interval_s=1.0,
             metres_per_unit=metres_per_unit,
         )
         _ar_stabilizer_floor = floor_id
@@ -162,6 +167,83 @@ def _serialize_ar_world_v2(payload: dict) -> dict:
         ],
         'carets': [[_point3(p) for p in poly] for poly in payload['carets']],
         'alphas': [float(a) for a in payload['alphas']],
+        # Guidance metadata is intentionally additive. The frontend can use
+        # this to label/debug the difference between a shallow corridor bend
+        # and a discrete directional turn; geometry remains backward-compatible.
+        'guidance_mode': payload.get('guidance_mode', 'directional'),
+        'local_bend_deg': float(payload.get('local_bend_deg', 0.0)),
+    }
+
+
+def _serialize_tracking_seed(result: dict, localizer, image) -> dict | None:
+    """Expose the current server fix as a browser-side KLT/PnP seed.
+
+    The seed is produced only from the frame that was just localized.  It is
+    never a future frame or a pre-rendered trajectory.  Map-point IDs are
+    retained so the browser can keep each 2D track attached to the same 3D
+    point while the camera moves.
+    """
+    points_2d = result.get('_tracking_points_2d')
+    points_3d = result.get('_tracking_points_3d')
+    point_ids = result.get('_tracking_mp_ids')
+    if points_2d is None or points_3d is None:
+        return None
+
+    points_2d = np.asarray(points_2d, dtype=np.float64).reshape(-1, 2)
+    points_3d = np.asarray(points_3d, dtype=np.float64).reshape(-1, 3)
+    if point_ids is None:
+        point_ids = np.full((len(points_2d),), -1, dtype=np.int64)
+    point_ids = np.asarray(point_ids, dtype=np.int64).reshape(-1)
+    count = min(len(points_2d), len(points_3d), len(point_ids))
+    if count < 6:
+        return None
+
+    finite = (
+        np.isfinite(points_2d[:count]).all(axis=1)
+        & np.isfinite(points_3d[:count]).all(axis=1)
+        & (point_ids[:count] >= 0)
+    )
+    if int(finite.sum()) < 6:
+        return None
+    points_2d = points_2d[:count][finite]
+    points_3d = points_3d[:count][finite]
+    point_ids = point_ids[:count][finite]
+
+    try:
+        K = np.asarray(localizer.camera_self_calibrator.active_K(), dtype=np.float64)
+    except Exception:
+        K = np.asarray(localizer.K, dtype=np.float64)
+    img_wh = localization_core.get_reference_image_size_from_intrinsics(K)
+    if img_wh is None:
+        img_wh = (int(image.shape[1]), int(image.shape[0]))
+
+    floor_projection = None
+    floor_config = getattr(localizer, 'floor_config', None)
+    H_matrix = getattr(localizer, 'H_matrix', None)
+    if isinstance(floor_config, dict) and H_matrix is not None:
+        try:
+            floor_projection = {
+                'traj_center': [float(v) for v in floor_config['traj_center']],
+                'floor_v1': [float(v) for v in floor_config['floor_v1']],
+                'floor_v2': [float(v) for v in floor_config['floor_v2']],
+                'H': [[float(v) for v in row] for row in np.asarray(H_matrix, dtype=np.float64)],
+            }
+        except (KeyError, TypeError, ValueError):
+            floor_projection = None
+
+    return {
+        'points_2d': [[float(v) for v in p] for p in points_2d],
+        'points_3d': [[float(v) for v in p] for p in points_3d],
+        'map_point_ids': [int(v) for v in point_ids],
+        'K': [float(K[0, 0]), float(K[1, 1]), float(K[0, 2]), float(K[1, 2])],
+        'imgWH': [int(img_wh[0]), int(img_wh[1])],
+        'floor_projection': floor_projection,
+        'quality': {
+            'num_points': int(len(points_2d)),
+            'num_inliers': int(result.get('num_inliers', 0) or 0),
+            'inlier_ratio': _finite_or(result.get('inlier_ratio', 0.0), 0.0),
+            'median_reproj_error': _finite_or(result.get('median_reproj_error')),
+        },
     }
 
 
@@ -172,7 +254,15 @@ async def api_live_localize(
     destination: str = Form(''),
     destination_floor: str = Form(''),
     auto_floor: str = Form('1'),
+    frame_id: str = Form(''),
+    capture_time_ms: str = Form(''),
 ):
+    if state.localizer is None:
+        return JSONResponse(
+            {'success': False, 'error': 'Navigation backend is still preparing',
+             'ready': False, 'retry_after_ms': 250},
+            status_code=503,
+        )
     if frame is None:
         return JSONResponse({'success': False, 'error': 'Missing frame file'}, status_code=400)
 
@@ -216,7 +306,9 @@ async def api_live_localize(
     localizer_ref.debug_mode = False
 
     localize_start = time.time()
-    result, xy = await run_in_threadpool(localizer_ref.localize, image)
+    result, xy = await run_in_threadpool(
+        localizer_ref.localize, image, True,
+    )
     localize_time = time.time() - localize_start
 
     if auto_floor_enabled and requested_floor and not (result.get('success') and xy is not None):
@@ -245,7 +337,12 @@ async def api_live_localize(
             selected_floor = await run_in_threadpool(set_active_floor, best['floor_id'])
             localizer_ref = state.localizer
             localizer_ref.debug_mode = False
-            result, xy = best['result'], best['xy']
+            # Re-run the winning floor with correspondences enabled.  The
+            # candidate ranking path is intentionally lightweight and does not
+            # retain the 2D-3D pairs needed to seed browser tracking.
+            result, xy = await run_in_threadpool(
+                localizer_ref.localize, image, True,
+            )
         localize_time = time.time() - localize_start
 
     if not result.get('success') or xy is None:
@@ -361,6 +458,17 @@ async def api_live_localize(
     if ar_world_v2 is None:
         held_ar_world = _get_held_ar_world(ar_hold_key)
         if held_ar_world is not None:
+            # A weak AR frame must not resurrect a stale turn caret after the
+            # user has entered a shallow corridor bend.  The held pose can be
+            # useful for the ribbon, but its old directional cue is no longer
+            # semantically valid at the current route position.
+            if path_coords:
+                guidance_mode, local_bend_deg = route_guidance_mode(x, y, path_coords)
+                if guidance_mode == 'gentle_corridor':
+                    held_ar_world['carets'] = []
+                    held_ar_world['alphas'] = []
+                    held_ar_world['guidance_mode'] = guidance_mode
+                    held_ar_world['local_bend_deg'] = float(local_bend_deg)
             ar_world_v2 = held_ar_world
             ar_world_reason = 'held_last_world_pose'
 
@@ -395,6 +503,9 @@ async def api_live_localize(
         'num_matches': int(result.get('num_matches', 0) or 0),
         'inlier_ratio': _finite_or(result.get('inlier_ratio', 0.0), 0.0),
         'median_reproj_error': _finite_or(result.get('median_reproj_error')),
+        'tracking_seed': _serialize_tracking_seed(result, localizer_ref, image),
+        'tracking_seed_frame_id': str(frame_id or '') or None,
+        'tracking_seed_capture_time_ms': str(capture_time_ms or '') or None,
     }
     hold_key = _ar_world_hold_key(selected_floor, destination, destination_floor)
     return _remember_live_state(hold_key, response_payload)

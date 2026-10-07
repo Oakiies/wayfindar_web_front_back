@@ -710,6 +710,7 @@ def localize_image(
     use_superpoint: bool = True,
     use_superglue: bool = True,
     calibration_callback=None,
+    return_correspondences: bool = False,
 ) -> dict:
     """Full localization pipeline: Retrieval → Matching → PnP → Pose."""
     result = {
@@ -878,6 +879,13 @@ def localize_image(
             'inlier_ratio': best_inlier_ratio, 'median_reproj_error': best_median_reproj_error,
             'method': 'PnP'
         })
+        # The replay/live tracker can propagate these map correspondences with
+        # KLT between expensive global-localization requests. Keep them out of
+        # normal API responses; callers opt in explicitly because numpy arrays
+        # are internal working data, not JSON payload.
+        if return_correspondences and calibration_candidate is not None:
+            result['_tracking_points_2d'] = np.asarray(calibration_candidate[0], dtype=np.float32)
+            result['_tracking_points_3d'] = np.asarray(calibration_candidate[1], dtype=np.float32)
         if debug_mode and 'debug_info' in result:
             result['debug_info'].update({
                 'num_matches': best_matches, 'num_inliers': best_inliers,

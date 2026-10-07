@@ -1,0 +1,649 @@
+{
+  "graph": {
+    "directed": false,
+    "metadata": {
+      "building_name": "อาคารของฉัน",
+      "floors": [
+        "floor_siamdis2"
+      ],
+      "created_date": "2026-10-06",
+      "scale": 1,
+      "defined_types": [
+        {
+          "id": "intersection",
+          "label": "Intersection",
+          "color": "#3b82f6"
+        },
+        {
+          "id": "room_access",
+          "label": "Room Access",
+          "color": "#14b8a6"
+        },
+        {
+          "id": "entrance",
+          "label": "Entrance",
+          "color": "#10b981"
+        },
+        {
+          "id": "restroom",
+          "label": "Restroom",
+          "color": "#06b6d4"
+        },
+        {
+          "id": "elevator",
+          "label": "Elevator",
+          "color": "#8b5cf6"
+        },
+        {
+          "id": "stairs",
+          "label": "Stairs",
+          "color": "#f59e0b"
+        },
+        {
+          "id": "fire_exit",
+          "label": "Fire Exit",
+          "color": "#ef4444"
+        },
+        {
+          "id": "poi",
+          "label": "POI",
+          "color": "#ec4899"
+        },
+        {
+          "id": "room",
+          "label": "Room",
+          "color": "#6366f1"
+        }
+      ]
+    },
+    "nodes": {
+      "node-1791285793630": {
+        "label": "BEANS",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 1038.8922716597558,
+            "y": 530.2693208506105
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285794730": {
+        "label": "IPHONE & SAMSUNG",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 986.1703511106131,
+            "y": 562
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285795564": {
+        "label": "LOJEL",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 1012.5152224689012,
+            "y": 665.6229508091453
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285800346": {
+        "label": "MUJI",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 900,
+            "y": 705
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285806814": {
+        "label": "LOFT",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 325,
+            "y": 268.6748768377443
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285808347": {
+        "label": "WOLF",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 244,
+            "y": 405
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285809280": {
+        "label": "ROLIFE",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 263,
+            "y": 422
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285811846": {
+        "label": "STARBUCKS",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 327,
+            "y": 517
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285815663": {
+        "label": "FOCUS",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 405,
+            "y": 614.132937714426
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285835530": {
+        "label": "DIGITAL LAB",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 552,
+            "y": 499
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285837146": {
+        "label": "SPEAKER & AUDIO",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "room",
+          "position": {
+            "x": 513,
+            "y": 459
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285843497": {
+        "label": "Intersection 1",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "intersection",
+          "position": {
+            "x": 657,
+            "y": 612
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285845279": {
+        "label": "Intersection 2",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "intersection",
+          "position": {
+            "x": 895.7845433195116,
+            "y": 610.9461358298779
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285854730": {
+        "label": "Intersection 3",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "intersection",
+          "position": {
+            "x": 999,
+            "y": 612
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285861047": {
+        "label": "Intersection 4",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "intersection",
+          "position": {
+            "x": 195,
+            "y": 272
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285862030": {
+        "label": "Intersection 5",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "intersection",
+          "position": {
+            "x": 195.54187193709268,
+            "y": 357.10837438741856
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285995747": {
+        "label": "Intersection 6",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "intersection",
+          "position": {
+            "x": 316,
+            "y": 469
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791285998664": {
+        "label": "Intersection 7",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "intersection",
+          "position": {
+            "x": 333,
+            "y": 551
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791286715159": {
+        "label": "Intersection 8",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "intersection",
+          "position": {
+            "x": 973,
+            "y": 703
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791286735092": {
+        "label": "Intersection 9",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "intersection",
+          "position": {
+            "x": 947,
+            "y": 611
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      },
+      "node-1791286777492": {
+        "label": "Intersection 10",
+        "metadata": {
+          "floor": "floor_siamdis2",
+          "type": "intersection",
+          "position": {
+            "x": 1075,
+            "y": 579
+          },
+          "accessible": true,
+          "room_id": ""
+        }
+      }
+    },
+    "edges": [
+      {
+        "source": "node-1791285845279",
+        "source_label": "Intersection 2",
+        "target": "node-1791285843497",
+        "target_label": "Intersection 1",
+        "metadata": {
+          "type": "hallway",
+          "distance": 243,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285843497",
+        "source_label": "Intersection 1",
+        "target": "node-1791285835530",
+        "target_label": "DIGITAL LAB",
+        "metadata": {
+          "type": "hallway",
+          "distance": 154.25303886795876,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285835530",
+        "source_label": "DIGITAL LAB",
+        "target": "node-1791285837146",
+        "target_label": "SPEAKER & AUDIO",
+        "metadata": {
+          "type": "hallway",
+          "distance": 55.86591089385369,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285837146",
+        "source_label": "SPEAKER & AUDIO",
+        "target": "node-1791285806814",
+        "target_label": "LOFT",
+        "metadata": {
+          "type": "hallway",
+          "distance": 265.1659857523208,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285806814",
+        "source_label": "LOFT",
+        "target": "node-1791285861047",
+        "target_label": "Intersection 4",
+        "metadata": {
+          "type": "hallway",
+          "distance": 130,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285861047",
+        "source_label": "Intersection 4",
+        "target": "node-1791285862030",
+        "target_label": "Intersection 5",
+        "metadata": {
+          "type": "hallway",
+          "distance": 84.1486779456457,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285862030",
+        "source_label": "Intersection 5",
+        "target": "node-1791285808347",
+        "target_label": "WOLF",
+        "metadata": {
+          "type": "hallway",
+          "distance": 72.91776189653656,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285808347",
+        "source_label": "WOLF",
+        "target": "node-1791285809280",
+        "target_label": "ROLIFE",
+        "metadata": {
+          "type": "hallway",
+          "distance": 25.495097567963924,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285809280",
+        "source_label": "ROLIFE",
+        "target": "node-1791285995747",
+        "target_label": "Intersection 6",
+        "metadata": {
+          "type": "hallway",
+          "distance": 70.83784299369935,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285995747",
+        "source_label": "Intersection 6",
+        "target": "node-1791285811846",
+        "target_label": "STARBUCKS",
+        "metadata": {
+          "type": "hallway",
+          "distance": 49.24428900898052,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285811846",
+        "source_label": "STARBUCKS",
+        "target": "node-1791285998664",
+        "target_label": "Intersection 7",
+        "metadata": {
+          "type": "hallway",
+          "distance": 34.52535300326414,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285998664",
+        "source_label": "Intersection 7",
+        "target": "node-1791285815663",
+        "target_label": "FOCUS",
+        "metadata": {
+          "type": "hallway",
+          "distance": 95.75890467446668,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285815663",
+        "source_label": "FOCUS",
+        "target": "node-1791285843497",
+        "target_label": "Intersection 1",
+        "metadata": {
+          "type": "hallway",
+          "distance": 252.009026471858,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285845279",
+        "source_label": "Intersection 2",
+        "target": "node-1791285800346",
+        "target_label": "MUJI",
+        "metadata": {
+          "type": "hallway",
+          "distance": 93.00537618869137,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285845279",
+        "source_label": "Intersection 2",
+        "target": "node-1791286735092",
+        "target_label": "Intersection 9",
+        "metadata": {
+          "type": "hallway",
+          "distance": 47.01063709417264,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791286735092",
+        "source_label": "Intersection 9",
+        "target": "node-1791285794730",
+        "target_label": "IPHONE & SAMSUNG",
+        "metadata": {
+          "type": "hallway",
+          "distance": 62.73210028469242,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791286735092",
+        "source_label": "Intersection 9",
+        "target": "node-1791285854730",
+        "target_label": "Intersection 3",
+        "metadata": {
+          "type": "hallway",
+          "distance": 52.009614495783374,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285854730",
+        "source_label": "Intersection 3",
+        "target": "node-1791285793630",
+        "target_label": "BEANS",
+        "metadata": {
+          "type": "hallway",
+          "distance": 96.60745312862771,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285794730",
+        "source_label": "IPHONE & SAMSUNG",
+        "target": "node-1791285793630",
+        "target_label": "BEANS",
+        "metadata": {
+          "type": "hallway",
+          "distance": 66.14597793769059,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285854730",
+        "source_label": "Intersection 3",
+        "target": "node-1791285795564",
+        "target_label": "LOJEL",
+        "metadata": {
+          "type": "hallway",
+          "distance": 65.19202405202648,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285795564",
+        "source_label": "LOJEL",
+        "target": "node-1791286715159",
+        "target_label": "Intersection 8",
+        "metadata": {
+          "type": "hallway",
+          "distance": 57.4543296888929,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791286715159",
+        "source_label": "Intersection 8",
+        "target": "node-1791285800346",
+        "target_label": "MUJI",
+        "metadata": {
+          "type": "hallway",
+          "distance": 74.02702209328699,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791286777492",
+        "source_label": "Intersection 10",
+        "target": "node-1791285793630",
+        "target_label": "BEANS",
+        "metadata": {
+          "type": "hallway",
+          "distance": 63.812224534175265,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791286777492",
+        "source_label": "Intersection 10",
+        "target": "node-1791285795564",
+        "target_label": "LOJEL",
+        "metadata": {
+          "type": "hallway",
+          "distance": 106.80769181100449,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791285854730",
+        "source_label": "Intersection 3",
+        "target": "node-1791286777492",
+        "target_label": "Intersection 10",
+        "metadata": {
+          "type": "hallway",
+          "distance": 82.85529554590944,
+          "accessible": true,
+          "bidirectional": true
+        }
+      },
+      {
+        "source": "node-1791286777492",
+        "source_label": "Intersection 10",
+        "target": "node-1791285794730",
+        "target_label": "IPHONE & SAMSUNG",
+        "metadata": {
+          "type": "hallway",
+          "distance": 90.44172998020196,
+          "accessible": true,
+          "bidirectional": true
+        }
+      }
+    ]
+  }
+}

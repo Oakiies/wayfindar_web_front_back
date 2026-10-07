@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import cv2
 from app.services.state import state
-from app.services.floor_service import get_floor_config, get_keyframes_dir
+from app.services.floor_service import candidate_floor_ids, get_floor_config, get_keyframes_dir
 from app.services.localizer_service import get_or_create_localizer
 import app.core.localization as loc
 import app.config as config
@@ -78,7 +78,7 @@ def _rank_floor_with_global_descriptors(frame) -> list:
 
     rankings = []
     query_desc_cache = None
-    for floor_id in sorted(state.floor_configs.keys(), key=lambda item: state.floor_configs[item].get('order', 0)):
+    for floor_id in candidate_floor_ids():
         try:
             index = _load_global_descriptor_index(floor_id)
             if index is None:
@@ -168,7 +168,7 @@ def rank_floor_candidates_for_frame(frame) -> list:
         return lightweight_rankings
 
     rankings = []
-    for floor_id in sorted(state.floor_configs.keys(), key=lambda item: state.floor_configs[item].get('order', 0)):
+    for floor_id in candidate_floor_ids():
         try:
             floor_localizer = get_or_create_localizer(floor_id)
             db_descs = floor_localizer.database.get('global_descriptors')
@@ -231,7 +231,9 @@ def evaluate_floor_hypotheses(frame, rankings: list, candidate_floor_ids: list):
         try:
             hypothesis_localizer = get_or_create_localizer(floor_id)
             t0 = time.time()
-            result, xy = hypothesis_localizer.localize(frame)
+            # Keep the successful hypothesis's 2D–3D seed so the continuous
+            # KLT/PnP tracker can resume immediately after a floor handoff.
+            result, xy = hypothesis_localizer.localize(frame, return_correspondences=True)
             localize_time = time.time() - t0
             success = bool(result.get('success')) if isinstance(result, dict) else False
             num_inliers = int(result.get('num_inliers', 0) or 0) if isinstance(result, dict) else 0
@@ -287,61 +289,25 @@ def infer_start_floor_from_frame(frame, return_rankings: bool = False):
 
 
 def infer_start_floor_from_video(video_path, return_candidates: bool = False):
+    """Infer the starting floor from the first delivered image only.
+
+    A video upload is a transport for a live camera stream. Looking ahead over
+    several seconds before starting navigation would leak future query frames
+    into the initial state and makes the replay benchmark unlike the camera
+    path. The first frame is enough for a bounded floor hypothesis; the normal
+    causal localization worker validates it when the stream begins.
+    """
     capture = cv2.VideoCapture(str(video_path))
     try:
         if not capture.isOpened():
             fallback = state.current_floor_id or state.default_floor_id
             return (fallback, [fallback]) if return_candidates else fallback
-
-        fps = capture.get(cv2.CAP_PROP_FPS) or 1.0
-        sample_period_seconds = 1.0
-        next_sample_ts = 0.0
-        max_samples = 5
-        sample_index = 0
-        frame_index = 0
-        aggregated_scores: dict = {}
-        vote_counts: dict = {}
-        # Probe the warm current/default floor first. This is the common case
-        # for the demo and avoids loading every floor before the first fix.
-        preferred_floor = state.current_floor_id or state.default_floor_id
-        preferred_probe_done = False
-
-        while sample_index < max_samples:
-            success, frame = capture.read()
-            if not success:
-                break
-            timestamp_ms = capture.get(cv2.CAP_PROP_POS_MSEC)
-            timestamp = max(0.0, float(timestamp_ms) / 1000.0 if timestamp_ms is not None and timestamp_ms >= 0 else frame_index / fps)
-            if timestamp + 1e-6 >= next_sample_ts:
-                if not preferred_probe_done:
-                    preferred_probe_done = True
-                    try:
-                        preferred_localizer = get_or_create_localizer(preferred_floor)
-                        result, xy = preferred_localizer.localize(frame)
-                        if isinstance(result, dict) and result.get('success') and xy is not None:
-                            print(f"[OK] Start-floor fast path: {preferred_floor} localized first frame")
-                            return (preferred_floor, [preferred_floor]) if return_candidates else preferred_floor
-                    except Exception as exc:
-                        print(f"WARN: start-floor fast probe failed for {preferred_floor}: {exc}")
-                _, rankings = infer_start_floor_from_frame(frame, return_rankings=True)
-                if rankings:
-                    top_floor = rankings[0]['floor_id']
-                    vote_counts[top_floor] = vote_counts.get(top_floor, 0) + 1
-                    for item in rankings:
-                        aggregated_scores[item['floor_id']] = aggregated_scores.get(item['floor_id'], 0.0) + float(item['score'])
-                sample_index += 1
-                next_sample_ts += sample_period_seconds
-            frame_index += 1
-
-        if not aggregated_scores:
+        success, frame = capture.read()
+        if not success or frame is None:
             fallback = state.current_floor_id or state.default_floor_id
             return (fallback, [fallback]) if return_candidates else fallback
-
-        sorted_floors = sorted(aggregated_scores.keys(), key=lambda f: (vote_counts.get(f, 0), aggregated_scores.get(f, 0.0)), reverse=True)
-        best_floor = sorted_floors[0]
-        summary = ', '.join(f"{f}: votes={vote_counts.get(f, 0)} score={aggregated_scores.get(f, 0.0):.4f}" for f in sorted_floors)
-        print(f"[OK] Start-floor consensus: {summary}")
-        print(f"[OK] Selected start floor: {best_floor}")
-        return (best_floor, sorted_floors[:2]) if return_candidates else best_floor
+        best_floor, rankings = infer_start_floor_from_frame(frame, return_rankings=True)
+        candidates = [item['floor_id'] for item in rankings[:2]] if rankings else [best_floor]
+        return (best_floor, candidates) if return_candidates else best_floor
     finally:
         capture.release()

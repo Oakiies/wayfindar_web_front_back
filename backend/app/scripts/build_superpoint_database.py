@@ -57,7 +57,7 @@ def copy_if_exists(src, dst):
     return False
 
 
-def process_floor(floor_config, extractor, max_distance_px=5.0, force=False):
+def process_floor(floor_config, extractor, max_distance_px=5.0, force=False, progress=None):
     floor_id = floor_config['id']
     data_dir = Path(floor_config['data_dir'])
     src_root = data_dir / 'keyframes'
@@ -81,16 +81,22 @@ def process_floor(floor_config, extractor, max_distance_px=5.0, force=False):
         desc_path = dst_dir / 'descriptors.npy'
         if desc_path.exists() and not force:
             report['frames'].append({'keyframe_id': src_dir.name, 'status': 'skipped', 'reason': 'already_exists'})
+            if progress:
+                progress(index, len(keyframe_dirs))
             continue
         image_path = src_dir / 'image.png'
         if not image_path.exists():
             image_path = src_dir / 'image.jpg'
         if not image_path.exists():
             report['frames'].append({'keyframe_id': src_dir.name, 'status': 'failed', 'reason': 'image_missing'})
+            if progress:
+                progress(index, len(keyframe_dirs))
             continue
         image = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
         if image is None:
             report['frames'].append({'keyframe_id': src_dir.name, 'status': 'failed', 'reason': 'image_decode_failed'})
+            if progress:
+                progress(index, len(keyframe_dirs))
             continue
         orb_kpts = np.load(src_dir / 'keypoints.npy').astype(np.float32)
         orb_mp_ids = np.load(src_dir / 'mappoint_ids.npy')
@@ -111,6 +117,8 @@ def process_floor(floor_config, extractor, max_distance_px=5.0, force=False):
         })
         if index % 100 == 0 or index == len(keyframe_dirs):
             print(f'[{floor_id}] {index}/{len(keyframe_dirs)} keyframes processed')
+        if progress:
+            progress(index, len(keyframe_dirs))
     report['finished_at'] = time.time()
     report['duration_seconds'] = report['finished_at'] - report['started_at']
     report['num_frames'] = len(report['frames'])

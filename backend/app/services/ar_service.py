@@ -187,7 +187,7 @@ def _user_arc(path_coords, cum, x, y):
     return base
 
 
-def chevron_anchors(x, y, path_coords, clip_at_corner=True):
+def chevron_anchors(x, y, path_coords, clip_at_corner=True, recenter=True):
     """Chevron positions along the route, in floor-plan px.
 
     Pinned to fixed stations measured from the START of the route, not to fixed
@@ -202,7 +202,11 @@ def chevron_anchors(x, y, path_coords, clip_at_corner=True):
     wall that actually hides them, reading as "turn here" at a spot the user has
     not reached.
 
-    Shifted sideways so the trail passes through the user rather than through
+    With recenter=False, world stations stay on the surveyed route regardless
+    of camera motion. Video replay uses this mode to avoid moving the floor
+    markings whenever a new localization fix changes the lateral offset.
+
+    The legacy recenter=True mode shifts sideways through the user rather than through
     the surveyed centreline - the same reason car navigation draws its guidance
     line from the vehicle and takes only the *direction* from the route. Without
     this the map's own ~0.5 m centreline error lands the arrows against a wall.
@@ -243,7 +247,7 @@ def chevron_anchors(x, y, path_coords, clip_at_corner=True):
     if not stations:
         return []
 
-    off, (nx, ny) = _lateral_offset(x, y, path_coords)
+    off, (nx, ny) = _lateral_offset(x, y, path_coords) if recenter else (0.0, (0.0, 0.0))
     out = []
     for s in stations:
         px, py = _point_at_arc(path_coords, cum, s)
@@ -505,7 +509,8 @@ def build_ar_world(localizer, floor_id, pose, x, y, path_coords, num_inliers,
 
 
 def build_ar_world_poc(localizer, floor_id, pose, x, y, path_coords, num_inliers,
-                       image_size=None, reproj_error=None, stabilizer=None):
+                       image_size=None, reproj_error=None, stabilizer=None, pin_route=False,
+                       timestamp=None, progress_tracker=None):
     """Use the floor-ribbon AR geometry from ``poc_ar_arrow``.
 
     The PoC intentionally lives beside the backend so it can be rendered and
@@ -515,12 +520,27 @@ def build_ar_world_poc(localizer, floor_id, pose, x, y, path_coords, num_inliers
     """
     from poc_ar_arrow.ar_arrow_v2 import build_ar_world_v2
 
-    payload, _reason = build_ar_world_v2(
+    payload, _reason = build_ar_world_poc_debug(
         localizer, floor_id, pose, x, y, path_coords, num_inliers,
         image_size=image_size, reproj_error=reproj_error, stabilizer=stabilizer,
+        pin_route=pin_route, timestamp=timestamp, progress_tracker=progress_tracker,
+    )
+    return payload
+
+
+def build_ar_world_poc_debug(localizer, floor_id, pose, x, y, path_coords, num_inliers,
+                             image_size=None, reproj_error=None, stabilizer=None,
+                             pin_route=False, timestamp=None, progress_tracker=None):
+    """Return the production AR payload and the geometry gate that decided it."""
+    from poc_ar_arrow.ar_arrow_v2 import build_ar_world_v2
+
+    payload, reason = build_ar_world_v2(
+        localizer, floor_id, pose, x, y, path_coords, num_inliers,
+        image_size=image_size, reproj_error=reproj_error, stabilizer=stabilizer,
+        pin_route=pin_route, timestamp=timestamp, progress_tracker=progress_tracker,
     )
     if payload is None:
-        return None
+        return None, reason
 
     def point_list(point):
         return [round(float(value), 5) for value in point]
@@ -541,6 +561,8 @@ def build_ar_world_poc(localizer, floor_id, pose, x, y, path_coords, num_inliers
         'carets': [polygon_list(polygon) for polygon in payload['carets']],
         'alphas': [float(value) for value in payload['alphas']],
         'metres_per_unit': float(payload.get('metres_per_unit', 1.0)),
+        'guidance_mode': payload.get('guidance_mode', 'directional'),
+        'local_bend_deg': float(payload.get('local_bend_deg', 0.0)),
         'ribbon_quads': [
             [polygon_list(quad), float(depth)]
             for quad, depth in payload['ribbon_quads']
@@ -550,7 +572,7 @@ def build_ar_world_poc(localizer, floor_id, pose, x, y, path_coords, num_inliers
             for edge in payload['ribbon_edges']
         ],
         'marker': False,
-    }
+    }, 'ok'
 
 
 def add_poc_destination_marker(payload, localizer, floor_id, destination_xy,

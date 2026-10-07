@@ -84,6 +84,9 @@ export interface ArWorldPayload {
   ribbon_quads?: Array<[number[][], number]>;
   ribbon_edges?: number[][][];
   metres_per_unit?: number;
+  /** Backend guidance classification: a shallow bend has no repeated turn caret. */
+  guidance_mode?: 'gentle_corridor' | 'directional' | string;
+  local_bend_deg?: number;
   destination_marker?: {
     centre: number[];
     top: number[];
@@ -101,6 +104,27 @@ export interface ArWorldPayload {
   marker: boolean;
   /** 0 for a fresh pose, up to 1 while briefly reusing the last trustworthy pose. */
   heldAge?: number;
+}
+
+export interface TrackingSeed {
+  points_2d: Array<[number, number]>;
+  points_3d: Array<[number, number, number]>;
+  map_point_ids: number[];
+  /** [fx, fy, cx, cy] in the seed frame's reference image coordinates. */
+  K: [number, number, number, number];
+  imgWH: [number, number];
+  floor_projection?: {
+    traj_center: [number, number, number];
+    floor_v1: [number, number, number];
+    floor_v2: [number, number, number];
+    H: [[number, number, number], [number, number, number], [number, number, number]];
+  } | null;
+  quality?: {
+    num_points?: number;
+    num_inliers?: number;
+    inlier_ratio?: number;
+    median_reproj_error?: number | null;
+  };
 }
 
 export interface LiveLocalizeResponse {
@@ -138,6 +162,9 @@ export interface LiveLocalizeResponse {
   inlier_ratio?: number;
   median_reproj_error?: number | null;
   ar_world?: ArWorldPayload | null;
+  tracking_seed?: TrackingSeed | null;
+  tracking_seed_frame_id?: string | null;
+  tracking_seed_capture_time_ms?: string | null;
   timing?: {
     decode_ms?: number;
     localize_ms?: number;
@@ -159,6 +186,8 @@ export interface LocalizeLiveFramePayload {
   destination?: string | null;
   destinationFloor?: string | null;
   autoFloor?: boolean;
+  frameId?: string | number;
+  captureTimeMs?: number;
   signal?: AbortSignal;
   onPerfMetrics?: (metrics: LiveLocalizePerfMetrics) => void;
 }
@@ -319,6 +348,12 @@ export async function localizeLiveFrame(payload: LocalizeLiveFramePayload): Prom
     formData.append('destination_floor', destinationFloor);
   }
   formData.append('auto_floor', autoFloor ? '1' : '0');
+  if (payload.frameId !== undefined) {
+    formData.append('frame_id', String(payload.frameId));
+  }
+  if (payload.captureTimeMs !== undefined && Number.isFinite(payload.captureTimeMs)) {
+    formData.append('capture_time_ms', String(payload.captureTimeMs));
+  }
 
   return await new Promise<LiveLocalizeResponse>((resolve, reject) => {
     const xhr = new XMLHttpRequest();

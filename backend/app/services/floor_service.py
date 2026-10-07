@@ -62,13 +62,46 @@ def get_keyframes_dir(floor_id: str | None = None, matching_mode: str = 'orb') -
     return data_dir / 'keyframes'
 
 
+def candidate_floor_ids() -> list:
+    """Floor ids localization may consider, in display order. Honors state.focus_venue."""
+    floors = sorted(state.floor_configs.values(), key=lambda item: item.get('order', 0))
+    if state.focus_venue:
+        floors = [floor for floor in floors if floor.get('venue') == state.focus_venue]
+    return [floor['id'] for floor in floors]
+
+
+def get_venues() -> list:
+    """Venues that can be focused: floors tagged with a `venue` in building.json."""
+    venues = {}
+    for floor in sorted(state.floor_configs.values(), key=lambda item: item.get('order', 0)):
+        venue = floor.get('venue')
+        if venue:
+            venues.setdefault(venue, []).append(floor['id'])
+    return [{'id': venue, 'floor_ids': ids} for venue, ids in venues.items()]
+
+
+def set_focus_venue(venue: str | None) -> str | None:
+    """Restrict localization to one venue (or clear with None) and move onto it."""
+    venue = (venue or '').strip() or None
+    if venue and venue not in {item['id'] for item in get_venues()}:
+        raise ValueError(f'unknown venue {venue!r}')
+    state.focus_venue = venue
+    if venue:
+        allowed = candidate_floor_ids()
+        if state.current_floor_id not in allowed:
+            set_active_floor(allowed[0])
+    return state.focus_venue
+
+
 def get_floor_list() -> list:
     if state.floor_configs:
         return [
             {
                 'id': floor['id'],
                 'label': floor.get('label', floor['id']),
-                'order': floor.get('order')
+                'order': floor.get('order'),
+                'venue': floor.get('venue'),
+                'map_size': floor.get('map_size'),
             }
             for floor in sorted(state.floor_configs.values(), key=lambda item: item.get('order', 0))
         ]
@@ -80,6 +113,12 @@ def set_active_floor(floor_id: str | None = None) -> str:
     # retries. Serialize lazy floor/model initialization so two requests do
     # not construct duplicate GPU localizers for the same missing floor.
     with _floor_switch_lock:
+        if state.focus_venue:
+            allowed = candidate_floor_ids()
+            if allowed and floor_id not in allowed:
+                # A client that still sends the UI's default floor must not
+                # pull localization out of the focused venue.
+                floor_id = allowed[0]
         floor_config = get_floor_config(floor_id)
         selected_floor = floor_config['id']
 

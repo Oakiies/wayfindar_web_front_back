@@ -1,33 +1,45 @@
-import { FlaskConical, MapPin, Search } from 'lucide-react';
+import { Crosshair, FlaskConical, MapPin, Search } from 'lucide-react';
 import React from 'react';
 import MapCanvas from './MapCanvas';
 import FloorRail from './ui/FloorRail';
+import { type MapFrame } from '../lib/mapFrame';
 import { type FloorInfo } from '../types/navigation';
 
 interface MainMapViewProps {
   floors: FloorInfo[];
   selectedFloorId: string;
   mapImageUrl: string;
+  mapFrame?: MapFrame | null;
   navGridDots: number[];
   openSearch: () => void;
   onSelectFloor: (floorId: string) => void;
   onOpenVideoTest: () => void;
+  /** Label of the venue the user can focus on (null = nothing to focus). */
+  focusLabel: string | null;
+  focusActive: boolean;
+  onToggleFocus: () => void;
+  focusError: string | null;
 }
 
 const MainMapView: React.FC<MainMapViewProps> = ({
   floors,
   selectedFloorId,
   mapImageUrl,
+  mapFrame,
   navGridDots,
   openSearch,
   onSelectFloor,
   onOpenVideoTest,
+  focusLabel,
+  focusActive,
+  onToggleFocus,
+  focusError,
 }) => {
   const floorButtons = [...floors].sort((a, b) => b.order - a.order);
   return (
     <div className="relative h-full w-full overflow-hidden bg-paper">
       <div className="absolute inset-0">
-        <MapCanvas mapImageUrl={mapImageUrl} className="h-full w-full" />
+        <MapCanvas mapImageUrl={mapImageUrl} mapFrame={mapFrame} className="h-full w-full" />
       </div>
 
       {/* Top: a single search affordance. Nothing else competes with it. */}
@@ -53,6 +65,23 @@ const MainMapView: React.FC<MainMapViewProps> = ({
           <span>Test Localizer</span>
         </button>
       </div>
+
+      {focusLabel && (
+        <div className="pointer-events-auto absolute right-4 top-[calc(max(1rem,env(safe-area-inset-top))+6.75rem)] z-30 flex flex-col items-end gap-1">
+          <button
+            type="button"
+            onClick={onToggleFocus}
+            aria-pressed={focusActive}
+            className={`press tap flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold shadow-sm ${
+              focusActive ? 'bg-accent text-surface' : 'glass text-ink'
+            }`}
+          >
+            <Crosshair className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+            <span>{focusActive ? `Focused: ${focusLabel}` : `Focus ${focusLabel}`}</span>
+          </button>
+          {focusError && <span className="rounded-full bg-warn/15 px-3 py-1 text-[11px] text-ink-2">{focusError}</span>}
+        </div>
+      )}
 
       <FloorRail floors={floorButtons} activeFloorId={selectedFloorId} onSelect={onSelectFloor} />
 
